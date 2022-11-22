@@ -1,0 +1,148 @@
+{
+    "admins" : [
+        {
+            "id":1,
+            "lastName":"Rena",
+            "firstName" : "Liao",
+            "email":"aureate16@gmail.com",
+            "password":"123qwe"
+        }
+    ],
+    "users" : [
+        {
+            "id":1,
+            "lastName":"Jenny",
+            "firstName" : "Lin",
+            "title":"菜鳥前端",
+            "experiences":"",
+            "links":{
+                "websiteUrl":""
+            },
+            "email":"aureate16@gmail.com",
+            "password":"qwe123"
+        },
+        {
+            "id":2,
+            "lastName":"Jimmy",
+            "firstName" : "Yang",
+            "title":"7年全端打雜",
+            "experiences":"",
+            "links":{
+                "websiteUrl":""
+            },
+            "email":"jimmy.yang@gmail.com",
+            "password":"zxcasd"
+        }
+    ],
+   
+    "resources":[
+        {
+            "id":1,
+            "topics":["HTML/CSS"],
+            "userId":"",
+            "createTime":"", 
+            "isPublic":true,
+            "title":"W3School CSS Tutorial",
+            "intro":"CSS 是用來設計 HTML 文檔樣式的語言，w3schools提供基礎到進階的CSS語法及範例",
+            "imgUrl":"",
+            "url":"https://www.w3schools.com/css/",
+            "IsSafeUrl":true,
+            "classify":{
+                "type":"第三方技術網站",
+                "level":"初階",
+                "price":"免費",
+                "lang":["繁體中文","簡體中文","英文","多語系"]
+            },
+            "commentNum":0,
+            "averageScore":0,
+            "feedbacks":[
+                {
+                    "id":1,
+                    "userId":1,
+                    "item":["資源連結包含不雅、暴力及其他非法資訊"]
+                }
+            ]
+        },
+        {
+            "id":2,
+            "topics":["HTML/CSS"],
+            "userId":1,
+            "createTime":"2022-11-22 13:40:33", 
+            "isPublic":true,
+            "title":"六角學院 - 使用 HTML、CSS 開發一個網站",
+            "intro":"這門課程適合沒有設計及程式基礎的初學者，可以學習到CSS常用語法及網頁排版技巧",
+            "imgUrl":"",
+            "url":"https://www.hexschool.com/courses/html_css.html",
+            "IsSafeUrl":true,
+            "classify":{
+                "type":"線上課程",
+                "level":"初階",
+                "price":"付費",
+                "lang":["繁體中文"]
+            },
+            "commentNum":0,
+            "averageScore":0,
+            "feedbacks":[]
+        },
+        {
+            "id":3,
+            "topics":["JavaScript"],
+            "userId":1,
+            "createTime":"2022-11-25 13:40:33", 
+            "isPublic":false,
+            "title":"我知道你懂 hoisting，可是你了解到多深？",
+            "intro":"本篇文章完整介紹什麼是Hoisting、為什麼需要hoisting,以及它的運作方式",
+            "imgUrl":"",
+            "url":"https://blog.techbridge.cc/2018/11/10/javascript-hoisting/",
+            "IsSafeUrl":true,
+            "classify":{
+                "type":"文章",
+                "level":"進階",
+                "price":"免費",
+                "lang":["繁體中文"]
+            },
+            "commentNum":0,
+            "averageScore":0,
+            "feedbacks":[]
+        }
+    ],
+    "bookmarks" : [
+        {
+            "id":1,
+            "resourceId":1,
+            "userId":1,
+            "isFixedTop":true
+        },
+        {
+            "id":2,
+            "resourceId":1,
+            "userId":2,
+            "isFixedTop":true
+        },
+        {
+            "id":3,
+            "resourceId":2,
+            "userId":1,
+            "isFixedTop":false
+        }
+
+    ],
+    "comments" :[
+        {
+            "resourceId":1,
+            "userId":1,
+            "commentTime":"2022-11-22 13:50:50",
+            "score":5,
+            "content":"適合初學者，老師講解得淺顯易懂、很清楚!",
+            "likeNum":0,
+            "dislikeNum":0,
+            "feedbacks":[
+                {
+                    "id":1,
+                    "userId":1,
+                    "item":"偏離主題"
+                }
+            ]
+        }
+    ]
+}
