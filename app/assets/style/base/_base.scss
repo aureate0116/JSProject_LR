@@ -1,0 +1,30 @@
+/*放全站html標籤css設定*/
+
+// *,
+// *::before,
+// *::after {
+//   box-sizing: border-box;
+// } 
+// Bootstrap 預設有 box-sizing: border-box; 
+
+body{ 
+    background-color: #F0F0F0;
+    font-family:'Noto Sans TC' ;
+}
+
+img{
+  max-width: 100%;
+  vertical-align: middle; 
+  //background-image: cover;
+}
+
+ul{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  
+}
+
+// ul,p {
+//   margin-bottom: 0;
+// }

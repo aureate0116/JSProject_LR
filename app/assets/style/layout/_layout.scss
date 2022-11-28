@@ -1,0 +1,44 @@
+
+.navbar-brand{
+    width: 75px;
+    height: 40px;
+    display: block;
+    background-image: url(../images/engineerLogo_ss.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+
+    @include media-breakpoint-up(lg) { 
+        width: 200px;
+        height: 40px;
+        background-image: url(../images/engineerLogo.png);
+    }
+}
+
+.footer-brand{
+    width: 75px;
+    height: 40px;
+    display: block;
+    background-image: url(../images/engineerLogo_ss_w.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+
+    @include media-breakpoint-up(lg) { 
+        width: 200px;
+        height: 40px;
+        background-image: url(../images/engineerLogo_w.png);
+    }
+
+   
+}
+
+
+.create {
+    //登入後的新增功能下拉 icon 隱藏
+    .dropdown-toggle::after{
+        display: none;
+    }
+}
+
+// .dropdown-menu[data-bs-popper]{
+//     right:0;
+// }

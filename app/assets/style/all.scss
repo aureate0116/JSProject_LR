@@ -1,6 +1,35 @@
+//Google font & icon : Teko & Noto Sans Traditional Chinese
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&family=Teko:wght@300;400&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import url('https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined');
+
+//bs5 
 @import "../../../node_modules/bootstrap/scss/functions";
-@import "./helpers/variables";
-@import "../../../node_modules/bootstrap/scss/bootstrap";
+
+// 修改 bootstrap 自定義變數
+@import "./utils/variables";
 
 
-@import './layout/index.scss'
+@import "../../../node_modules/bootstrap/scss/bootstrap"; //(TBC)
+
+
+// custom 順序: mixin > reset > base > layout > components(module) > pages (使用bs 不用 reset)
+@import url('https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css');
+@import './utils/mixin';
+@import './base/base';
+@import "./base/fontStyle"; 
+
+
+
+@import './layout/layout';
+@import './pages/index';
+@import './pages/resource_list';
+@import './pages/resource';
+
+
+@import './layout/profile_layout';
+@import './pages/acc_profile';
+@import './pages/acc_account';
+@import './pages/signup';
+@import './pages/login';
+@import './pages/acc_resources';

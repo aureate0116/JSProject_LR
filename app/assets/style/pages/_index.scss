@@ -1,0 +1,168 @@
+
+//1 banner
+.bannerBlock{
+ 
+  img{
+   display: none;
+  }
+
+  @include media-breakpoint-up(lg) { 
+    h2{
+      font-size: 40px;
+    }
+    .bannerLeft{
+      text-align: left;
+    }
+    img{
+      width: 30%;
+      margin-right:10px;
+      display: block;
+    }
+   }
+}
+
+//2. painpoint
+.painpoint{
+  .painpointRight{
+    width: 100%;
+    h3{
+      text-align: center;
+    }
+  }
+
+  @include media-breakpoint-up(lg) { 
+    .painpointRight{
+      width: 50%;
+      h3{
+        font-size: 30px;
+        text-align: left;
+      }
+    }
+    
+  }
+
+  //painpoint swiper 
+  .swiper {
+    width: 100%;
+    //height: 300px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .swiper-slide {
+    background-size: cover;
+    background-position: center;
+    
+    img{
+      width: 40%;
+      object-fit: cover;
+    }
+  }
+  .mySwiper .swiper-slide {
+    opacity: 0.4;
+  }
+  .mySwiper .swiper-slide-thumb-active {
+    opacity: 1;
+  }
+
+}
+
+
+
+//solution
+.solution{
+  font-size: 20px ;
+  img{
+    width: 30%;
+  }
+
+  @include media-breakpoint-up(md) { 
+    font-size: 16px;
+    h4{
+      font-size: 25px;
+    }
+    .content{
+      height: 100%;
+      
+    }
+
+  }
+
+}
+
+//goodRate 
+.goodRate{
+  img{
+    width: 25%;
+    margin-right: 10px;
+  }
+}
+
+//fgoodRate+ reeResources 
+.goodRate,.freeResources{
+  
+  .tab-pane{
+    h4{
+      font-size: 20px;
+    }
+  }
+  @include media-breakpoint-up(md) { 
+    .tab-pane{
+      h4{
+        font-size: 16px;
+      }
+    }
+  }
+}
+
+//freeResources
+.freeResources{
+  img{
+    width: 40%;
+  }
+  @include media-breakpoint-up(md) { 
+    img{
+      width: 70%;
+    }
+  }
+
+}
+
+//hotTopic
+.hotTopic{
+  h3{
+    text-align: center;
+  }
+  img{
+    width: 40%;
+    margin-bottom: 10px;
+  }
+  
+  .topicItem{
+    background-color: $primary ;
+    a{color:white;    }
+    border:3px solid $white;
+  }
+
+
+  @include media-breakpoint-up(md) { 
+    h3{
+      text-align: left;
+    }
+    img{
+      width: 50%;
+      
+    }
+
+    .topicItem{
+      background-color:white;
+      a{color:$primary;}
+      border:3px solid $gray-300;
+    }
+  
+    .topicItem:hover{
+      background-color: $primary ;
+      a{ color:white; }
+      border:3px solid $white;
+    }
+  }
+}

@@ -1,0 +1,23 @@
+
+.profile{
+    label{
+        color:$gray;
+    }
+
+    .leftMenu{
+        width: 100%;
+    }
+    .rightContent{
+        width: 100%;
+    }
+
+    @include media-breakpoint-up(md) { 
+        .leftMenu{
+            width: 20%;
+        }
+        .rightContent{
+            width: 80%;
+        }
+
+    }
+}

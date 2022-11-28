@@ -1,0 +1,71 @@
+---
+title: 個人資料
+layout: ./app/profile_layout.ejs
+engine: ejs
+current: acc_profile
+---
+
+<main>
+ 
+  <form action="./acc_profile.html" method="post">
+    <h2 class="text-dark fw-bold fs-6 py-3">公開個人資料</h2>
+    <h3 class="fs-7 my-3">基本資料</h3>
+    
+    <div class="d-flex flex-column flex-md-row-reverse justify-content-end ">
+        <div class="profilePhoto ms-md-6 mb-4">
+            <img class="rounded-circle " src="./assets/images/icon_image.png" alt="photo">
+            <a href="#" role="button" class="btn btn-outline-primary mt-2 fs-8">編輯</a>
+        </div>
+
+        <div>
+            <div class="form-floating mb-3"> 
+                <input type="text" id="firstName" placeholder="名字" class="form-control">
+                <label for="firstName">名字</label>
+            </div>
+        
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="lastName" placeholder="姓">
+                <label for="lastName">姓</label>
+            </div>
+            
+        
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="yourTitle" placeholder="頭銜">
+                <label for="yourTitle">頭銜</label>
+            </div>
+        
+        
+            <div class="form-floating">
+                <textarea class="form-control" placeholder="Leave a comment here" id="yourExp" style="height: 100px"></textarea>
+                <label for="yourExp">經歷</label>
+            </div>
+
+            <h3 class="fs-7 my-3 mt-5">連結</h3>
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="website">個人網站</span>
+                <input type="url" class="form-control" id="websiteInput" aria-describedby="website" placeholder="http(s)://">
+            </div>
+          
+        </div>
+    </div>
+
+
+    
+
+    <div class="mt-6">
+        <button type="submit" class="btn btn-primary text-white">儲存</button>
+    </div>
+
+    
+
+
+</form>
+
+    
+
+   
+
+    
+   
+
+</main>

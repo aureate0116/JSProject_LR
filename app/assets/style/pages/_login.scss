@@ -1,0 +1,6 @@
+.login{
+    width: 100%;
+    @include media-breakpoint-up(lg) { 
+        width: 40%;
+    }
+}

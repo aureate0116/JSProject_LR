@@ -1,0 +1,32 @@
+//RWD 斷點
+
+//手機橫幅: >=576  (sm)
+// @mixin mobileLandscape(){
+//     @media screen and (min-width:576px) {
+//         @content;
+//     }
+// }
+
+
+// //pad : >=768px (md)
+// @mixin pad(){
+//     @media screen and (min-width:768px) {
+//         @content;
+//     }
+// }
+
+
+// //筆電桌機 : >=992px  (lg)   
+// //include media-breakpoint-up(lg) { ... }
+// @mixin desktop(){
+//     @media screen and (min-width:992px) {
+//         @content;
+//     }
+// }
+
+// //大螢幕 : 1200px以上 (xl)
+// @mixin desktop(){
+//     @media screen and (min-width:1200px) {
+//         @content;
+//     }
+// }

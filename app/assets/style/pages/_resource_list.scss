@@ -1,0 +1,39 @@
+
+
+//filterList
+.filterList{
+    
+    @include media-breakpoint-up(lg) { 
+        .filterGroup1,.filterGroup2,.filterGroup3{
+            border-bottom:1px solid $gray-200;
+        }
+
+    }
+   
+}
+
+
+.filter{
+    
+    @include media-breakpoint-up(lg) { 
+        width:25%
+
+    }
+}
+
+//resourceList
+.resourceList{
+    button{
+      font-size: 12px;
+    }
+    @include media-breakpoint-up(lg) { 
+        width:75%;
+        
+    }
+    @include media-breakpoint-up(md) { 
+        button{
+            font-size: 16px;
+        }
+
+    }
+}
