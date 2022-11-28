@@ -1,16 +1,20 @@
 {
-    "admins" : [
+    "users" : [
         {
             "id":1,
             "lastName":"Rena",
             "firstName" : "Liao",
+            "title":"菜鳥前端",
+            "experiences":"",
+            "links":{
+                "websiteUrl":""
+            },
             "email":"aureate16@gmail.com",
-            "password":"123qwe"
-        }
-    ],
-    "users" : [
+            "password":"123qwe",
+            "role":"admin"
+        },
         {
-            "id":1,
+            "id":2,
             "lastName":"Jenny",
             "firstName" : "Lin",
             "title":"菜鳥前端",
@@ -19,10 +23,11 @@
                 "websiteUrl":""
             },
             "email":"aureate16@gmail.com",
-            "password":"qwe123"
+            "password":"qwe123",
+            "role":"user"
         },
         {
-            "id":2,
+            "id":3,
             "lastName":"Jimmy",
             "firstName" : "Yang",
             "title":"7年全端打雜",
@@ -31,7 +36,8 @@
                 "websiteUrl":""
             },
             "email":"jimmy.yang@gmail.com",
-            "password":"zxcasd"
+            "password":"zxcasd",
+            "role":"user"
         }
     ],
    
@@ -101,7 +107,6 @@
                 "price":"免費",
                 "lang":["繁體中文"]
             },
-            "commentNum":0,
             "averageScore":0,
             "feedbacks":[]
         }

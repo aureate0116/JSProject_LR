@@ -1,5 +1,7 @@
 "use strict";
 
+require("./resource_list");
+
 /*****************swiper***************/
 var swiper = new Swiper(".mySwiper", {
   //spaceBetween: 10,
@@ -35,4 +37,11 @@ var swiper2 = new Swiper(".mySwiper2", {
 //     }
 //   })
 // })
+"use strict";
+
+header('Content-Type: text/javascript'); // axios.get('./json/db.json').then(res=>{
+//     console.log('成功get')
+// })
+
+console.log('success');
 //# sourceMappingURL=all.js.map
