@@ -13614,11 +13614,6 @@ ul {
   }
 }
 
-.noImgBlock {
-  width: 100%;
-  height: 94px;
-}
-
 @media (min-width: 768px) {
   .resourceContent {
     margin-top: -200px;
