@@ -5,6 +5,7 @@ engine: ejs
 current: index
 ---
 
+
 <main>
 
     <!-- 1 bannerBlock -->
@@ -473,6 +474,29 @@ current: index
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
-<!-- <script src="./assets/js/all.js"></script> -->
+
+<script src="./assets/js/all.js"></script>
+<script>
+    let swiper = new Swiper(".mySwiper", {
+    //spaceBetween: 10,
+    slidesPerView: 4,
+    freeMode: true,
+    watchSlidesProgress: true,
+    });
+    let swiper2 = new Swiper(".mySwiper2", {
+    //spaceBetween: 10,
+    navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+    },
+    thumbs: {
+        swiper: swiper,
+    },
+    });
+
+</script>
 
 
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script src="./assets/js/all.js"></script>
