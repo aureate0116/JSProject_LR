@@ -13457,13 +13457,13 @@ ul {
   }
 }
 
-.carousel-inner {
+.bannerBlock #bannerText .carousel-inner {
   width: 150px;
   font-size: 24px;
 }
 
 @media (min-width: 768px) {
-  .carousel-inner {
+  .bannerBlock #bannerText .carousel-inner {
     width: 220px;
     font-size: 40px;
   }
