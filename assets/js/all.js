@@ -1,7 +1,3 @@
-// import 'https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js'
-// import './index'
-// import './resource_list'
-
 /*****************nab tab***************/
 //hover 切換
 // const navItem = document.querySelectorAll(".goodRate .nav-link");
@@ -23,138 +19,166 @@
 "use strict";
 "use strict";
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 //1. 頁面初始化
-function init() {
-  getResources();
+function initIndex() {
+  getResourcesForIndex();
 }
 
-init();
-/****************好評推薦********************/
+initIndex(); //好評推薦
 
 var goodRate1 = document.querySelector('#goodRate1 > div.row');
 var goodRate2 = document.querySelector('#goodRate2 > div.row');
 var goodRate3 = document.querySelector('#goodRate3 > div.row');
-var resourcesData = [];
-var commentsData = []; //2. 取得資源資料
+var goodRate1Tab = document.querySelector('#goodRate1-tab');
+var goodRate2Tab = document.querySelector('#goodRate2-tab');
+var goodRate3Tab = document.querySelector('#goodRate3-tab'); //最新免費資源
 
-function getResources() {
+var resourceType1 = document.querySelector('#resourceType1 > div.row');
+var resourceType2 = document.querySelector('#resourceType2 > div.row');
+var resourceType3 = document.querySelector('#resourceType3 > div.row');
+var resource1Tab = document.querySelector('#resource1-tab');
+var resource2Tab = document.querySelector('#resource2-tab');
+var resource3Tab = document.querySelector('#resource3-tab');
+console.log(resource1Tab);
+var resourcesData = [];
+var commentsData = []; //取得資源資料
+
+function getResourcesForIndex() {
   axios.get('./json/db.json').then(function (res) {
     resourcesData = res.data.resources;
     commentsData = res.data.comments;
     renderGoodRateList();
+    renderNewFreeList();
   })["catch"](function (error) {
     console.log(error);
   });
-} //3. 渲染好評推薦資料
+} //渲染好評推薦資料
 
 
 function renderGoodRateList() {
   var resultScore = getAverageScore();
   var newResultScoreOjb = combineCommentStar(resultScore); //newResultScore
 
+  var itemNum1 = 0;
+  var itemNum2 = 0;
+  var itemNum3 = 0;
+  var renderMaxNum = 6;
   var tabJS = "";
   var tabHtml = "";
   var tabPython = "";
   resourcesData.forEach(function (item, index) {
-    switch (item.topic) {
+    switch (item.topics) {
       case "JavaScript":
-        tabJS += combineResouorceItem(item, index, resultScore, newResultScoreOjb, resourceIdObj);
+        if (itemNum1 < renderMaxNum) {
+          tabJS += combineResouorceItemType1(item, index, resultScore, newResultScoreOjb, resourceIdObj);
+          itemNum1 += 1;
+        }
+
+        break;
 
       case "HTML/CSS":
-        tabHtml += combineResouorceItem(item, index, resultScore, newResultScoreOjb, resourceIdObj);
+        if (itemNum2 < renderMaxNum) {
+          tabHtml += combineResouorceItemType1(item, index, resultScore, newResultScoreOjb, resourceIdObj);
+          itemNum2 += 1;
+        }
+
+        break;
 
       case "Python":
-        tabPython += combineResouorceItem(item, index, resultScore, newResultScoreOjb, resourceIdObj);
-    }
+        if (itemNum3 < renderMaxNum) {
+          tabPython += combineResouorceItemType1(item, index, resultScore, newResultScoreOjb, resourceIdObj);
+          itemNum3 += 1;
+        }
+
+        break;
+    } //itemNum +=1;
+
   });
-  goodRate1.innerHTML = tabJS; //goodRate2.innerHTML = tabHtml;
-  //goodRate3.innerHTML = tabPython;
 
-  console.log(tabJS);
-} //計算分數
-
-
-var scoreTotal = {}; //每筆資源評價 總分
-
-var resourceIdObj = {}; //每筆資源評價 筆數
-
-var resultScore = {}; //每筆資源 平均分數(星星數)
-
-function getAverageScore() {
-  commentsData.forEach(function (item) {
-    if (resourceIdObj[item.resourceId] === undefined) {
-      resourceIdObj[item.resourceId] = 1;
-      scoreTotal[item.resourceId] = item.score;
-    } else {
-      resourceIdObj[item.resourceId] += 1;
-      scoreTotal[item.resourceId] += item.score;
+  if (goodRate1 !== null) {
+    if (tabJS == "") {
+      goodRate1Tab.setAttribute("class", "d-none");
     }
 
-    resultScore[item.resourceId] = (scoreTotal[item.resourceId] / resourceIdObj[item.resourceId]).toFixed(1);
-  });
-  return resultScore; //console.log(resultScore);  //1: '4.0', 2: '3.3', 3: '4.5', 4: '2.8'}
-} //4. 組星星字串
+    goodRate1.innerHTML = tabJS;
+  }
 
-
-function combineCommentStar(resultScore) {
-  //評論分數+星星+筆數 HTML
-  var newResultScore = _objectSpread({}, resultScore);
-
-  var resourceIdArr = Object.keys(newResultScore); //['1, '2, '3'] 
-
-  var scoreArr = Object.values(newResultScore); //['4.0', '3.3', '4.5' ,'2.8'] 
-
-  scoreArr.forEach(function (item, index) {
-    var starStr = ""; //星星HTML String
-    //星星數
-
-    for (var i = 1; i <= item[0]; i++) {
-      starStr += "<li><span class=\"material-icons material-icons-sharp fs-8\">star</span></li>";
-      newResultScore["".concat(resourceIdArr["".concat(index)])] = starStr;
-    } //半顆星星+空星星  
-
-
-    if (item[2] <= 2) {
-      for (var _i = 1; _i <= 5 - item[0]; _i++) {
-        starStr += "<li><span class=\"material-icons material-icons-sharp fs-8\">star_outline</span></li> ";
-        newResultScore["".concat(resourceIdArr["".concat(index)])] = starStr;
-      }
-    } else if (item[2] >= 3 && item[2] <= 7) {
-      starStr += "<li><span class=\"material-icons material-icons-sharp fs-8\">star_half</span></li>";
-
-      for (var _i2 = 1; _i2 <= 5 - item[0] - 1; _i2++) {
-        starStr += "<li><span class=\"material-icons material-icons-sharp fs-8\">star_outline</span></li>";
-      }
-
-      newResultScore["".concat(resourceIdArr["".concat(index)])] = starStr;
-    } else if (item[2] >= 8) {
-      starStr += "<li><span class=\"material-icons material-icons-sharp fs-8\">star</span></li";
-
-      for (var _i3 = 1; _i3 <= 5 - item[0] - 1; _i3++) {
-        starStr += "<li><span class=\"material-icons material-icons-sharp fs-8\">star_outline</span></li>";
-        newResultScore["".concat(resourceIdArr["".concat(index)])] = starStr;
-      }
+  if (goodRate2 !== null) {
+    if (tabHtml == "") {
+      goodRate2Tab.setAttribute("class", "d-none");
     }
-  });
-  return newResultScore;
-} //5. 入門推薦組單一資源項目html
+
+    goodRate2.innerHTML = tabHtml;
+  }
+
+  if (goodRate3 !== null) {
+    if (tabPython == "") {
+      goodRate3Tab.setAttribute("class", "d-none");
+    }
+
+    goodRate3.innerHTML = tabPython;
+  }
+} //組單一資源項目html - type 1
 
 
-function combineResouorceItem(item, index, resultScore, newResultScoreOjb, resourceIdObj) {
+function combineResouorceItemType1(item, index, resultScore, newResultScoreOjb, resourceIdObj) {
   if (item.imgUrl === "") {
     item.imgUrl = "./assets/images/resources_cover/noimgCover.jpg";
   }
 
   if (resultScore["".concat(index + 1)] === undefined || newResultScoreOjb[item.id] === undefined || resourceIdObj["".concat(index + 1)] === undefined) {
-    return "\n    <div class=\"col-lg-2 col-md-4 col-6\">\n    <div>\n        <p class=\"text-center\">\n            <a href=\"./resource.html\" target=\"_blank\">\n            <img src=\"".concat(item.imgUrl, "\" alt=\"").concat(item.title, "\" onerror=\"this.src=./assets/images/resources_cover/noimgCover.jpg\"/></a></p>\n        <div class=\"p-2\">\n            <h4 class=\"fs-7\"><a href=\"").concat(item.url, "\" target=\"_blank\"> ").concat(item.title, "</a></h4>\n            <div class=\"d-flex flex-wrap justify-content-between align-items-center\">                             \n                <span class=\"fs-8\"> \u5C1A\u7121\u8A55\u50F9 </span>\n            </div>\n  \n        </div>\n    </div>\n    </div>\n    ");
+    return "\n    <div class=\"col-md-6 col-lg-4\">\n    <div class=\"d-flex p-2 align-items-center\">\n        <img src=\"".concat(item.imgUrl, "\" alt=\"").concat(item.title, "\" onerror=\"this.src=./assets/images/resources_cover/noimgCover.jpg\">\n        <div class=\"p-2\">\n            <h4 class=\"ellipsis\"><a href=\"").concat(item.url, "\" target=\"_blank\"> ").concat(item.title, "</a></h4>\n            <div class=\"d-flex justify-content-between align-items-center\">\n            \u5C1A\u7121\u8A55\u50F9\n            </div>\n        </div>\n    </div>\n    </div>\n    ");
   } else {
-    return "\n      <div class=\"col-lg-2 col-md-4 col-6\">\n      <div>\n          <p class=\"text-center\">\n              <a href=\"./resource.html\" target=\"_blank\">\n              <img src=\"".concat(item.imgUrl, "\" alt=\"").concat(item.title, "\" onerror=\"this.src=./assets/images/resources_cover/noimgCover.jpg\"/></a></p>\n          <div class=\"p-2\">\n              <h4 class=\"fs-7\"><a href=\"").concat(item.url, "\" target=\"_blank\"> ").concat(item.title, "</a></h4>\n\n              <div class=\"d-flex flex-wrap justify-content-between align-items-center\">\n                  <span class=\"fs-7 fw-bold me-lg-2\"> ").concat(resultScore["".concat(index + 1)], "</span>\n                  <ul class=\"d-flex align-items-center lh-1 me-lg-2\">\n                  ").concat(newResultScoreOjb[item.id], "\n                  </ul>                                \n                  <span class=\"fs-8\">(").concat(resourceIdObj["".concat(index + 1)], ")</span>\n              </div>\n\n          </div>\n      </div>\n      </div>\n      ");
+    return "\n    <div class=\"col-md-6 col-lg-4\">\n    <div class=\"d-flex p-2 align-items-center\">\n        <img src=\"".concat(item.imgUrl, "\" alt=\"").concat(item.title, "\" onerror=\"this.src=./assets/images/resources_cover/noimgCover.jpg\">\n        <div class=\"p-2\">\n            <h4 class=\"ellipsis\"><a href=\"").concat(item.url, "\" target=\"_blank\"> ").concat(item.title, "</a></h4>\n            <div class=\"d-flex justify-content-between align-items-center\">\n                <span class=\"fs-6 fw-bold\"> ").concat(resultScore["".concat(index + 1)], "</span>\n                <ul class=\"d-flex align-items-center lh-1\">\n                ").concat(newResultScoreOjb[item.id], "\n                </ul>                                \n                <span class=\"fs-7\">(").concat(resourceIdObj["".concat(index + 1)], ")</span>\n            </div>\n        </div>\n    </div>\n    </div>");
+  }
+} //渲染最新免費資源
+
+
+function renderNewFreeList() {
+  var resultScore = getAverageScore();
+  var newResultScoreOjb = combineCommentStar(resultScore); //newResultScore
+
+  var tabOnline = "";
+  var tabOffline = "";
+  var tabArticle = "";
+  resourcesData.forEach(function (item, index) {
+    if (item.classify.price === "免費") {
+      if (item.classify.type === "線上課程") {
+        tabOnline += combineResouorceItem(item, index, resultScore, newResultScoreOjb, resourceIdObj);
+      }
+
+      if (item.classify.type === "實體課程") {
+        tabOffline += combineResouorceItem(item, index, resultScore, newResultScoreOjb, resourceIdObj);
+      }
+
+      if (item.classify.type === "文章") {
+        tabArticle += combineResouorceItem(item, index, resultScore, newResultScoreOjb, resourceIdObj);
+      }
+    }
+  });
+
+  if (resourceType1 !== null) {
+    resourceType1.innerHTML = tabOnline;
+
+    if (tabOnline == "") {
+      resource1Tab.setAttribute("class", "d-none");
+    }
+  }
+
+  if (resourceType2 !== null) {
+    resourceType2.innerHTML = tabOffline;
+
+    if (tabOffline == "") {
+      resource2Tab.setAttribute("class", "d-none");
+    }
+  }
+
+  if (resourceType3 !== null) {
+    resourceType3.innerHTML = tabArticle;
+
+    if (tabArticle == "") {
+      resource3Tab.setAttribute("class", "d-none");
+    }
   }
 }
 "use strict";
@@ -166,11 +190,11 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 //1. 頁面初始化
-function init() {
-  getResources();
+function initResourceList() {
+  getResourcesForResources();
 }
 
-init();
+initResourceList();
 /*****************入門推薦 ***************/
 
 var foundation1Basic = document.querySelector('#foundation1Basic > div.row');
@@ -179,7 +203,7 @@ var foundation3CN = document.querySelector('#foundation3CN > div.row');
 var resourcesData = [];
 var commentsData = []; //2. 取得資料
 
-function getResources() {
+function getResourcesForResources() {
   axios.get('./json/db.json').then(function (res) {
     resourcesData = res.data.resources;
     commentsData = res.data.comments;
@@ -195,32 +219,54 @@ function getResources() {
 function renderFoundationRecommond() {
   var resultScore = getAverageScore();
   var newResultScoreOjb = combineCommentStar(resultScore); //newResultScore
-  //組各tab render HTML
+
+  var itemNum1 = 0;
+  var itemNum2 = 0;
+  var itemNum3 = 0;
+  var renderMaxNum = 5; //組各tab render HTML
 
   var basicStr = "";
   var freeStr = "";
   var cnStr = "";
   resourcesData.forEach(function (item, index) {
     if (item.classify.level === "初階") {
-      basicStr += combineResouorceItem(item, index, resultScore, newResultScoreOjb, resourceIdObj);
+      if (itemNum1 < renderMaxNum) {
+        basicStr += combineResouorceItem(item, index, resultScore, newResultScoreOjb, resourceIdObj);
+        itemNum1 += 1;
+      }
     }
 
     if (item.classify.price === "免費") {
-      freeStr += combineResouorceItem(item, index, resultScore, newResultScoreOjb, resourceIdObj);
+      if (itemNum2 < renderMaxNum) {
+        freeStr += combineResouorceItem(item, index, resultScore, newResultScoreOjb, resourceIdObj);
+        itemNum2 += 1;
+      }
     }
 
     item.classify.lang.forEach(function (langItem) {
       if (langItem === "繁體中文") {
-        cnStr += combineResouorceItem(item, index, resultScore, newResultScoreOjb, resourceIdObj);
+        if (itemNum3 < renderMaxNum) {
+          cnStr += combineResouorceItem(item, index, resultScore, newResultScoreOjb, resourceIdObj);
+          itemNum3 += 1;
+        }
       }
     });
-  }); //console.log(basicStr);
-  // console.log(freeStr);
-  // console.log(cnStr);
+  });
 
-  foundation1Basic.innerHTML = basicStr;
-  foundation2Free.innerHTML = freeStr;
-  foundation3CN.innerHTML = cnStr;
+  if (foundation1Basic !== null) {
+    foundation1Basic.innerHTML = basicStr;
+  }
+
+  if (foundation2Free !== null) {
+    foundation2Free.innerHTML = freeStr;
+  }
+
+  if (foundation3CN !== null) {
+    foundation3CN.innerHTML = cnStr;
+  } // foundation1Basic.innerHTML = basicStr;
+  // foundation2Free.innerHTML = freeStr;
+  // foundation3CN.innerHTML = cnStr;
+
 } //計算分數
 
 
@@ -296,9 +342,9 @@ function combineResouorceItem(item, index, resultScore, newResultScoreOjb, resou
   }
 
   if (resultScore["".concat(index + 1)] === undefined || newResultScoreOjb[item.id] === undefined || resourceIdObj["".concat(index + 1)] === undefined) {
-    return "\n    <div class=\"col-lg-2 col-md-4 col-6\">\n    <div>\n        <p class=\"text-center\">\n            <a href=\"./resource.html\" target=\"_blank\">\n            <img src=\"".concat(item.imgUrl, "\" alt=\"").concat(item.title, "\" onerror=\"this.src=./assets/images/resources_cover/noimgCover.jpg\"/></a></p>\n        <div class=\"p-2\">\n            <h4 class=\"fs-7\"><a href=\"").concat(item.url, "\" target=\"_blank\"> ").concat(item.title, "</a></h4>\n            <div class=\"d-flex flex-wrap justify-content-between align-items-center\">                             \n                <span class=\"fs-8\"> \u5C1A\u7121\u8A55\u50F9 </span>\n            </div>\n  \n        </div>\n    </div>\n    </div>\n    ");
+    return "\n    <div class=\"col-lg-2 col-md-4 col-6\">\n    <div>\n        <p class=\"text-center\">\n            <a href=\"./resource.html\" target=\"_blank\">\n            <img src=\"".concat(item.imgUrl, "\" alt=\"").concat(item.title, "\" onerror=\"this.src=./assets/images/resources_cover/noimgCover.jpg\"></a></p>\n        <div class=\"p-2\">\n            <h4 class=\"fs-7 ellipsis\"><a href=\"").concat(item.url, "\" target=\"_blank\"> ").concat(item.title, "</a></h4>\n            <div class=\"d-flex flex-wrap justify-content-between align-items-center\">                             \n                <span class=\"fs-8\"> \u5C1A\u7121\u8A55\u50F9 </span>\n            </div>\n  \n        </div>\n    </div>\n    </div>\n    ");
   } else {
-    return "\n      <div class=\"col-lg-2 col-md-4 col-6\">\n      <div>\n          <p class=\"text-center\">\n              <a href=\"./resource.html\" target=\"_blank\">\n              <img src=\"".concat(item.imgUrl, "\" alt=\"").concat(item.title, "\" onerror=\"this.src=./assets/images/resources_cover/noimgCover.jpg\"/></a></p>\n          <div class=\"p-2\">\n              <h4 class=\"fs-7\"><a href=\"").concat(item.url, "\" target=\"_blank\"> ").concat(item.title, "</a></h4>\n\n              <div class=\"d-flex flex-wrap justify-content-between align-items-center\">\n                  <span class=\"fs-7 fw-bold me-lg-2\"> ").concat(resultScore["".concat(index + 1)], "</span>\n                  <ul class=\"d-flex align-items-center lh-1 me-lg-2\">\n                  ").concat(newResultScoreOjb[item.id], "\n                  </ul>                                \n                  <span class=\"fs-8\">(").concat(resourceIdObj["".concat(index + 1)], ")</span>\n              </div>\n\n          </div>\n      </div>\n      </div>\n      ");
+    return "\n      <div class=\"col-lg-2 col-md-4 col-6\">\n      <div>\n          <p class=\"text-center\">\n              <a href=\"./resource.html\" target=\"_blank\">\n              <img src=\"".concat(item.imgUrl, "\" alt=\"").concat(item.title, "\" onerror=\"this.src=./assets/images/resources_cover/noimgCover.jpg\"></a></p>\n          <div class=\"p-2\">\n              <h4 class=\"fs-7 ellipsis\"><a href=\"").concat(item.url, "\" target=\"_blank\"> ").concat(item.title, "</a></h4>\n\n              <div class=\"d-flex flex-wrap justify-content-between align-items-center\">\n                  <span class=\"fs-7 fw-bold me-lg-2\"> ").concat(resultScore["".concat(index + 1)], "</span>\n                  <ul class=\"d-flex align-items-center lh-1 me-lg-2\">\n                  ").concat(newResultScoreOjb[item.id], "\n                  </ul>                                \n                  <span class=\"fs-8\">(").concat(resourceIdObj["".concat(index + 1)], ")</span>\n              </div>\n\n          </div>\n      </div>\n      </div>\n      ");
   }
 } //判斷圖片處理
 //圖片顯示比例問題 
@@ -565,10 +611,8 @@ function getRenderList(resourcesData) {
     } else {
       return false;
     }
-  });
-  console.log("newResourcesRenderList");
-  console.log(newResourcesRenderList); // return newResourcesRenderList;
-  //renderFilterResultList();
+  }); // console.log("newResourcesRenderList");
+  // console.log(newResourcesRenderList);
 } // end getRenderList(resourcesData)
 
 /************************暫時隱藏*************************************88 */
@@ -602,7 +646,10 @@ function renderFilterResultList() {
   finalRenderList.forEach(function (item) {
     renderfilterStr += "<div class=\"row my-3 \">\n    <div class=\"col-2 \">\n        <img src=\"".concat(item.imgUrl, "\" alt=\"").concat(item.title, "\">   \n    </div>\n      <div class=\"col-6\">\n          <h4 class=\"fs-7\">").concat(item.title, "</h4>\n          <div class=\"d-flex flex-wrap align-items-center\">\n              <span class=\"fs-7 fw-bold me-lg-2\">??</span>\n              <ul class=\"d-flex align-items-center lh-1 me-lg-2\">\n                  <li><span class=\"material-icons material-icons-sharp fs-8\">star</span></li>\n                  <li><span class=\"material-icons material-icons-sharp fs-8\">star</span></li>\n                  <li><span class=\"material-icons material-icons-sharp fs-8\">star</span></li>\n                  <li><span class=\"material-icons material-icons-sharp fs-8\">star_half</span></li>\n                  <li><span class=\"material-icons material-icons-sharp fs-8\">star_outline</span></li>\n              </ul>                                \n              <span class=\"fs-8\">(35)</span>\n              <p>").concat(item.classify.type, ", ").concat(item.classify.level, " , ").concat(item.classify.price, ", ").concat(item.classify.lang, " </p>\n          </div>\n      </div>\n      <div class=\"col-4\">\n          <div class=\"d-flex flex-column align-items-end\">\n              <button type=\"button\" class=\"btn btn-tiffany my-2 w-75\">\u524D\u5F80\u8CC7\u6E90</button>\n              <button type=\"button\" class=\"btn btn-yellowBrown w-75 my-2\">\u67E5\u770B\u8A55\u8AD6</button>\n          </div>\n      </div>\n    </div>\n        ");
   });
-  resourceItem.innerHTML = renderfilterStr;
+
+  if (resourceItem !== null) {
+    resourceItem.innerHTML = renderfilterStr;
+  }
 }
 /***************************************8 */
 
