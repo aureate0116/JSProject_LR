@@ -5,15 +5,30 @@ engine: ejs
 current: index
 ---
 
-
 <main>
 
     <!-- 1 bannerBlock -->
     <div class="container-fluid px-3 py-5 p-lg-0 bg-primary">
         <div class="bannerBlock container p-0 p-lg-8 p-md-4 d-flex align-items-center justify-content-center justify-content-lg-between">
             <div class="bannerLeft">
-                <h2 class="text-white">幫助想成為 <span class="text-decoration-underline"> test text </span> 的你 <br/>
-                輕鬆找到 <span class="text-decoration-underline">test text </span>的學習資源</h2>
+                <div class="text-white fs-2 d-flex flex-wrap align-items-center">
+                    <span>幫助想成為</span>  
+                    <span id="bannerText" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner px-2 text-center">
+                            <span class="carousel-item active text-decoration-underline" data-bs-interval="3000" > 前端工程師 </span>
+                            <span class="carousel-item text-decoration-underline" data-bs-interval="3000"> 後端工程師 </span>
+                            <span class="carousel-item text-decoration-underline" data-bs-interval="3000"> 全端工程師 </span>
+                            <span class="carousel-item text-decoration-underline" data-bs-interval="3000"> 資料工程師 </span>
+                            <!-- <span class="carousel-item text-decoration-underline" data-bs-interval="3000"> 開發維運工程師 </span>
+                            <span class="carousel-item text-decoration-underline" data-bs-interval="3000"> 行動應用工程師 </span>
+                            <span class="carousel-item text-decoration-underline" data-bs-interval="3000"> 產品測試工程師 </span> -->
+                        </div>
+                    </span>  
+                    <span>的你</span> 
+                </div>
+                <div class="text-white fs-2 ">
+                    <p>輕鬆找到<span class="text-secondary"> 可靠的 </span>學習資源 !</p>
+                </div>
 
                 <!-- search -->
                 <div class="bg-light input-group rounded-3 my-3">
@@ -134,20 +149,20 @@ current: index
         <ul class="nav nav-pills mb-3 d-flex align-items-center " id="pills-tab" role="tablist">
             <li><h3 class="fs-5 mb-0 fw-bold me-4">好評推薦</h3></li>
             <li class="nav-item" role="presentation">
-              <button class="nav-link active" id="language1-tab" data-bs-toggle="pill" data-bs-target="#language1" type="button" role="tab" aria-controls="pills-home" aria-selected="true">JavaScript</button>
+              <button class="nav-link active" id="goodRate1" data-bs-toggle="pill" data-bs-target="#language1" type="button" role="tab" aria-controls="pills-home" aria-selected="true">JavaScript</button>
             </li>
             <li class="nav-item" role="presentation">
-              <button class="nav-link" id="language2-tab" data-bs-toggle="pill" data-bs-target="#language2" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">language 2</button>
+              <button class="nav-link" id="goodRate2" data-bs-toggle="pill" data-bs-target="#language2" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">HTML/CSS</button>
             </li>
             <li class="nav-item" role="presentation">
-              <button class="nav-link" id="language3-tab" data-bs-toggle="pill" data-bs-target="#language3" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">language 3</button>
+              <button class="nav-link" id="goodRate3" data-bs-toggle="pill" data-bs-target="#language3" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Python</button>
             </li>
         </ul>
 
         <div class="tab-content border border-primary p-3 rounded-3" id="pills-tabContent">
 
             <!--start tab-pane 1-->
-            <div class="tab-pane fade show active" id="language1" role="tabpanel" aria-labelledby="language1-tab">
+            <div class="tab-pane fade show active" id="goodRate1" role="tabpanel" aria-labelledby="language1-tab">
                 <div class="row">
                     <div class="col-md-6 col-lg-4">
                         <div class="d-flex p-2 align-items-center">
@@ -267,13 +282,13 @@ current: index
             </div><!--end tab-pane 1-->
 
             <!--start tab-pane 2-->
-            <div class="tab-pane fade" id="language2" role="tabpanel" aria-labelledby="language2-tab">.2
+            <div class="tab-pane fade" id="goodRate2" role="tabpanel" aria-labelledby="language2-tab">.2
 
 
             </div><!--end tab-pane 2-->
 
             <!--start tab-pane 3-->
-            <div class="tab-pane fade" id="language3" role="tabpanel" aria-labelledby="language3-tab">...3
+            <div class="tab-pane fade" id="goodRate3" role="tabpanel" aria-labelledby="language3-tab">...3
 
 
             </div><!--end tab-pane 3-->
@@ -473,11 +488,17 @@ current: index
 
 </main>
 
+
+
 <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 
 <script src="./assets/js/all.js"></script>
 <script>
-    let swiper = new Swiper(".mySwiper", {
+
+   //輪播
+   let swiper = new Swiper(".mySwiper", {
     //spaceBetween: 10,
     slidesPerView: 4,
     freeMode: true,
@@ -494,9 +515,9 @@ current: index
     },
     });
 
+
+
+
 </script>
 
 
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
-<script src="./assets/js/all.js"></script>

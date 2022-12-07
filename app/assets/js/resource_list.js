@@ -1,7 +1,7 @@
 
 //1. 頁面初始化
 function init(){
-    getFoundationTabResources();
+  getResources();
     
 }
 init();
@@ -16,8 +16,8 @@ const foundation3CN = document.querySelector('#foundation3CN > div.row');
 let resourcesData = [];
 let commentsData = [];
 
-//2. 取得入門推薦資料
-function getFoundationTabResources(){
+//2. 取得資料
+function getResources(){
   axios.get('./json/db.json')
   .then(res=>{
     resourcesData = res.data.resources;
@@ -28,7 +28,6 @@ function getFoundationTabResources(){
     //filterAndSort();
   
   }).catch(error=>{
-    //console.log(`資料有誤`);
     console.log(error);
   })
 }
@@ -61,7 +60,9 @@ function renderFoundationRecommond(){
         })
 
   })
-
+  //console.log(basicStr);
+  // console.log(freeStr);
+  // console.log(cnStr);
   foundation1Basic.innerHTML = basicStr;
   foundation2Free.innerHTML = freeStr;
   foundation3CN.innerHTML = cnStr;

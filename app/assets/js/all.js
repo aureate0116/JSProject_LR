@@ -1,25 +1,6 @@
-
-//console.log('123');
-
-
-
-/*****************index - swiper***************/
-// let swiper = new Swiper(".mySwiper", {
-//   //spaceBetween: 10,
-//   slidesPerView: 4,
-//   freeMode: true,
-//   watchSlidesProgress: true,
-// });
-// let swiper2 = new Swiper(".mySwiper2", {
-//   //spaceBetween: 10,
-//   navigation: {
-//     nextEl: ".swiper-button-next",
-//     prevEl: ".swiper-button-prev",
-//   },
-//   thumbs: {
-//     swiper: swiper,
-//   },
-// });
+// import 'https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js'
+// import './index'
+// import './resource_list'
 
 
 
@@ -47,19 +28,4 @@
 //   })
 
 // })
-// let swiper = new Swiper(".mySwiper", {
-//     //spaceBetween: 10,
-//     slidesPerView: 4,
-//     freeMode: true,
-//     watchSlidesProgress: true,
-//     });
-//     let swiper2 = new Swiper(".mySwiper2", {
-//     //spaceBetween: 10,
-//     navigation: {
-//         nextEl: ".swiper-button-next",
-//         prevEl: ".swiper-button-prev",
-//     },
-//     thumbs: {
-//         swiper: swiper,
-//     },
-//     });
+
