@@ -1,10 +1,10 @@
 
 //1. 頁面初始化
-function init(){
-  getResources();
+function initResourceList(){
+  getResourcesForResources();
     
 }
-init();
+initResourceList();
 
 
 /*****************入門推薦 ***************/
@@ -17,7 +17,7 @@ let resourcesData = [];
 let commentsData = [];
 
 //2. 取得資料
-function getResources(){
+function getResourcesForResources(){
   axios.get('./json/db.json')
   .then(res=>{
     resourcesData = res.data.resources;
@@ -39,6 +39,10 @@ function renderFoundationRecommond(){
   let resultScore = getAverageScore();
   let newResultScoreOjb = combineCommentStar(resultScore); //newResultScore
 
+  let itemNum1 = 0;
+  let itemNum2 = 0;
+  let itemNum3 = 0;
+  let renderMaxNum = 5;
   //組各tab render HTML
   let basicStr ="";
   let freeStr="";
@@ -46,27 +50,48 @@ function renderFoundationRecommond(){
 
   resourcesData.forEach( (item,index)=>{
         if(item.classify.level === "初階"){
-            basicStr += combineResouorceItem(item,index,resultScore,newResultScoreOjb,resourceIdObj);
+          if(itemNum1 <renderMaxNum){
+             basicStr += combineResouorceItem(item,index,resultScore,newResultScoreOjb,resourceIdObj);
+             itemNum1+=1;
+          }
+           
         }
         
         if(item.classify.price === "免費"){
-          freeStr += combineResouorceItem(item,index,resultScore,newResultScoreOjb,resourceIdObj);  
+          if(itemNum2 <renderMaxNum){
+            freeStr += combineResouorceItem(item,index,resultScore,newResultScoreOjb,resourceIdObj); 
+            itemNum2+=1;
+          }
+           
         }
         
         item.classify.lang.forEach(langItem=>{
           if(langItem === "繁體中文"){
-            cnStr += combineResouorceItem(item,index,resultScore,newResultScoreOjb,resourceIdObj);
+            if(itemNum3 <renderMaxNum){
+              cnStr += combineResouorceItem(item,index,resultScore,newResultScoreOjb,resourceIdObj);
+              itemNum3+=1;
+            }
+            
           }
         })
 
   })
-  //console.log(basicStr);
-  // console.log(freeStr);
-  // console.log(cnStr);
-  foundation1Basic.innerHTML = basicStr;
-  foundation2Free.innerHTML = freeStr;
-  foundation3CN.innerHTML = cnStr;
 
+  if(foundation1Basic!==null){
+    foundation1Basic.innerHTML = basicStr;
+  }
+  
+  if(foundation2Free!==null){
+    foundation2Free.innerHTML = freeStr;
+  }
+  
+  if(foundation3CN!==null){
+    foundation3CN.innerHTML = cnStr;
+  }
+
+  // foundation1Basic.innerHTML = basicStr;
+  // foundation2Free.innerHTML = freeStr;
+  // foundation3CN.innerHTML = cnStr;
 }
 
 //計算分數
@@ -146,9 +171,9 @@ function combineResouorceItem(item,index,resultScore,newResultScoreOjb,resourceI
     <div>
         <p class="text-center">
             <a href="./resource.html" target="_blank">
-            <img src="${item.imgUrl}" alt="${item.title}" onerror="this.src=./assets/images/resources_cover/noimgCover.jpg"/></a></p>
+            <img src="${item.imgUrl}" alt="${item.title}" onerror="this.src=./assets/images/resources_cover/noimgCover.jpg"></a></p>
         <div class="p-2">
-            <h4 class="fs-7"><a href="${item.url}" target="_blank"> ${item.title}</a></h4>
+            <h4 class="fs-7 ellipsis"><a href="${item.url}" target="_blank"> ${item.title}</a></h4>
             <div class="d-flex flex-wrap justify-content-between align-items-center">                             
                 <span class="fs-8"> 尚無評價 </span>
             </div>
@@ -163,9 +188,9 @@ function combineResouorceItem(item,index,resultScore,newResultScoreOjb,resourceI
       <div>
           <p class="text-center">
               <a href="./resource.html" target="_blank">
-              <img src="${item.imgUrl}" alt="${item.title}" onerror="this.src=./assets/images/resources_cover/noimgCover.jpg"/></a></p>
+              <img src="${item.imgUrl}" alt="${item.title}" onerror="this.src=./assets/images/resources_cover/noimgCover.jpg"></a></p>
           <div class="p-2">
-              <h4 class="fs-7"><a href="${item.url}" target="_blank"> ${item.title}</a></h4>
+              <h4 class="fs-7 ellipsis"><a href="${item.url}" target="_blank"> ${item.title}</a></h4>
 
               <div class="d-flex flex-wrap justify-content-between align-items-center">
                   <span class="fs-7 fw-bold me-lg-2"> ${resultScore[`${index+1}`]}</span>
@@ -505,10 +530,9 @@ function getRenderList(resourcesData){
       return false;
     }
   });
-  console.log("newResourcesRenderList");
-  console.log(newResourcesRenderList);
-  // return newResourcesRenderList;
-  //renderFilterResultList();
+  // console.log("newResourcesRenderList");
+  // console.log(newResourcesRenderList);
+  
 }  // end getRenderList(resourcesData)
 
 /************************暫時隱藏*************************************88 */
@@ -572,8 +596,9 @@ function renderFilterResultList(){
   })
   
   
-
-  resourceItem.innerHTML = renderfilterStr;
+  if(resourceItem!==null){
+    resourceItem.innerHTML = renderfilterStr;
+  }
 
 
 }

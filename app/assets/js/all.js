@@ -1,7 +1,3 @@
-// import 'https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js'
-// import './index'
-// import './resource_list'
-
 
 
 /*****************nab tab***************/
@@ -28,4 +24,5 @@
 //   })
 
 // })
+
 
