@@ -13542,7 +13542,6 @@ ul {
 }
 
 .goodRate img {
-  width: 40%;
   margin-right: 10px;
 }
 
@@ -13733,6 +13732,9 @@ ul {
 }
 
 @media (min-width: 768px) {
+  .resourceComment {
+    margin-top: 120px;
+  }
   .resourceComment img {
     width: 20%;
   }

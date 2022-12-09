@@ -19,9 +19,32 @@
 "use strict";
 "use strict";
 
+var url = "http://localhost:3000"; // const url="./json/db.json"
+// const url="http://localhost:3000/users"
+// const url="http://localhost:3000/resources"
+// const url="http://localhost:3000/bookmarks"
+// const url="http://localhost:3000/comments"
+"use strict";
+
+var locationHref = location.href.split("/");
+var resTopic = location.href.split("=")[1];
+var resId = location.href.split("=")[1];
+var pageClassify = locationHref[3].split(".html")[0]; // console.log("pageClassify",pageClassify);
+// console.log("locationHref",locationHref);
 //1. 頁面初始化
+
 function initIndex() {
-  getResourcesForIndex();
+  if (pageClassify == "" || pageClassify == "index") {
+    getResourcesForIndex();
+  } else if (pageClassify == "resource") {
+    if (resId == undefined) {
+      location.href = "./index.html";
+    }
+  } else if (pageClassify == "resource_list") {
+    if (resTopic == undefined) {
+      location.href = "./index.html";
+    }
+  }
 }
 
 initIndex(); //好評推薦
@@ -38,8 +61,8 @@ var resourceType2 = document.querySelector('#resourceType2 > div.row');
 var resourceType3 = document.querySelector('#resourceType3 > div.row');
 var resource1Tab = document.querySelector('#resource1-tab');
 var resource2Tab = document.querySelector('#resource2-tab');
-var resource3Tab = document.querySelector('#resource3-tab');
-console.log(resource1Tab);
+var resource3Tab = document.querySelector('#resource3-tab'); // console.log(resource1Tab);
+
 var resourcesData = [];
 var commentsData = []; //取得資源資料
 
@@ -127,9 +150,9 @@ function combineResouorceItemType1(item, index, resultScore, newResultScoreOjb, 
   }
 
   if (resultScore["".concat(index + 1)] === undefined || newResultScoreOjb[item.id] === undefined || resourceIdObj["".concat(index + 1)] === undefined) {
-    return "\n    <div class=\"col-md-6 col-lg-4\">\n    <div class=\"d-flex p-2 align-items-center\">\n        <img src=\"".concat(item.imgUrl, "\" alt=\"").concat(item.title, "\" onerror=\"this.src=./assets/images/resources_cover/noimgCover.jpg\">\n        <div class=\"p-2\">\n            <h4 class=\"ellipsis\"><a href=\"").concat(item.url, "\" target=\"_blank\"> ").concat(item.title, "</a></h4>\n            <div class=\"d-flex justify-content-between align-items-center\">\n            \u5C1A\u7121\u8A55\u50F9\n            </div>\n        </div>\n    </div>\n    </div>\n    ");
+    return "\n    <div class=\"col-md-6 col-lg-4\">\n    <div class=\"d-flex p-2 align-items-center\">\n        <div class=\"row\">\n            <div class=\"col-6\"><a href=\"./resource.html?id=".concat(item.id, "\" target=\"_blank\"><img src=\"").concat(item.imgUrl, "\" alt=\"").concat(item.title, "\" onerror=\"this.src=./assets/images/resources_cover/noimgCover.jpg\"></a></div>\n            \n            <div class=\"col-6\">\n                <h4 class=\"ellipsis\"><a href=\"./resource.html?id=").concat(item.id, "\" target=\"_blank\"> ").concat(item.title, "</a></h4>\n                <div class=\"d-flex justify-content-between align-items-center\">\n                \u5C1A\u7121\u8A55\u50F9\n                </div>\n            </div>\n            \n        </div>\n         \n        \n    </div>\n    </div>\n    ");
   } else {
-    return "\n    <div class=\"col-md-6 col-lg-4\">\n    <div class=\"d-flex p-2 align-items-center\">\n        <img src=\"".concat(item.imgUrl, "\" alt=\"").concat(item.title, "\" onerror=\"this.src=./assets/images/resources_cover/noimgCover.jpg\">\n        <div class=\"p-2\">\n            <h4 class=\"ellipsis\"><a href=\"").concat(item.url, "\" target=\"_blank\"> ").concat(item.title, "</a></h4>\n            <div class=\"d-flex justify-content-between align-items-center\">\n                <span class=\"fs-6 fw-bold\"> ").concat(resultScore["".concat(index + 1)], "</span>\n                <ul class=\"d-flex align-items-center lh-1\">\n                ").concat(newResultScoreOjb[item.id], "\n                </ul>                                \n                <span class=\"fs-7\">(").concat(resourceIdObj["".concat(index + 1)], ")</span>\n            </div>\n        </div>\n    </div>\n    </div>");
+    return "\n    <div class=\"col-md-6 col-lg-4\">\n    <div class=\"d-flex p-2 align-items-center\">\n        <div class=\"row\">\n            <div class=\"col-6\"><a href=\"./resource.html?id=".concat(item.id, "\" target=\"_blank\"><img src=\"").concat(item.imgUrl, "\" alt=\"").concat(item.title, "\" onerror=\"this.src=./assets/images/resources_cover/noimgCover.jpg\"></a></div>\n\n            <div class=\"col-6\">\n                <h4 class=\"ellipsis\"><a href=\"./resource.html?id=").concat(item.id, "\" target=\"_blank\"> ").concat(item.title, "</a></h4>\n                <div class=\"d-flex justify-content-between align-items-center\">\n                    <span class=\"fs-6 fw-bold\"> ").concat(resultScore["".concat(index + 1)], "</span>\n                    <ul class=\"d-flex align-items-center lh-1\">\n                    ").concat(newResultScoreOjb[item.id], "\n                    </ul>                                \n                    <span class=\"fs-7\">(").concat(resourceIdObj["".concat(index + 1)], ")</span>\n                </div>\n            </div>\n        </div>\n        \n    </div>\n    </div>");
   }
 } //渲染最新免費資源
 
@@ -183,6 +206,116 @@ function renderNewFreeList() {
 }
 "use strict";
 
+var resId = location.href.split("=")[1];
+
+function initResourcePage() {
+  getResourcesItem(resId);
+  getResourcesComment(resId);
+}
+
+initResourcePage();
+/******************資源資訊***********************/
+
+var resourceContent;
+
+function getResourcesItem(id) {
+  axios.get("".concat(url, "/resources?id=").concat(id, "&_expand=user")).then(function (res) {
+    resourceContent = res.data; // console.log("resourceContent");
+    // console.log(resourceContent);
+
+    renderResource();
+  })["catch"](function (error) {
+    console.log(error);
+  });
+}
+
+var imageNBrief = document.querySelector('.imageNBrief');
+var titleBox = document.querySelector('.titleBox');
+var btnBox = document.querySelector('.btnBox');
+
+function renderResource() {
+  var renderItem = resourceContent[0];
+  var userName = ""; //console.log(item.user.role);
+
+  if (renderItem !== undefined) {
+    if (renderItem.user.role === "admin") {
+      userName = "admin";
+    } else {
+      userName = "".concat(renderItem.user.lastName, " ").concat(renderItem.user.firstName, " ");
+    }
+
+    var resultScore = getAverageScore();
+    var newResultScoreOjb = combineCommentStar(resultScore);
+    var imageNBriefStr = "";
+    var titleBoxStr = "";
+    var btnBoxStr = "";
+
+    if (resultScore[resId] === undefined || newResultScoreOjb[renderItem.resId] === undefined || resourceIdObj[resId] === undefined) {
+      titleBoxStr = "<h2 class=\"fs-5 fw-bold mt-md-0 mt-3\">".concat(renderItem.title, "</h2>\n            <div class=\"d-flex flex-wrap align-items-center text-secondary\">\n                <span class=\"fs-8 fw-bold me-lg-2\">\u5C1A\u7121\u8A55\u50F9</span>\n            </div>\n            <div class=\"classify fs-7\">\n                <ul class=\"d-flex \">\n                    <li class=\"me-2\">  ").concat(renderItem.topics, "</li>\n                    <li class=\"me-2\">  ").concat(renderItem.classify.type, "</li>\n                    <li class=\"me-2\">  ").concat(renderItem.classify.level, "</li>\n                    <li class=\"me-2\">  ").concat(renderItem.classify.price, "</li>\n                </ul>\n                <ul>\n                    <li class=\"me-2\">  ").concat(renderItem.classify.lang, " </li>\n                    <li class=\"me-2\">\u5EFA\u7ACB\u8005 : ").concat(userName, " </li>\n                </ul>\n            </div>");
+    } else {
+      titleBoxStr = "<h2 class=\"fs-5 fw-bold mt-md-0 mt-3\">".concat(renderItem.title, "</h2>\n            <div class=\"d-flex flex-wrap align-items-center text-secondary\">\n                <span class=\"fs-5 fw-bold me-lg-2\"> ").concat(resultScore[resId], "</span>\n                <ul class=\"d-flex align-items-center lh-1 me-lg-2\">\n                ").concat(newResultScoreOjb[renderItem.resId], "\n                </ul>                                \n                <span class=\"fs-8\">(").concat(resourceIdObj[resId], ")</span>\n            </div>\n            <div class=\"classify fs-7\">\n                <ul class=\"d-flex \">\n                    <li class=\"me-2\">  ").concat(renderItem.topics, "</li>\n                    <li class=\"me-2\">  ").concat(renderItem.classify.type, "</li>\n                    <li class=\"me-2\">  ").concat(renderItem.classify.level, "</li>\n                    <li class=\"me-2\">  ").concat(renderItem.classify.price, "</li>\n                </ul>\n                <ul>\n                    <li class=\"me-2\">  ").concat(renderItem.classify.lang, " </li>\n                    <li class=\"me-2\">\u5EFA\u7ACB\u8005 : ").concat(userName, " </li>\n                </ul>\n            </div>");
+    }
+
+    btnBoxStr = "\n        <button type=\"button\" class=\"btn btn-sm btn-secondary my-2 text-white px-lg-4 py-2 fs-6\">\u524D\u5F80\u8CC7\u6E90</button>\n        <div class=\"d-flex justify-content-center flex-row flex-md-column flex-lg-row align-items-center\">                    \n            <a href=\"#\" role=\"button\" class=\"d-flex align-items-center me-2 \">\n                <span class=\"material-icons \">bookmark_border</span>\n                <!-- <span class=\"material-icons\">bookmark</span> -->\n                <span>\u6536\u85CF</span>\n            </a>\n\n            <a href=\"#\" role=\"button\" class=\" d-flex align-items-center me-2 \">\n                <span class=\"material-icons material-icons-outlined\">feedback</span>\n                <!-- <span class=\"material-icons\">feedback</span> -->\n                <span>\u56DE\u5831</span>\n            </a>\n        </div>";
+    imageNBriefStr = "\n        <img class=\"d-md-block d-none\" src=\"".concat(renderItem.imgUrl, "\" alt=\"").concat(renderItem.title, "\">\n                    <div class=\"mt-md-3 text-dark\">").concat(renderItem.intro, "</div>");
+
+    if (imageNBrief !== null) {
+      imageNBrief.innerHTML = imageNBriefStr;
+    }
+
+    if (titleBox !== null) {
+      titleBox.innerHTML = titleBoxStr;
+    }
+
+    if (btnBox !== null) {
+      btnBox.innerHTML = btnBoxStr;
+    }
+  }
+}
+/******************資源評論***********************/
+
+
+var commentList = document.querySelector('.resourceComment > .commentList');
+var resourceCommentData = [];
+
+function getResourcesComment(id) {
+  axios.get("".concat(url, "/comments?_expand=resouceId&&resourceId=").concat(id, "&&_expand=user")).then(function (res) {
+    resourceCommentData = res.data;
+    console.log("resourceCommentData");
+    console.log(resourceCommentData);
+    renderComment();
+  })["catch"](function (error) {
+    console.log(error);
+  });
+}
+
+function renderComment() {
+  var commentStr = "";
+  var userName = ""; //let resultScore = getAverageScore();
+
+  resourceCommentData.forEach(function (item) {
+    var resultScore = {
+      "1": "".concat(item.score)
+    };
+    var newResultScoreOjb = combineCommentStar(resultScore);
+
+    if (item.user.role === "admin") {
+      userName = "admin";
+    } else {
+      userName = "".concat(item.user.lastName, " ").concat(item.user.firstName, " ");
+    }
+
+    var commentTimeAge = Ftime(item.commentTime);
+    commentStr += "\n        <div class=\"col mb-3 position-relatvie\" style=\"z-index:10;\">\n            <div class=\"card card-body position-relatvie\" style=\"z-index:10;\">\n                <div class=\"d-flex p-lg-3 align-items-lg-center flex-column flex-lg-row justify-content-between\"> \n                    <h3 class=\"card-title fs-7 d-flex align-items-center justify-content-lg-start justify-content-between\">\n                        <img class=\"rounded-circle\" src=\"./assets/images/icon_image.png\" alt=\"\">\n                        <p class=\"mb-0 mx-2 text-start\">\n                            ".concat(userName, "<br/>\n                            <span class=\"fs-9 text-gray\">").concat(item.user.title, "</span>\n                        </p>\n                        \n                    </h3>\n                    <div class=\"d-flex flex-lg-column justify-content-between\">\n                        <ul class=\"card-text d-flex align-items-center lh-1\">\n                        ").concat(newResultScoreOjb[1], "\n                        \n                        </ul> \n                        <p class=\"mb-0 text-end\">\n                            <span class=\"fs-9 text-gray\">").concat(commentTimeAge, "</span></p>\n                    </div>\n                </div>\n\n                <div class=\"d-flex flex-column\">\n                    <div class=\"form-floating my-3\"> \n                        <p>").concat(item.content, "</p>\n                    </div>\n                </div>\n\n                <div class=\"d-flex justify-content-between fs-8\">\n                    <!-- like & dislike -->\n                    <div class=\"d-flex align-items-center\">\n                        <a href=\"#\">\n                            <span class=\"material-icons-outlined fs-6\">thumb_up_alt</span></a>\n                        <span class=\"mx-2\">").concat(item.likeNum, "</span>\n                        <!-- <a href=\"#\">\n                        <span class=\"material-icons fs-6\">thumb_up_alt</span></a> -->\n\n                            <a href=\"#\">\n                            <span class=\"material-icons-outlined fs-6\">thumb_down_alt</span></a>\n                            <span class=\"mx-2\">").concat(item.dislikeNum, "</span>\n                            <!-- <a href=\"#\">\n                            <span class=\"material-icons fs-6\">thumb_down_alt</span></a> -->\n\n                    </div>\n\n                    <div class=\"position-relatvie\" >\n                        <a class=\"d-flex align-items-center\" data-bs-toggle=\"collapse\" href=\"#commentOffense1\" role=\"button\" aria-expanded=\"false\" aria-controls=\"commentOffense\">\n                            <span class=\"material-icons-outlined\">report</span>\n                            <span>\u6AA2\u8209</span>\n                        </a>\n\n                        <div class=\"offenseItem border bg-light rounded-3 p-3 collapse position-absolute end-0\" id=\"commentOffense1\" style=\"z-index:0;\">\n                            <div class=\"form-check\">\n                                <input class=\"form-check-input\" type=\"radio\" name=\"offenseItem\" id=\"offenseItem1\">\n                                <label class=\"form-check-label\" for=\"offenseItem1\">\n                                    \u504F\u96E2\u4E3B\u984C\n                                </label>\n                            </div>\n                            <div class=\"form-check\">\n                                <input class=\"form-check-input\" type=\"radio\" name=\"offenseItem\" id=\"offenseItem2\">\n                                <label class=\"form-check-label\" for=\"offenseItem2\">\n                                    \u5783\u573E\u5167\u5BB9\u53CA\u5EE3\u544A\u5BA3\u50B3\n                                </label>\n                            </div>\n                            <div class=\"form-check\">\n                                <input class=\"form-check-input\" type=\"radio\" name=\"offenseItem\" id=\"offenseItem3\">\n                                <label class=\"form-check-label\" for=\"offenseItem3\">\n                                    \u9A37\u64FE\u5167\u5BB9\u53CA\u4E0D\u96C5\u7528\u8A9E\n                                </label>\n                            </div>\n                            <button class=\"btn btn-primary btn-sm text-white\" type=\"submit\">\u9001\u51FA</button>\n                        </div>\n                    </div>\n                </div>\n            </div><!--end card-->\n        </div><!--end col-->");
+  });
+
+  if (commentList !== null) {
+    commentList.innerHTML = commentStr;
+  }
+}
+/******************相關資源***********************/
+"use strict";
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -195,21 +328,36 @@ function initResourceList() {
 }
 
 initResourceList();
+/*****************top ***************/
+
+var bannerBlockTitle = document.querySelector('.bannerBlock > h2');
+
+if (resTopic !== undefined && bannerBlockTitle !== null) {
+  bannerBlockTitle.textContent = resTopic;
+}
 /*****************入門推薦 ***************/
+
 
 var foundation1Basic = document.querySelector('#foundation1Basic > div.row');
 var foundation2Free = document.querySelector('#foundation2Free > div.row');
 var foundation3CN = document.querySelector('#foundation3CN > div.row');
 var resourcesData = [];
-var commentsData = []; //2. 取得資料
+var commentsData = []; // let topicsName="";
+//2. 取得資料
 
 function getResourcesForResources() {
-  axios.get('./json/db.json').then(function (res) {
-    resourcesData = res.data.resources;
-    commentsData = res.data.comments;
+  axios.get("".concat(url, "/resources")).then(function (res) {
+    resourcesData = res.data;
     renderFoundationRecommond();
-    renderFilterResultList(); //getAverageScore();
-    //filterAndSort();
+    renderFilterResultList();
+  })["catch"](function (error) {
+    console.log(error);
+  });
+}
+
+function getCommentData() {
+  axios.get("".concat(url, "/comments")).then(function (res) {
+    commentsData = res.data;
   })["catch"](function (error) {
     console.log(error);
   });
@@ -229,28 +377,30 @@ function renderFoundationRecommond() {
   var freeStr = "";
   var cnStr = "";
   resourcesData.forEach(function (item, index) {
-    if (item.classify.level === "初階") {
-      if (itemNum1 < renderMaxNum) {
-        basicStr += combineResouorceItem(item, index, resultScore, newResultScoreOjb, resourceIdObj);
-        itemNum1 += 1;
-      }
-    }
-
-    if (item.classify.price === "免費") {
-      if (itemNum2 < renderMaxNum) {
-        freeStr += combineResouorceItem(item, index, resultScore, newResultScoreOjb, resourceIdObj);
-        itemNum2 += 1;
-      }
-    }
-
-    item.classify.lang.forEach(function (langItem) {
-      if (langItem === "繁體中文") {
-        if (itemNum3 < renderMaxNum) {
-          cnStr += combineResouorceItem(item, index, resultScore, newResultScoreOjb, resourceIdObj);
-          itemNum3 += 1;
+    if (item.topics === "JavaScript") {
+      if (item.classify.level === "初階") {
+        if (itemNum1 < renderMaxNum) {
+          basicStr += combineResouorceItem(item, index, resultScore, newResultScoreOjb, resourceIdObj);
+          itemNum1 += 1;
         }
       }
-    });
+
+      if (item.classify.price === "免費") {
+        if (itemNum2 < renderMaxNum) {
+          freeStr += combineResouorceItem(item, index, resultScore, newResultScoreOjb, resourceIdObj);
+          itemNum2 += 1;
+        }
+      }
+
+      item.classify.lang.forEach(function (langItem) {
+        if (langItem === "繁體中文") {
+          if (itemNum3 < renderMaxNum) {
+            cnStr += combineResouorceItem(item, index, resultScore, newResultScoreOjb, resourceIdObj);
+            itemNum3 += 1;
+          }
+        }
+      });
+    }
   });
 
   if (foundation1Basic !== null) {
@@ -342,9 +492,9 @@ function combineResouorceItem(item, index, resultScore, newResultScoreOjb, resou
   }
 
   if (resultScore["".concat(index + 1)] === undefined || newResultScoreOjb[item.id] === undefined || resourceIdObj["".concat(index + 1)] === undefined) {
-    return "\n    <div class=\"col-lg-2 col-md-4 col-6\">\n    <div>\n        <p class=\"text-center\">\n            <a href=\"./resource.html\" target=\"_blank\">\n            <img src=\"".concat(item.imgUrl, "\" alt=\"").concat(item.title, "\" onerror=\"this.src=./assets/images/resources_cover/noimgCover.jpg\"></a></p>\n        <div class=\"p-2\">\n            <h4 class=\"fs-7 ellipsis\"><a href=\"").concat(item.url, "\" target=\"_blank\"> ").concat(item.title, "</a></h4>\n            <div class=\"d-flex flex-wrap justify-content-between align-items-center\">                             \n                <span class=\"fs-8\"> \u5C1A\u7121\u8A55\u50F9 </span>\n            </div>\n  \n        </div>\n    </div>\n    </div>\n    ");
+    return "\n    <div class=\"col-lg-2 col-md-4 col-6\">\n    <div>\n        <p class=\"text-center\">\n            <a href=\"./resource.html?id=".concat(item.id, "\" target=\"_blank\">\n            <img src=\"").concat(item.imgUrl, "\" alt=\"").concat(item.title, "\" onerror=\"this.src=./assets/images/resources_cover/noimgCover.jpg\"></a></p>\n        <div class=\"p-2\">\n            <h4 class=\"fs-7 ellipsis\"><a href=\"./resource.html?id=").concat(item.id, "\" target=\"_blank\"> ").concat(item.title, "</a></h4>\n            <div class=\"d-flex flex-wrap justify-content-between align-items-center\">                             \n                <span class=\"fs-8\"> \u5C1A\u7121\u8A55\u50F9 </span>\n            </div>\n  \n        </div>\n    </div>\n    </div>\n    ");
   } else {
-    return "\n      <div class=\"col-lg-2 col-md-4 col-6\">\n      <div>\n          <p class=\"text-center\">\n              <a href=\"./resource.html\" target=\"_blank\">\n              <img src=\"".concat(item.imgUrl, "\" alt=\"").concat(item.title, "\" onerror=\"this.src=./assets/images/resources_cover/noimgCover.jpg\"></a></p>\n          <div class=\"p-2\">\n              <h4 class=\"fs-7 ellipsis\"><a href=\"").concat(item.url, "\" target=\"_blank\"> ").concat(item.title, "</a></h4>\n\n              <div class=\"d-flex flex-wrap justify-content-between align-items-center\">\n                  <span class=\"fs-7 fw-bold me-lg-2\"> ").concat(resultScore["".concat(index + 1)], "</span>\n                  <ul class=\"d-flex align-items-center lh-1 me-lg-2\">\n                  ").concat(newResultScoreOjb[item.id], "\n                  </ul>                                \n                  <span class=\"fs-8\">(").concat(resourceIdObj["".concat(index + 1)], ")</span>\n              </div>\n\n          </div>\n      </div>\n      </div>\n      ");
+    return "\n      <div class=\"col-lg-2 col-md-4 col-6\">\n      <div>\n          <p class=\"text-center\">\n              <a href=\"./resource.html?id=".concat(item.id, "\" target=\"_blank\">\n              <img src=\"").concat(item.imgUrl, "\" alt=\"").concat(item.title, "\" onerror=\"this.src=./assets/images/resources_cover/noimgCover.jpg\"></a></p>\n          <div class=\"p-2\">\n              <h4 class=\"fs-7 ellipsis\"><a href=\"./resource.html?id=").concat(item.id, "\" target=\"_blank\"> ").concat(item.title, "</a></h4>\n\n              <div class=\"d-flex flex-wrap justify-content-between align-items-center\">\n                  <span class=\"fs-7 fw-bold me-lg-2\"> ").concat(resultScore["".concat(index + 1)], "</span>\n                  <ul class=\"d-flex align-items-center lh-1 me-lg-2\">\n                  ").concat(newResultScoreOjb[item.id], "\n                  </ul>                                \n                  <span class=\"fs-8\">(").concat(resourceIdObj["".concat(index + 1)], ")</span>\n              </div>\n\n          </div>\n      </div>\n      </div>\n      ");
   }
 } //判斷圖片處理
 //圖片顯示比例問題 
@@ -589,17 +739,19 @@ function getRenderList(resourcesData) {
   //2. 比對關鍵字filterCheckedArr & resourcesData 取得要 render 的清單先放進 resourcesRenderList
   var resourcesRenderList = [];
   resourcesData.forEach(function (item) {
-    var langItemStr = ""; //取得 lang 陣列中的文字
+    if (item.topics === "JavaScript") {
+      var langItemStr = ""; //取得 lang 陣列中的文字
 
-    item.classify.lang.forEach(function (langItem) {
-      langItemStr = langItem;
-      filterCheckedArr.forEach(function (checkedItem) {
-        if (item.classify.type === checkedItem || item.classify.level === checkedItem || item.classify.price === checkedItem || langItemStr === checkedItem) {
-          resourcesRenderList.push(item); // console.log("resourcesRenderList")
-          // console.log(resourcesRenderList)
-        }
+      item.classify.lang.forEach(function (langItem) {
+        langItemStr = langItem;
+        filterCheckedArr.forEach(function (checkedItem) {
+          if (item.classify.type === checkedItem || item.classify.level === checkedItem || item.classify.price === checkedItem || langItemStr === checkedItem) {
+            resourcesRenderList.push(item); // console.log("resourcesRenderList")
+            // console.log(resourcesRenderList)
+          }
+        });
       });
-    });
+    }
   }); //3. 去除 resourcesRenderList 重複 id 項目
 
   var set = new Set();
@@ -644,7 +796,7 @@ function renderFilterResultList() {
 
 
   finalRenderList.forEach(function (item) {
-    renderfilterStr += "<div class=\"row my-3 \">\n    <div class=\"col-2 \">\n        <img src=\"".concat(item.imgUrl, "\" alt=\"").concat(item.title, "\">   \n    </div>\n      <div class=\"col-6\">\n          <h4 class=\"fs-7\">").concat(item.title, "</h4>\n          <div class=\"d-flex flex-wrap align-items-center\">\n              <span class=\"fs-7 fw-bold me-lg-2\">??</span>\n              <ul class=\"d-flex align-items-center lh-1 me-lg-2\">\n                  <li><span class=\"material-icons material-icons-sharp fs-8\">star</span></li>\n                  <li><span class=\"material-icons material-icons-sharp fs-8\">star</span></li>\n                  <li><span class=\"material-icons material-icons-sharp fs-8\">star</span></li>\n                  <li><span class=\"material-icons material-icons-sharp fs-8\">star_half</span></li>\n                  <li><span class=\"material-icons material-icons-sharp fs-8\">star_outline</span></li>\n              </ul>                                \n              <span class=\"fs-8\">(35)</span>\n              <p>").concat(item.classify.type, ", ").concat(item.classify.level, " , ").concat(item.classify.price, ", ").concat(item.classify.lang, " </p>\n          </div>\n      </div>\n      <div class=\"col-4\">\n          <div class=\"d-flex flex-column align-items-end\">\n              <button type=\"button\" class=\"btn btn-tiffany my-2 w-75\">\u524D\u5F80\u8CC7\u6E90</button>\n              <button type=\"button\" class=\"btn btn-yellowBrown w-75 my-2\">\u67E5\u770B\u8A55\u8AD6</button>\n          </div>\n      </div>\n    </div>\n        ");
+    renderfilterStr += "<div class=\"row my-3 \">\n    <div class=\"col-2 \">\n        <img src=\"".concat(item.imgUrl, "\" alt=\"").concat(item.title, "\">   \n    </div>\n      <div class=\"col-6\">\n          <h4 class=\"fs-7\">").concat(item.title, "</h4>\n          <div class=\"d-flex flex-wrap align-items-center\">\n              <span class=\"fs-7 fw-bold me-lg-2\">3.5</span>\n              <ul class=\"d-flex align-items-center lh-1 me-lg-2\">\n                  <li><span class=\"material-icons material-icons-sharp fs-8\">star</span></li>\n                  <li><span class=\"material-icons material-icons-sharp fs-8\">star</span></li>\n                  <li><span class=\"material-icons material-icons-sharp fs-8\">star</span></li>\n                  <li><span class=\"material-icons material-icons-sharp fs-8\">star_half</span></li>\n                  <li><span class=\"material-icons material-icons-sharp fs-8\">star_outline</span></li>\n              </ul>                                \n              <span class=\"fs-8\">(35)</span>\n              <p>").concat(item.classify.type, ", ").concat(item.classify.level, " , ").concat(item.classify.price, ", ").concat(item.classify.lang, " </p>\n          </div>\n      </div>\n      <div class=\"col-4\">\n          <div class=\"d-flex flex-column align-items-end\">\n              <button type=\"button\" class=\"btn btn-tiffany my-2 w-75\">\u524D\u5F80\u8CC7\u6E90</button>\n              <button type=\"button\" class=\"btn btn-yellowBrown w-75 my-2\">\u67E5\u770B\u8A55\u8AD6</button>\n          </div>\n      </div>\n    </div>\n        ");
   });
 
   if (resourceItem !== null) {
@@ -675,5 +827,48 @@ function filterAndSort() {
 
 
   clearFilterBtn.addEventListener("click", function (e) {});
+}
+"use strict";
+
+//  Unix时间戳转换为当前时间多久之前
+//  @param timespan  int         Unix时间戳
+//  @return timeSpanStr  string      转换之后的前台需要的字符串
+//  https://beltxman.com/1576.html
+// console.log(Ftime (1670564031));
+function Ftime(timespan) {
+  var dateTime = new Date(timespan * 1000);
+  var year = dateTime.getFullYear();
+  var month = dateTime.getMonth() + 1;
+  var day = dateTime.getDate();
+  var hour = dateTime.getHours();
+  var minute = dateTime.getMinutes(); //当前时间
+
+  var now = Date.parse(new Date()); //typescript转换写法
+
+  var milliseconds = 0;
+  var timeSpanStr; //计算时间差
+
+  milliseconds = now / 1000 - timespan; //一分钟以内
+
+  if (milliseconds <= 60) {
+    timeSpanStr = '剛剛';
+  } //大于一分钟小于一小时
+  else if (60 < milliseconds && milliseconds <= 60 * 60) {
+      timeSpanStr = Math.ceil(milliseconds / 60) + '分鐘前';
+    } //大于一小时小于等于一天
+    else if (60 * 60 < milliseconds && milliseconds <= 60 * 60 * 24) {
+        timeSpanStr = Math.ceil(milliseconds / (60 * 60)) + '小時前';
+      } //大于一天小于等于15天
+      else if (60 * 60 * 24 < milliseconds && milliseconds <= 60 * 60 * 24 * 30) {
+          timeSpanStr = Math.ceil(milliseconds / (60 * 60 * 24)) + '天前';
+        } //大于一个月小于一年
+        else if (60 * 60 * 24 * 30 < milliseconds && milliseconds <= 60 * 60 * 24 * 30 * 12) {
+            timeSpanStr = Math.ceil(milliseconds / (60 * 60 * 24 * 30)) + '個月前';
+          } //超过一年显示
+          else {
+              timeSpanStr = year + '年' + month + '月' + day + '日 ' + hour + ':' + minute;
+            }
+
+  return timeSpanStr;
 }
 //# sourceMappingURL=all.js.map
