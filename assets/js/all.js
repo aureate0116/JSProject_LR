@@ -34,9 +34,11 @@ var pageClassify = locationHref[3].split(".html")[0]; // console.log("pageClassi
 //1. 頁面初始化
 
 function initIndex() {
-  if (pageClassify == "" || pageClassify == "index") {
-    getResourcesForIndex();
-  } else if (pageClassify == "resource") {
+  getResourcesForIndex(); // if(pageClassify==""||pageClassify=="index"){
+  //     getResourcesForIndex();
+  // }
+
+  if (pageClassify == "resource") {
     if (resId == undefined) {
       location.href = "./index.html";
     }
@@ -67,11 +69,18 @@ var resourcesData = [];
 var commentsData = []; //取得資源資料
 
 function getResourcesForIndex() {
-  axios.get('./json/db.json').then(function (res) {
-    resourcesData = res.data.resources;
-    commentsData = res.data.comments;
+  axios.get("".concat(url, "/resources")).then(function (res) {
+    resourcesData = res.data;
     renderGoodRateList();
     renderNewFreeList();
+  })["catch"](function (error) {
+    console.log(error);
+  });
+}
+
+function getCommentForIndex() {
+  axios.get("".concat(url, "/comments")).then(function (res) {
+    commentsData = res.data;
   })["catch"](function (error) {
     console.log(error);
   });
