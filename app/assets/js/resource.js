@@ -1,39 +1,77 @@
-
 let resId = location.href.split("=")[1];
 
-
 function initResourcePage(){
+    getResourcesForResources();
+    getCommentData();
     getResourcesItem(resId);
     getResourcesComment(resId);
 }
 initResourcePage();
 
+let resourcesData = [];
+let commentsData = [];
 
-/******************資源資訊***********************/
-let resourceContent;
+//2. 取得資料
+function getResourcesForResources(){
+  axios.get(`${url}/resources`)
+  .then(res=>{
+    resourcesData = res.data;
+    //getCommentData();
+    renderRelatedResource();
+
+  }).catch(error=>{
+    console.log(error);
+  })
+}
+
+function getCommentData(){
+  axios.get(`${url}/comments`)
+  .then(res=>{
+    commentsData = res.data; 
+    renderRelatedResource();
+  }).catch(error=>{
+    console.log(error);
+  })
+}
+
+
+let resourceContent=[];
+let resourceCommentData=[];
+
 function getResourcesItem(id){
     axios.get(`${url}/resources?id=${id}&_expand=user`)
     .then(res=>{
         resourceContent = res.data;
-        // console.log("resourceContent");
-        // console.log(resourceContent);
         renderResource();
-
+        renderRelatedResource();
     
     }).catch(error=>{
       console.log(error);
     })
 }
 
+function getResourcesComment(id){
+    axios.get(`${url}/comments?_expand=resouceId&&resourceId=${id}&&_expand=user`)
+    .then(res=>{
+        resourceCommentData = res.data;
+        renderResource();
+        renderComment();
+
+    }).catch(error=>{
+      console.log(error);
+    })
+}
+
+/******************資源資訊***********************/
 
 const imageNBrief = document.querySelector('.imageNBrief');
 const titleBox = document.querySelector('.titleBox');
 const btnBox = document.querySelector('.btnBox');
 
+
 function renderResource(){
     let renderItem=resourceContent[0];
     let userName ="";
-    //console.log(item.user.role);
 
     if(renderItem!==undefined){
         if( renderItem.user.role==="admin"){
@@ -49,7 +87,11 @@ function renderResource(){
         let titleBoxStr="";
         let btnBoxStr="";
 
-        if(resultScore[resId]===undefined || newResultScoreOjb[renderItem.resId]=== undefined || resourceIdObj[resId]=== undefined ){
+        if( renderItem.imgUrl ===""){
+            renderItem.imgUrl = "./assets/images/resources_cover/noimgCover.jpg";
+        }
+
+        if(resultScore[resId]===undefined || newResultScoreOjb[resId]=== undefined ){
             titleBoxStr = `<h2 class="fs-5 fw-bold mt-md-0 mt-3">${renderItem.title}</h2>
             <div class="d-flex flex-wrap align-items-center text-secondary">
                 <span class="fs-8 fw-bold me-lg-2">尚無評價</span>
@@ -71,9 +113,9 @@ function renderResource(){
             <div class="d-flex flex-wrap align-items-center text-secondary">
                 <span class="fs-5 fw-bold me-lg-2"> ${resultScore[resId]}</span>
                 <ul class="d-flex align-items-center lh-1 me-lg-2">
-                ${newResultScoreOjb[renderItem.resId]}
+                ${newResultScoreOjb[resId]}
                 </ul>                                
-                <span class="fs-8">(${resourceIdObj[resId]})</span>
+                <span class="fs-8">(${resourceCommentData.length})</span>
             </div>
             <div class="classify fs-7">
                 <ul class="d-flex ">
@@ -91,7 +133,7 @@ function renderResource(){
 
 
         btnBoxStr = `
-        <button type="button" class="btn btn-sm btn-secondary my-2 text-white px-lg-4 py-2 fs-6">前往資源</button>
+        <a href="${renderItem.url}" target="_blank" type="button" class="btn btn-sm btn-secondary my-2 text-white px-lg-4 py-2 fs-6">前往資源</a>
         <div class="d-flex justify-content-center flex-row flex-md-column flex-lg-row align-items-center">                    
             <a href="#" role="button" class="d-flex align-items-center me-2 ">
                 <span class="material-icons ">bookmark_border</span>
@@ -123,39 +165,28 @@ function renderResource(){
 
     }
    
-    
-
 }
-
 
 
 /******************資源評論***********************/
 
 const commentList=document.querySelector('.resourceComment > .commentList');
 
-let resourceCommentData=[];
-function getResourcesComment(id){
-    axios.get(`${url}/comments?_expand=resouceId&&resourceId=${id}&&_expand=user`)
-    .then(res=>{
-        resourceCommentData = res.data;
-        console.log("resourceCommentData");
-        console.log(resourceCommentData);
-        renderComment();
-
-    
-    }).catch(error=>{
-      console.log(error);
-    })
-}
-
 
 function renderComment(){
 
     let commentStr="";
     let userName ="";
-    //let resultScore = getAverageScore();
-   
+    // console.log(resourceCommentData)
 
+    if(resourceCommentData.length===0){
+        const btnReadMore = document.querySelector('.btnReadMore');
+        if(btnReadMore!==null){
+            btnReadMore.setAttribute("class","d-none");
+        }
+    }
+    //let resultScore = getAverageScore();
+    let commentNum = 0;
     resourceCommentData.forEach(item=>{
         let resultScore = {
             "1":`${item.score}`
@@ -168,6 +199,7 @@ function renderComment(){
             userName =`${item.user.lastName} ${item.user.firstName} `;
         }
 
+        
         let commentTimeAge = Ftime(item.commentTime);
         commentStr+=`
         <div class="col mb-3 position-relatvie" style="z-index:10;">
@@ -215,12 +247,12 @@ function renderComment(){
                     </div>
 
                     <div class="position-relatvie" >
-                        <a class="d-flex align-items-center" data-bs-toggle="collapse" href="#commentOffense1" role="button" aria-expanded="false" aria-controls="commentOffense">
+                        <a class="d-flex align-items-center" data-bs-toggle="collapse" href="#commentOffense${commentNum+1}" role="button" aria-expanded="false" aria-controls="commentOffense">
                             <span class="material-icons-outlined">report</span>
                             <span>檢舉</span>
                         </a>
 
-                        <div class="offenseItem border bg-light rounded-3 p-3 collapse position-absolute end-0" id="commentOffense1" style="z-index:0;">
+                        <div class="offenseItem border bg-light rounded-3 p-3 collapse position-absolute end-0" id="commentOffense${commentNum+1}" style="z-index:0;">
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="offenseItem" id="offenseItem1">
                                 <label class="form-check-label" for="offenseItem1">
@@ -244,8 +276,9 @@ function renderComment(){
                     </div>
                 </div>
             </div><!--end card-->
-        </div><!--end col-->`;
+        </div>`;
 
+        commentNum +=1;
 
     })
 
@@ -256,6 +289,58 @@ function renderComment(){
 
 }
 
-
-
 /******************相關資源***********************/
+
+const relatedResource = document.querySelector('.relatedResource');
+
+function renderRelatedResource(){
+    let relatedStr="";
+    let renderNum = 1;
+    
+    if(resourcesData!==undefined){
+        resourcesData.forEach(resItem=>{
+        let resultScore = getAverageScore();
+        let newResultScoreOjb = combineCommentStar(resultScore);
+        if(resourceContent.length!==0){
+            //console.log(resourceContent);
+            if(resItem.topics === resourceContent[0].topics 
+                && resItem.id !== resourceContent[0].id){
+                renderNum +=1;   
+                if(renderNum <=5 ){
+                    if(resultScore[resItem.id]==undefined||newResultScoreOjb[resItem.id]==undefined){
+                        relatedStr+=`
+                        <div class="my-4">
+                        <h4 class="fs-7"><a href="./resource.html?id=${resItem.id}" target="_blank"> ${resItem.title}</a></h4>
+                            <div class="d-flex flex-wrap justify-content-start align-items-center">
+                                <span class="fs-8 text-gray me-lg-2">尚無評價</span>                           
+                            </div>
+                        </div>
+                        `;
+                    }else{
+                        relatedStr+=`
+                        <div class="my-4">
+                        <h4 class="fs-7"><a href="./resource.html?id=${resItem.id}" target="_blank"> ${resItem.title}</a></h4>
+                        <div class="d-flex flex-wrap justify-content-start align-items-center text-secondary">
+                            <span class="fs-7 fw-bold me-lg-2">${resultScore[resItem.id]}</span>
+                            <ul class="d-flex align-items-center lh-1 me-lg-2 ">
+                            ${newResultScoreOjb[resItem.id]}
+                            </ul>                                
+                        </div>
+                        </div>
+                        `;
+                    }
+                
+                    
+                } 
+            }
+        }
+        
+        
+    })
+    }
+    
+
+    if(relatedResource!==null){
+        relatedResource.innerHTML = relatedStr;
+    }
+}

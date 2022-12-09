@@ -1,5 +1,14 @@
-
-
+// let commentsData = [];
+// function getAllComment(){
+//     axios.get(`${url}/comments`)
+//     .then(res=>{
+//         commentsData = res.data;
+//         console.log(commentsData);
+    
+//     }).catch(error=>{
+//       console.log(error);
+//     })
+// }
 
 
 /*****************nab tab***************/

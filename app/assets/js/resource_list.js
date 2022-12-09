@@ -1,10 +1,13 @@
 
+
 //1. 頁面初始化
 function initResourceList(){
   getResourcesForResources();
-  
+  getCommentData();
+  //changeResourceAverageScore();
 }
 initResourceList();
+
 
 /*****************top ***************/
 
@@ -23,7 +26,6 @@ const foundation3CN = document.querySelector('#foundation3CN > div.row');
 
 let resourcesData = [];
 let commentsData = [];
-// let topicsName="";
 
 //2. 取得資料
 function getResourcesForResources(){
@@ -32,6 +34,7 @@ function getResourcesForResources(){
     resourcesData = res.data;
     renderFoundationRecommond();
     renderFilterResultList();
+    
   
   }).catch(error=>{
     console.log(error);
@@ -64,6 +67,7 @@ function renderFoundationRecommond(){
   let cnStr="";
 
   resourcesData.forEach( (item,index)=>{
+    
     if(item.topics==="JavaScript"){
       if(item.classify.level === "初階"){
         if(itemNum1 <renderMaxNum){
@@ -112,26 +116,40 @@ function renderFoundationRecommond(){
   // foundation3CN.innerHTML = cnStr;
 }
 
-//計算分數
+
+//計算資源評論平均分數
 let scoreTotal = {};  //每筆資源評價 總分
 let resourceIdObj = {}; //每筆資源評價 筆數
 let resultScore = {};  //每筆資源 平均分數(星星數)
 function getAverageScore(){
   commentsData.forEach(item=>{
-      if(resourceIdObj[item.resourceId] === undefined){
-          resourceIdObj[item.resourceId] = 1;
-          scoreTotal[item.resourceId] = item.score;
-          
+      if(resourceIdObj[`${item.resourceId}`] === undefined){
+          resourceIdObj[`${item.resourceId}`] = 1;
+          scoreTotal[`${item.resourceId}`] = item.score;
+
       }else{
           resourceIdObj[item.resourceId] +=1;
           scoreTotal[item.resourceId] += item.score;
 
       }
       resultScore[item.resourceId] = (scoreTotal[item.resourceId] /  resourceIdObj[item.resourceId]).toFixed(1);
+      //console.log(resultScore);
+
   })
+  //changeResourceAverageScore();
   return resultScore;
-  //console.log(resultScore);  //1: '4.0', 2: '3.3', 3: '4.5', 4: '2.8'}
 }
+
+// 平均值存回 resourcesData
+// function changeResourceAverageScore(){
+//       axios.patch(`${url}/resources?id=${resId}`, {
+//         "averageScore" : `${resultScore[resId]}` 
+//       })
+//       .then(res => {
+//         console.log(res.data);
+//       });
+// }
+
 
 
 //4. 組星星字串

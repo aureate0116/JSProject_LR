@@ -8,10 +8,8 @@ let pageClassify = locationHref[3].split(".html")[0];
 
 //1. 頁面初始化
 function initIndex(){
-    if(pageClassify==""||pageClassify=="index"){
-        getResourcesForIndex();
-    }
-    else if(pageClassify=="resource"){
+    getResourcesForIndex();
+    if(pageClassify=="resource"){
         if(resId == undefined){
             location.href = `./index.html`;
         }
@@ -40,17 +38,15 @@ const resource1Tab = document.querySelector('#resource1-tab');
 const resource2Tab = document.querySelector('#resource2-tab');
 const resource3Tab = document.querySelector('#resource3-tab');
 
-// console.log(resource1Tab);
 
 let resourcesData = [];
 let commentsData = [];
 
 //取得資源資料
 function getResourcesForIndex(){
-  axios.get('./json/db.json')
+  axios.get(`${url}/resources`)
   .then(res=>{
-    resourcesData = res.data.resources;
-    commentsData = res.data.comments;
+    resourcesData = res.data;
     renderGoodRateList();
     renderNewFreeList();
   
@@ -59,10 +55,20 @@ function getResourcesForIndex(){
   })
 }
 
+function getCommentForIndex(){
+    axios.get(`${url}/comments`)
+    .then(res=>{
+      commentsData = res.data;
+    
+    }).catch(error=>{
+      console.log(error);
+    })
+}
+
 //渲染好評推薦資料
 function renderGoodRateList(){
     let resultScore = getAverageScore();
-    let newResultScoreOjb = combineCommentStar(resultScore); //newResultScore
+    let newResultScoreOjb = combineCommentStar(resultScore); 
     let itemNum1 = 0;
     let itemNum2 = 0;
     let itemNum3 = 0;
@@ -72,6 +78,8 @@ function renderGoodRateList(){
     let tabPython="";
 
     resourcesData.forEach( (item,index)=>{
+        // console.log("resultScore");
+        // console.log(resultScore);
         switch (item.topics){
             case "JavaScript" :
                 if(itemNum1 <renderMaxNum){
@@ -95,7 +103,6 @@ function renderGoodRateList(){
                
                 break;
         }
-        //itemNum +=1;
     })
 
     if(goodRate1 !==null ){
@@ -217,5 +224,8 @@ function renderNewFreeList(){
             resource3Tab.setAttribute("class", "d-none");
         }
     }
+
+
+
 }
 
