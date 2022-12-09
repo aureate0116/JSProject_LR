@@ -1,8 +1,26 @@
+let locationHref = location.href.split("/");
+let resTopic = location.href.split("=")[1];
+let resId = location.href.split("=")[1];
+let pageClassify = locationHref[3].split(".html")[0];
+
+// console.log("pageClassify",pageClassify);
+// console.log("locationHref",locationHref);
 
 //1. 頁面初始化
 function initIndex(){
-    getResourcesForIndex();
-    
+    if(pageClassify==""||pageClassify=="index"){
+        getResourcesForIndex();
+    }
+    else if(pageClassify=="resource"){
+        if(resId == undefined){
+            location.href = `./index.html`;
+        }
+    }
+    else if(pageClassify=="resource_list"){
+        if(resTopic == undefined){
+            location.href = `./index.html`;
+        }
+    }
 }
 initIndex();
 
@@ -22,7 +40,7 @@ const resource1Tab = document.querySelector('#resource1-tab');
 const resource2Tab = document.querySelector('#resource2-tab');
 const resource3Tab = document.querySelector('#resource3-tab');
 
-console.log(resource1Tab);
+// console.log(resource1Tab);
 
 let resourcesData = [];
 let commentsData = [];
@@ -114,13 +132,19 @@ function combineResouorceItemType1(item,index,resultScore,newResultScoreOjb,reso
     return  `
     <div class="col-md-6 col-lg-4">
     <div class="d-flex p-2 align-items-center">
-        <img src="${item.imgUrl}" alt="${item.title}" onerror="this.src=./assets/images/resources_cover/noimgCover.jpg">
-        <div class="p-2">
-            <h4 class="ellipsis"><a href="${item.url}" target="_blank"> ${item.title}</a></h4>
-            <div class="d-flex justify-content-between align-items-center">
-            尚無評價
+        <div class="row">
+            <div class="col-6"><a href="./resource.html?id=${item.id}" target="_blank"><img src="${item.imgUrl}" alt="${item.title}" onerror="this.src=./assets/images/resources_cover/noimgCover.jpg"></a></div>
+            
+            <div class="col-6">
+                <h4 class="ellipsis"><a href="./resource.html?id=${item.id}" target="_blank"> ${item.title}</a></h4>
+                <div class="d-flex justify-content-between align-items-center">
+                尚無評價
+                </div>
             </div>
+            
         </div>
+         
+        
     </div>
     </div>
     `;
@@ -128,17 +152,21 @@ function combineResouorceItemType1(item,index,resultScore,newResultScoreOjb,reso
     return  `
     <div class="col-md-6 col-lg-4">
     <div class="d-flex p-2 align-items-center">
-        <img src="${item.imgUrl}" alt="${item.title}" onerror="this.src=./assets/images/resources_cover/noimgCover.jpg">
-        <div class="p-2">
-            <h4 class="ellipsis"><a href="${item.url}" target="_blank"> ${item.title}</a></h4>
-            <div class="d-flex justify-content-between align-items-center">
-                <span class="fs-6 fw-bold"> ${resultScore[`${index+1}`]}</span>
-                <ul class="d-flex align-items-center lh-1">
-                ${newResultScoreOjb[item.id]}
-                </ul>                                
-                <span class="fs-7">(${resourceIdObj[`${index+1}`]})</span>
+        <div class="row">
+            <div class="col-6"><a href="./resource.html?id=${item.id}" target="_blank"><img src="${item.imgUrl}" alt="${item.title}" onerror="this.src=./assets/images/resources_cover/noimgCover.jpg"></a></div>
+
+            <div class="col-6">
+                <h4 class="ellipsis"><a href="./resource.html?id=${item.id}" target="_blank"> ${item.title}</a></h4>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="fs-6 fw-bold"> ${resultScore[`${index+1}`]}</span>
+                    <ul class="d-flex align-items-center lh-1">
+                    ${newResultScoreOjb[item.id]}
+                    </ul>                                
+                    <span class="fs-7">(${resourceIdObj[`${index+1}`]})</span>
+                </div>
             </div>
         </div>
+        
     </div>
     </div>`;
   }

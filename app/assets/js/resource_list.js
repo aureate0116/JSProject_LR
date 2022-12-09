@@ -2,10 +2,18 @@
 //1. 頁面初始化
 function initResourceList(){
   getResourcesForResources();
-    
+  
 }
 initResourceList();
 
+/*****************top ***************/
+
+const bannerBlockTitle = document.querySelector('.bannerBlock > h2');
+
+if(resTopic!==undefined && bannerBlockTitle!==null){
+  bannerBlockTitle.textContent = resTopic;
+
+}
 
 /*****************入門推薦 ***************/
 
@@ -15,18 +23,25 @@ const foundation3CN = document.querySelector('#foundation3CN > div.row');
 
 let resourcesData = [];
 let commentsData = [];
+// let topicsName="";
 
 //2. 取得資料
 function getResourcesForResources(){
-  axios.get('./json/db.json')
+  axios.get(`${url}/resources`)
   .then(res=>{
-    resourcesData = res.data.resources;
-    commentsData = res.data.comments;
+    resourcesData = res.data;
     renderFoundationRecommond();
     renderFilterResultList();
-    //getAverageScore();
-    //filterAndSort();
   
+  }).catch(error=>{
+    console.log(error);
+  })
+}
+
+function getCommentData(){
+  axios.get(`${url}/comments`)
+  .then(res=>{
+    commentsData = res.data; 
   }).catch(error=>{
     console.log(error);
   })
@@ -49,31 +64,34 @@ function renderFoundationRecommond(){
   let cnStr="";
 
   resourcesData.forEach( (item,index)=>{
-        if(item.classify.level === "初階"){
-          if(itemNum1 <renderMaxNum){
-             basicStr += combineResouorceItem(item,index,resultScore,newResultScoreOjb,resourceIdObj);
-             itemNum1+=1;
-          }
-           
+    if(item.topics==="JavaScript"){
+      if(item.classify.level === "初階"){
+        if(itemNum1 <renderMaxNum){
+           basicStr += combineResouorceItem(item,index,resultScore,newResultScoreOjb,resourceIdObj);
+           itemNum1+=1;
         }
-        
-        if(item.classify.price === "免費"){
-          if(itemNum2 <renderMaxNum){
-            freeStr += combineResouorceItem(item,index,resultScore,newResultScoreOjb,resourceIdObj); 
-            itemNum2+=1;
-          }
-           
+         
+      }
+      
+      if(item.classify.price === "免費"){
+        if(itemNum2 <renderMaxNum){
+          freeStr += combineResouorceItem(item,index,resultScore,newResultScoreOjb,resourceIdObj); 
+          itemNum2+=1;
         }
-        
-        item.classify.lang.forEach(langItem=>{
-          if(langItem === "繁體中文"){
-            if(itemNum3 <renderMaxNum){
-              cnStr += combineResouorceItem(item,index,resultScore,newResultScoreOjb,resourceIdObj);
-              itemNum3+=1;
-            }
-            
+         
+      }
+      
+      item.classify.lang.forEach(langItem=>{
+        if(langItem === "繁體中文"){
+          if(itemNum3 <renderMaxNum){
+            cnStr += combineResouorceItem(item,index,resultScore,newResultScoreOjb,resourceIdObj);
+            itemNum3+=1;
           }
-        })
+          
+        }
+      })
+    }
+        
 
   })
 
@@ -170,10 +188,10 @@ function combineResouorceItem(item,index,resultScore,newResultScoreOjb,resourceI
     <div class="col-lg-2 col-md-4 col-6">
     <div>
         <p class="text-center">
-            <a href="./resource.html" target="_blank">
+            <a href="./resource.html?id=${item.id}" target="_blank">
             <img src="${item.imgUrl}" alt="${item.title}" onerror="this.src=./assets/images/resources_cover/noimgCover.jpg"></a></p>
         <div class="p-2">
-            <h4 class="fs-7 ellipsis"><a href="${item.url}" target="_blank"> ${item.title}</a></h4>
+            <h4 class="fs-7 ellipsis"><a href="./resource.html?id=${item.id}" target="_blank"> ${item.title}</a></h4>
             <div class="d-flex flex-wrap justify-content-between align-items-center">                             
                 <span class="fs-8"> 尚無評價 </span>
             </div>
@@ -187,10 +205,10 @@ function combineResouorceItem(item,index,resultScore,newResultScoreOjb,resourceI
       <div class="col-lg-2 col-md-4 col-6">
       <div>
           <p class="text-center">
-              <a href="./resource.html" target="_blank">
+              <a href="./resource.html?id=${item.id}" target="_blank">
               <img src="${item.imgUrl}" alt="${item.title}" onerror="this.src=./assets/images/resources_cover/noimgCover.jpg"></a></p>
           <div class="p-2">
-              <h4 class="fs-7 ellipsis"><a href="${item.url}" target="_blank"> ${item.title}</a></h4>
+              <h4 class="fs-7 ellipsis"><a href="./resource.html?id=${item.id}" target="_blank"> ${item.title}</a></h4>
 
               <div class="d-flex flex-wrap justify-content-between align-items-center">
                   <span class="fs-7 fw-bold me-lg-2"> ${resultScore[`${index+1}`]}</span>
@@ -501,8 +519,10 @@ function getRenderList(resourcesData){
   //2. 比對關鍵字filterCheckedArr & resourcesData 取得要 render 的清單先放進 resourcesRenderList
   let resourcesRenderList = [];
   resourcesData.forEach(item=>{  
-    let langItemStr="";  //取得 lang 陣列中的文字
-    item.classify.lang.forEach(langItem=>{  
+
+    if(item.topics==="JavaScript"){
+      let langItemStr="";  //取得 lang 陣列中的文字
+      item.classify.lang.forEach(langItem=>{  
         langItemStr = langItem;
         filterCheckedArr.forEach(checkedItem=>{    
 
@@ -511,12 +531,16 @@ function getRenderList(resourcesData){
             item.classify.price === checkedItem ||
             langItemStr === checkedItem
           ){
+            
               resourcesRenderList.push(item);
+            
               // console.log("resourcesRenderList")
               // console.log(resourcesRenderList)
           }     
         })
-    })
+      })
+    }
+    
   })
 
   //3. 去除 resourcesRenderList 重複 id 項目
@@ -573,7 +597,7 @@ function renderFilterResultList(){
       <div class="col-6">
           <h4 class="fs-7">${item.title}</h4>
           <div class="d-flex flex-wrap align-items-center">
-              <span class="fs-7 fw-bold me-lg-2">??</span>
+              <span class="fs-7 fw-bold me-lg-2">3.5</span>
               <ul class="d-flex align-items-center lh-1 me-lg-2">
                   <li><span class="material-icons material-icons-sharp fs-8">star</span></li>
                   <li><span class="material-icons material-icons-sharp fs-8">star</span></li>
