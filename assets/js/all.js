@@ -1,3 +1,14 @@
+// let commentsData = [];
+// function getAllComment(){
+//     axios.get(`${url}/comments`)
+//     .then(res=>{
+//         commentsData = res.data;
+//         console.log(commentsData);
+//     }).catch(error=>{
+//       console.log(error);
+//     })
+// }
+
 /*****************nab tab***************/
 //hover 切換
 // const navItem = document.querySelectorAll(".goodRate .nav-link");
@@ -18,6 +29,7 @@
 // })
 "use strict";
 "use strict";
+"use strict";
 
 var url = "http://localhost:3000"; // const url="./json/db.json"
 // const url="http://localhost:3000/users"
@@ -34,9 +46,7 @@ var pageClassify = locationHref[3].split(".html")[0]; // console.log("pageClassi
 //1. 頁面初始化
 
 function initIndex() {
-  getResourcesForIndex(); // if(pageClassify==""||pageClassify=="index"){
-  //     getResourcesForIndex();
-  // }
+  getResourcesForIndex();
 
   if (pageClassify == "resource") {
     if (resId == undefined) {
@@ -63,8 +73,7 @@ var resourceType2 = document.querySelector('#resourceType2 > div.row');
 var resourceType3 = document.querySelector('#resourceType3 > div.row');
 var resource1Tab = document.querySelector('#resource1-tab');
 var resource2Tab = document.querySelector('#resource2-tab');
-var resource3Tab = document.querySelector('#resource3-tab'); // console.log(resource1Tab);
-
+var resource3Tab = document.querySelector('#resource3-tab');
 var resourcesData = [];
 var commentsData = []; //取得資源資料
 
@@ -89,8 +98,7 @@ function getCommentForIndex() {
 
 function renderGoodRateList() {
   var resultScore = getAverageScore();
-  var newResultScoreOjb = combineCommentStar(resultScore); //newResultScore
-
+  var newResultScoreOjb = combineCommentStar(resultScore);
   var itemNum1 = 0;
   var itemNum2 = 0;
   var itemNum3 = 0;
@@ -99,6 +107,8 @@ function renderGoodRateList() {
   var tabHtml = "";
   var tabPython = "";
   resourcesData.forEach(function (item, index) {
+    // console.log("resultScore");
+    // console.log(resultScore);
     switch (item.topics) {
       case "JavaScript":
         if (itemNum1 < renderMaxNum) {
@@ -123,8 +133,7 @@ function renderGoodRateList() {
         }
 
         break;
-    } //itemNum +=1;
-
+    }
   });
 
   if (goodRate1 !== null) {
@@ -218,25 +227,59 @@ function renderNewFreeList() {
 var resId = location.href.split("=")[1];
 
 function initResourcePage() {
+  getResourcesForResources();
+  getCommentData();
   getResourcesItem(resId);
   getResourcesComment(resId);
 }
 
 initResourcePage();
-/******************資源資訊***********************/
+var resourcesData = [];
+var commentsData = []; //2. 取得資料
 
-var resourceContent;
+function getResourcesForResources() {
+  axios.get("".concat(url, "/resources")).then(function (res) {
+    resourcesData = res.data; //getCommentData();
 
-function getResourcesItem(id) {
-  axios.get("".concat(url, "/resources?id=").concat(id, "&_expand=user")).then(function (res) {
-    resourceContent = res.data; // console.log("resourceContent");
-    // console.log(resourceContent);
-
-    renderResource();
+    renderRelatedResource();
   })["catch"](function (error) {
     console.log(error);
   });
 }
+
+function getCommentData() {
+  axios.get("".concat(url, "/comments")).then(function (res) {
+    commentsData = res.data;
+    renderRelatedResource();
+  })["catch"](function (error) {
+    console.log(error);
+  });
+}
+
+var resourceContent = [];
+var resourceCommentData = [];
+
+function getResourcesItem(id) {
+  axios.get("".concat(url, "/resources?id=").concat(id, "&_expand=user")).then(function (res) {
+    resourceContent = res.data;
+    renderResource();
+    renderRelatedResource();
+  })["catch"](function (error) {
+    console.log(error);
+  });
+}
+
+function getResourcesComment(id) {
+  axios.get("".concat(url, "/comments?_expand=resouceId&&resourceId=").concat(id, "&&_expand=user")).then(function (res) {
+    resourceCommentData = res.data;
+    renderResource();
+    renderComment();
+  })["catch"](function (error) {
+    console.log(error);
+  });
+}
+/******************資源資訊***********************/
+
 
 var imageNBrief = document.querySelector('.imageNBrief');
 var titleBox = document.querySelector('.titleBox');
@@ -244,7 +287,7 @@ var btnBox = document.querySelector('.btnBox');
 
 function renderResource() {
   var renderItem = resourceContent[0];
-  var userName = ""; //console.log(item.user.role);
+  var userName = "";
 
   if (renderItem !== undefined) {
     if (renderItem.user.role === "admin") {
@@ -259,13 +302,17 @@ function renderResource() {
     var titleBoxStr = "";
     var btnBoxStr = "";
 
-    if (resultScore[resId] === undefined || newResultScoreOjb[renderItem.resId] === undefined || resourceIdObj[resId] === undefined) {
-      titleBoxStr = "<h2 class=\"fs-5 fw-bold mt-md-0 mt-3\">".concat(renderItem.title, "</h2>\n            <div class=\"d-flex flex-wrap align-items-center text-secondary\">\n                <span class=\"fs-8 fw-bold me-lg-2\">\u5C1A\u7121\u8A55\u50F9</span>\n            </div>\n            <div class=\"classify fs-7\">\n                <ul class=\"d-flex \">\n                    <li class=\"me-2\">  ").concat(renderItem.topics, "</li>\n                    <li class=\"me-2\">  ").concat(renderItem.classify.type, "</li>\n                    <li class=\"me-2\">  ").concat(renderItem.classify.level, "</li>\n                    <li class=\"me-2\">  ").concat(renderItem.classify.price, "</li>\n                </ul>\n                <ul>\n                    <li class=\"me-2\">  ").concat(renderItem.classify.lang, " </li>\n                    <li class=\"me-2\">\u5EFA\u7ACB\u8005 : ").concat(userName, " </li>\n                </ul>\n            </div>");
-    } else {
-      titleBoxStr = "<h2 class=\"fs-5 fw-bold mt-md-0 mt-3\">".concat(renderItem.title, "</h2>\n            <div class=\"d-flex flex-wrap align-items-center text-secondary\">\n                <span class=\"fs-5 fw-bold me-lg-2\"> ").concat(resultScore[resId], "</span>\n                <ul class=\"d-flex align-items-center lh-1 me-lg-2\">\n                ").concat(newResultScoreOjb[renderItem.resId], "\n                </ul>                                \n                <span class=\"fs-8\">(").concat(resourceIdObj[resId], ")</span>\n            </div>\n            <div class=\"classify fs-7\">\n                <ul class=\"d-flex \">\n                    <li class=\"me-2\">  ").concat(renderItem.topics, "</li>\n                    <li class=\"me-2\">  ").concat(renderItem.classify.type, "</li>\n                    <li class=\"me-2\">  ").concat(renderItem.classify.level, "</li>\n                    <li class=\"me-2\">  ").concat(renderItem.classify.price, "</li>\n                </ul>\n                <ul>\n                    <li class=\"me-2\">  ").concat(renderItem.classify.lang, " </li>\n                    <li class=\"me-2\">\u5EFA\u7ACB\u8005 : ").concat(userName, " </li>\n                </ul>\n            </div>");
+    if (renderItem.imgUrl === "") {
+      renderItem.imgUrl = "./assets/images/resources_cover/noimgCover.jpg";
     }
 
-    btnBoxStr = "\n        <button type=\"button\" class=\"btn btn-sm btn-secondary my-2 text-white px-lg-4 py-2 fs-6\">\u524D\u5F80\u8CC7\u6E90</button>\n        <div class=\"d-flex justify-content-center flex-row flex-md-column flex-lg-row align-items-center\">                    \n            <a href=\"#\" role=\"button\" class=\"d-flex align-items-center me-2 \">\n                <span class=\"material-icons \">bookmark_border</span>\n                <!-- <span class=\"material-icons\">bookmark</span> -->\n                <span>\u6536\u85CF</span>\n            </a>\n\n            <a href=\"#\" role=\"button\" class=\" d-flex align-items-center me-2 \">\n                <span class=\"material-icons material-icons-outlined\">feedback</span>\n                <!-- <span class=\"material-icons\">feedback</span> -->\n                <span>\u56DE\u5831</span>\n            </a>\n        </div>";
+    if (resultScore[resId] === undefined || newResultScoreOjb[resId] === undefined) {
+      titleBoxStr = "<h2 class=\"fs-5 fw-bold mt-md-0 mt-3\">".concat(renderItem.title, "</h2>\n            <div class=\"d-flex flex-wrap align-items-center text-secondary\">\n                <span class=\"fs-8 fw-bold me-lg-2\">\u5C1A\u7121\u8A55\u50F9</span>\n            </div>\n            <div class=\"classify fs-7\">\n                <ul class=\"d-flex \">\n                    <li class=\"me-2\">  ").concat(renderItem.topics, "</li>\n                    <li class=\"me-2\">  ").concat(renderItem.classify.type, "</li>\n                    <li class=\"me-2\">  ").concat(renderItem.classify.level, "</li>\n                    <li class=\"me-2\">  ").concat(renderItem.classify.price, "</li>\n                </ul>\n                <ul>\n                    <li class=\"me-2\">  ").concat(renderItem.classify.lang, " </li>\n                    <li class=\"me-2\">\u5EFA\u7ACB\u8005 : ").concat(userName, " </li>\n                </ul>\n            </div>");
+    } else {
+      titleBoxStr = "<h2 class=\"fs-5 fw-bold mt-md-0 mt-3\">".concat(renderItem.title, "</h2>\n            <div class=\"d-flex flex-wrap align-items-center text-secondary\">\n                <span class=\"fs-5 fw-bold me-lg-2\"> ").concat(resultScore[resId], "</span>\n                <ul class=\"d-flex align-items-center lh-1 me-lg-2\">\n                ").concat(newResultScoreOjb[resId], "\n                </ul>                                \n                <span class=\"fs-8\">(").concat(resourceCommentData.length, ")</span>\n            </div>\n            <div class=\"classify fs-7\">\n                <ul class=\"d-flex \">\n                    <li class=\"me-2\">  ").concat(renderItem.topics, "</li>\n                    <li class=\"me-2\">  ").concat(renderItem.classify.type, "</li>\n                    <li class=\"me-2\">  ").concat(renderItem.classify.level, "</li>\n                    <li class=\"me-2\">  ").concat(renderItem.classify.price, "</li>\n                </ul>\n                <ul>\n                    <li class=\"me-2\">  ").concat(renderItem.classify.lang, " </li>\n                    <li class=\"me-2\">\u5EFA\u7ACB\u8005 : ").concat(userName, " </li>\n                </ul>\n            </div>");
+    }
+
+    btnBoxStr = "\n        <a href=\"".concat(renderItem.url, "\" target=\"_blank\" type=\"button\" class=\"btn btn-sm btn-secondary my-2 text-white px-lg-4 py-2 fs-6\">\u524D\u5F80\u8CC7\u6E90</a>\n        <div class=\"d-flex justify-content-center flex-row flex-md-column flex-lg-row align-items-center\">                    \n            <a href=\"#\" role=\"button\" class=\"d-flex align-items-center me-2 \">\n                <span class=\"material-icons \">bookmark_border</span>\n                <!-- <span class=\"material-icons\">bookmark</span> -->\n                <span>\u6536\u85CF</span>\n            </a>\n\n            <a href=\"#\" role=\"button\" class=\" d-flex align-items-center me-2 \">\n                <span class=\"material-icons material-icons-outlined\">feedback</span>\n                <!-- <span class=\"material-icons\">feedback</span> -->\n                <span>\u56DE\u5831</span>\n            </a>\n        </div>");
     imageNBriefStr = "\n        <img class=\"d-md-block d-none\" src=\"".concat(renderItem.imgUrl, "\" alt=\"").concat(renderItem.title, "\">\n                    <div class=\"mt-md-3 text-dark\">").concat(renderItem.intro, "</div>");
 
     if (imageNBrief !== null) {
@@ -285,23 +332,21 @@ function renderResource() {
 
 
 var commentList = document.querySelector('.resourceComment > .commentList');
-var resourceCommentData = [];
-
-function getResourcesComment(id) {
-  axios.get("".concat(url, "/comments?_expand=resouceId&&resourceId=").concat(id, "&&_expand=user")).then(function (res) {
-    resourceCommentData = res.data;
-    console.log("resourceCommentData");
-    console.log(resourceCommentData);
-    renderComment();
-  })["catch"](function (error) {
-    console.log(error);
-  });
-}
 
 function renderComment() {
   var commentStr = "";
-  var userName = ""; //let resultScore = getAverageScore();
+  var userName = ""; // console.log(resourceCommentData)
 
+  if (resourceCommentData.length === 0) {
+    var btnReadMore = document.querySelector('.btnReadMore');
+
+    if (btnReadMore !== null) {
+      btnReadMore.setAttribute("class", "d-none");
+    }
+  } //let resultScore = getAverageScore();
+
+
+  var commentNum = 0;
   resourceCommentData.forEach(function (item) {
     var resultScore = {
       "1": "".concat(item.score)
@@ -315,7 +360,8 @@ function renderComment() {
     }
 
     var commentTimeAge = Ftime(item.commentTime);
-    commentStr += "\n        <div class=\"col mb-3 position-relatvie\" style=\"z-index:10;\">\n            <div class=\"card card-body position-relatvie\" style=\"z-index:10;\">\n                <div class=\"d-flex p-lg-3 align-items-lg-center flex-column flex-lg-row justify-content-between\"> \n                    <h3 class=\"card-title fs-7 d-flex align-items-center justify-content-lg-start justify-content-between\">\n                        <img class=\"rounded-circle\" src=\"./assets/images/icon_image.png\" alt=\"\">\n                        <p class=\"mb-0 mx-2 text-start\">\n                            ".concat(userName, "<br/>\n                            <span class=\"fs-9 text-gray\">").concat(item.user.title, "</span>\n                        </p>\n                        \n                    </h3>\n                    <div class=\"d-flex flex-lg-column justify-content-between\">\n                        <ul class=\"card-text d-flex align-items-center lh-1\">\n                        ").concat(newResultScoreOjb[1], "\n                        \n                        </ul> \n                        <p class=\"mb-0 text-end\">\n                            <span class=\"fs-9 text-gray\">").concat(commentTimeAge, "</span></p>\n                    </div>\n                </div>\n\n                <div class=\"d-flex flex-column\">\n                    <div class=\"form-floating my-3\"> \n                        <p>").concat(item.content, "</p>\n                    </div>\n                </div>\n\n                <div class=\"d-flex justify-content-between fs-8\">\n                    <!-- like & dislike -->\n                    <div class=\"d-flex align-items-center\">\n                        <a href=\"#\">\n                            <span class=\"material-icons-outlined fs-6\">thumb_up_alt</span></a>\n                        <span class=\"mx-2\">").concat(item.likeNum, "</span>\n                        <!-- <a href=\"#\">\n                        <span class=\"material-icons fs-6\">thumb_up_alt</span></a> -->\n\n                            <a href=\"#\">\n                            <span class=\"material-icons-outlined fs-6\">thumb_down_alt</span></a>\n                            <span class=\"mx-2\">").concat(item.dislikeNum, "</span>\n                            <!-- <a href=\"#\">\n                            <span class=\"material-icons fs-6\">thumb_down_alt</span></a> -->\n\n                    </div>\n\n                    <div class=\"position-relatvie\" >\n                        <a class=\"d-flex align-items-center\" data-bs-toggle=\"collapse\" href=\"#commentOffense1\" role=\"button\" aria-expanded=\"false\" aria-controls=\"commentOffense\">\n                            <span class=\"material-icons-outlined\">report</span>\n                            <span>\u6AA2\u8209</span>\n                        </a>\n\n                        <div class=\"offenseItem border bg-light rounded-3 p-3 collapse position-absolute end-0\" id=\"commentOffense1\" style=\"z-index:0;\">\n                            <div class=\"form-check\">\n                                <input class=\"form-check-input\" type=\"radio\" name=\"offenseItem\" id=\"offenseItem1\">\n                                <label class=\"form-check-label\" for=\"offenseItem1\">\n                                    \u504F\u96E2\u4E3B\u984C\n                                </label>\n                            </div>\n                            <div class=\"form-check\">\n                                <input class=\"form-check-input\" type=\"radio\" name=\"offenseItem\" id=\"offenseItem2\">\n                                <label class=\"form-check-label\" for=\"offenseItem2\">\n                                    \u5783\u573E\u5167\u5BB9\u53CA\u5EE3\u544A\u5BA3\u50B3\n                                </label>\n                            </div>\n                            <div class=\"form-check\">\n                                <input class=\"form-check-input\" type=\"radio\" name=\"offenseItem\" id=\"offenseItem3\">\n                                <label class=\"form-check-label\" for=\"offenseItem3\">\n                                    \u9A37\u64FE\u5167\u5BB9\u53CA\u4E0D\u96C5\u7528\u8A9E\n                                </label>\n                            </div>\n                            <button class=\"btn btn-primary btn-sm text-white\" type=\"submit\">\u9001\u51FA</button>\n                        </div>\n                    </div>\n                </div>\n            </div><!--end card-->\n        </div><!--end col-->");
+    commentStr += "\n        <div class=\"col mb-3 position-relatvie\" style=\"z-index:10;\">\n            <div class=\"card card-body position-relatvie\" style=\"z-index:10;\">\n                <div class=\"d-flex p-lg-3 align-items-lg-center flex-column flex-lg-row justify-content-between\"> \n                    <h3 class=\"card-title fs-7 d-flex align-items-center justify-content-lg-start justify-content-between\">\n                        <img class=\"rounded-circle\" src=\"./assets/images/icon_image.png\" alt=\"\">\n                        <p class=\"mb-0 mx-2 text-start\">\n                            ".concat(userName, "<br/>\n                            <span class=\"fs-9 text-gray\">").concat(item.user.title, "</span>\n                        </p>\n                        \n                    </h3>\n                    <div class=\"d-flex flex-lg-column justify-content-between\">\n                        <ul class=\"card-text d-flex align-items-center lh-1\">\n                        ").concat(newResultScoreOjb[1], "\n                        \n                        </ul> \n                        <p class=\"mb-0 text-end\">\n                            <span class=\"fs-9 text-gray\">").concat(commentTimeAge, "</span></p>\n                    </div>\n                </div>\n\n                <div class=\"d-flex flex-column\">\n                    <div class=\"form-floating my-3\"> \n                        <p>").concat(item.content, "</p>\n                    </div>\n                </div>\n\n                <div class=\"d-flex justify-content-between fs-8\">\n                    <!-- like & dislike -->\n                    <div class=\"d-flex align-items-center\">\n                        <a href=\"#\">\n                            <span class=\"material-icons-outlined fs-6\">thumb_up_alt</span></a>\n                        <span class=\"mx-2\">").concat(item.likeNum, "</span>\n                        <!-- <a href=\"#\">\n                        <span class=\"material-icons fs-6\">thumb_up_alt</span></a> -->\n\n                            <a href=\"#\">\n                            <span class=\"material-icons-outlined fs-6\">thumb_down_alt</span></a>\n                            <span class=\"mx-2\">").concat(item.dislikeNum, "</span>\n                            <!-- <a href=\"#\">\n                            <span class=\"material-icons fs-6\">thumb_down_alt</span></a> -->\n\n                    </div>\n\n                    <div class=\"position-relatvie\" >\n                        <a class=\"d-flex align-items-center\" data-bs-toggle=\"collapse\" href=\"#commentOffense").concat(commentNum + 1, "\" role=\"button\" aria-expanded=\"false\" aria-controls=\"commentOffense\">\n                            <span class=\"material-icons-outlined\">report</span>\n                            <span>\u6AA2\u8209</span>\n                        </a>\n\n                        <div class=\"offenseItem border bg-light rounded-3 p-3 collapse position-absolute end-0\" id=\"commentOffense").concat(commentNum + 1, "\" style=\"z-index:0;\">\n                            <div class=\"form-check\">\n                                <input class=\"form-check-input\" type=\"radio\" name=\"offenseItem\" id=\"offenseItem1\">\n                                <label class=\"form-check-label\" for=\"offenseItem1\">\n                                    \u504F\u96E2\u4E3B\u984C\n                                </label>\n                            </div>\n                            <div class=\"form-check\">\n                                <input class=\"form-check-input\" type=\"radio\" name=\"offenseItem\" id=\"offenseItem2\">\n                                <label class=\"form-check-label\" for=\"offenseItem2\">\n                                    \u5783\u573E\u5167\u5BB9\u53CA\u5EE3\u544A\u5BA3\u50B3\n                                </label>\n                            </div>\n                            <div class=\"form-check\">\n                                <input class=\"form-check-input\" type=\"radio\" name=\"offenseItem\" id=\"offenseItem3\">\n                                <label class=\"form-check-label\" for=\"offenseItem3\">\n                                    \u9A37\u64FE\u5167\u5BB9\u53CA\u4E0D\u96C5\u7528\u8A9E\n                                </label>\n                            </div>\n                            <button class=\"btn btn-primary btn-sm text-white\" type=\"submit\">\u9001\u51FA</button>\n                        </div>\n                    </div>\n                </div>\n            </div><!--end card-->\n        </div>");
+    commentNum += 1;
   });
 
   if (commentList !== null) {
@@ -323,6 +369,40 @@ function renderComment() {
   }
 }
 /******************相關資源***********************/
+
+
+var relatedResource = document.querySelector('.relatedResource');
+
+function renderRelatedResource() {
+  var relatedStr = "";
+  var renderNum = 1;
+
+  if (resourcesData !== undefined) {
+    resourcesData.forEach(function (resItem) {
+      var resultScore = getAverageScore();
+      var newResultScoreOjb = combineCommentStar(resultScore);
+
+      if (resourceContent.length !== 0) {
+        //console.log(resourceContent);
+        if (resItem.topics === resourceContent[0].topics && resItem.id !== resourceContent[0].id) {
+          renderNum += 1;
+
+          if (renderNum <= 5) {
+            if (resultScore[resItem.id] == undefined || newResultScoreOjb[resItem.id] == undefined) {
+              relatedStr += "\n                        <div class=\"my-4\">\n                        <h4 class=\"fs-7\"><a href=\"./resource.html?id=".concat(resItem.id, "\" target=\"_blank\"> ").concat(resItem.title, "</a></h4>\n                            <div class=\"d-flex flex-wrap justify-content-start align-items-center\">\n                                <span class=\"fs-8 text-gray me-lg-2\">\u5C1A\u7121\u8A55\u50F9</span>                           \n                            </div>\n                        </div>\n                        ");
+            } else {
+              relatedStr += "\n                        <div class=\"my-4\">\n                        <h4 class=\"fs-7\"><a href=\"./resource.html?id=".concat(resItem.id, "\" target=\"_blank\"> ").concat(resItem.title, "</a></h4>\n                        <div class=\"d-flex flex-wrap justify-content-start align-items-center text-secondary\">\n                            <span class=\"fs-7 fw-bold me-lg-2\">").concat(resultScore[resItem.id], "</span>\n                            <ul class=\"d-flex align-items-center lh-1 me-lg-2 \">\n                            ").concat(newResultScoreOjb[resItem.id], "\n                            </ul>                                \n                        </div>\n                        </div>\n                        ");
+            }
+          }
+        }
+      }
+    });
+  }
+
+  if (relatedResource !== null) {
+    relatedResource.innerHTML = relatedStr;
+  }
+}
 "use strict";
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
@@ -334,6 +414,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //1. 頁面初始化
 function initResourceList() {
   getResourcesForResources();
+  getCommentData(); //changeResourceAverageScore();
 }
 
 initResourceList();
@@ -351,8 +432,7 @@ var foundation1Basic = document.querySelector('#foundation1Basic > div.row');
 var foundation2Free = document.querySelector('#foundation2Free > div.row');
 var foundation3CN = document.querySelector('#foundation3CN > div.row');
 var resourcesData = [];
-var commentsData = []; // let topicsName="";
-//2. 取得資料
+var commentsData = []; //2. 取得資料
 
 function getResourcesForResources() {
   axios.get("".concat(url, "/resources")).then(function (res) {
@@ -426,7 +506,7 @@ function renderFoundationRecommond() {
   // foundation2Free.innerHTML = freeStr;
   // foundation3CN.innerHTML = cnStr;
 
-} //計算分數
+} //計算資源評論平均分數
 
 
 var scoreTotal = {}; //每筆資源評價 總分
@@ -437,18 +517,28 @@ var resultScore = {}; //每筆資源 平均分數(星星數)
 
 function getAverageScore() {
   commentsData.forEach(function (item) {
-    if (resourceIdObj[item.resourceId] === undefined) {
-      resourceIdObj[item.resourceId] = 1;
-      scoreTotal[item.resourceId] = item.score;
+    if (resourceIdObj["".concat(item.resourceId)] === undefined) {
+      resourceIdObj["".concat(item.resourceId)] = 1;
+      scoreTotal["".concat(item.resourceId)] = item.score;
     } else {
       resourceIdObj[item.resourceId] += 1;
       scoreTotal[item.resourceId] += item.score;
     }
 
-    resultScore[item.resourceId] = (scoreTotal[item.resourceId] / resourceIdObj[item.resourceId]).toFixed(1);
-  });
-  return resultScore; //console.log(resultScore);  //1: '4.0', 2: '3.3', 3: '4.5', 4: '2.8'}
-} //4. 組星星字串
+    resultScore[item.resourceId] = (scoreTotal[item.resourceId] / resourceIdObj[item.resourceId]).toFixed(1); //console.log(resultScore);
+  }); //changeResourceAverageScore();
+
+  return resultScore;
+} // 平均值存回 resourcesData
+// function changeResourceAverageScore(){
+//       axios.patch(`${url}/resources?id=${resId}`, {
+//         "averageScore" : `${resultScore[resId]}` 
+//       })
+//       .then(res => {
+//         console.log(res.data);
+//       });
+// }
+//4. 組星星字串
 
 
 function combineCommentStar(resultScore) {
