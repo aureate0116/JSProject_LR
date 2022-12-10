@@ -41,7 +41,9 @@ var url = "http://localhost:3000"; // const url="./json/db.json"
 var locationHref = location.href.split("/");
 var resTopic = location.href.split("=")[1];
 var resId = location.href.split("=")[1];
-var pageClassify = locationHref[3].split(".html")[0]; // console.log("pageClassify",pageClassify);
+var pageClassify = locationHref[3].split(".html")[0]; // let resTopicNew = resTopic.split(" ");
+// console.log(resTopic);
+// console.log("pageClassify",pageClassify);
 // console.log("locationHref",locationHref);
 //1. 頁面初始化
 
@@ -97,8 +99,10 @@ function getCommentForIndex() {
 
 
 function renderGoodRateList() {
-  var resultScore = getAverageScore();
-  var newResultScoreOjb = combineCommentStar(resultScore);
+  var commentScoreNum = getAverageScore();
+  var resultScore = commentScoreNum[0];
+  var commentNum = commentScoreNum[1];
+  var starStr = combineCommentStar(resultScore);
   var itemNum1 = 0;
   var itemNum2 = 0;
   var itemNum3 = 0;
@@ -106,13 +110,13 @@ function renderGoodRateList() {
   var tabJS = "";
   var tabHtml = "";
   var tabPython = "";
-  resourcesData.forEach(function (item, index) {
+  resourcesData.forEach(function (item) {
     // console.log("resultScore");
     // console.log(resultScore);
     switch (item.topics) {
       case "JavaScript":
         if (itemNum1 < renderMaxNum) {
-          tabJS += combineResouorceItemType1(item, index, resultScore, newResultScoreOjb, resourceIdObj);
+          tabJS += combineResouorceItemType1(item, resultScore, starStr, commentNum);
           itemNum1 += 1;
         }
 
@@ -120,7 +124,7 @@ function renderGoodRateList() {
 
       case "HTML/CSS":
         if (itemNum2 < renderMaxNum) {
-          tabHtml += combineResouorceItemType1(item, index, resultScore, newResultScoreOjb, resourceIdObj);
+          tabHtml += combineResouorceItemType1(item, resultScore, starStr, commentNum);
           itemNum2 += 1;
         }
 
@@ -128,7 +132,7 @@ function renderGoodRateList() {
 
       case "Python":
         if (itemNum3 < renderMaxNum) {
-          tabPython += combineResouorceItemType1(item, index, resultScore, newResultScoreOjb, resourceIdObj);
+          tabPython += combineResouorceItemType1(item, resultScore, starStr, commentNum);
           itemNum3 += 1;
         }
 
@@ -162,38 +166,39 @@ function renderGoodRateList() {
 } //組單一資源項目html - type 1
 
 
-function combineResouorceItemType1(item, index, resultScore, newResultScoreOjb, resourceIdObj) {
+function combineResouorceItemType1(item, resultScore, starStr, commentNum) {
   if (item.imgUrl === "") {
     item.imgUrl = "./assets/images/resources_cover/noimgCover.jpg";
   }
 
-  if (resultScore["".concat(index + 1)] === undefined || newResultScoreOjb[item.id] === undefined || resourceIdObj["".concat(index + 1)] === undefined) {
+  if (resultScore[item.id] === undefined || starStr[item.id] === undefined || commentNum[item.id] === undefined) {
     return "\n    <div class=\"col-md-6 col-lg-4\">\n    <div class=\"d-flex p-2 align-items-center\">\n        <div class=\"row\">\n            <div class=\"col-6\"><a href=\"./resource.html?id=".concat(item.id, "\" target=\"_blank\"><img src=\"").concat(item.imgUrl, "\" alt=\"").concat(item.title, "\" onerror=\"this.src=./assets/images/resources_cover/noimgCover.jpg\"></a></div>\n            \n            <div class=\"col-6\">\n                <h4 class=\"ellipsis\"><a href=\"./resource.html?id=").concat(item.id, "\" target=\"_blank\"> ").concat(item.title, "</a></h4>\n                <div class=\"d-flex justify-content-between align-items-center\">\n                \u5C1A\u7121\u8A55\u50F9\n                </div>\n            </div>\n            \n        </div>\n         \n        \n    </div>\n    </div>\n    ");
   } else {
-    return "\n    <div class=\"col-md-6 col-lg-4\">\n    <div class=\"d-flex p-2 align-items-center\">\n        <div class=\"row\">\n            <div class=\"col-6\"><a href=\"./resource.html?id=".concat(item.id, "\" target=\"_blank\"><img src=\"").concat(item.imgUrl, "\" alt=\"").concat(item.title, "\" onerror=\"this.src=./assets/images/resources_cover/noimgCover.jpg\"></a></div>\n\n            <div class=\"col-6\">\n                <h4 class=\"ellipsis\"><a href=\"./resource.html?id=").concat(item.id, "\" target=\"_blank\"> ").concat(item.title, "</a></h4>\n                <div class=\"d-flex justify-content-between align-items-center\">\n                    <span class=\"fs-6 fw-bold\"> ").concat(resultScore["".concat(index + 1)], "</span>\n                    <ul class=\"d-flex align-items-center lh-1\">\n                    ").concat(newResultScoreOjb[item.id], "\n                    </ul>                                \n                    <span class=\"fs-7\">(").concat(resourceIdObj["".concat(index + 1)], ")</span>\n                </div>\n            </div>\n        </div>\n        \n    </div>\n    </div>");
+    return "\n    <div class=\"col-md-6 col-lg-4\">\n    <div class=\"d-flex p-2 align-items-center\">\n        <div class=\"row\">\n            <div class=\"col-6\"><a href=\"./resource.html?id=".concat(item.id, "\" target=\"_blank\"><img src=\"").concat(item.imgUrl, "\" alt=\"").concat(item.title, "\" onerror=\"this.src=./assets/images/resources_cover/noimgCover.jpg\"></a></div>\n\n            <div class=\"col-6\">\n                <h4 class=\"ellipsis\"><a href=\"./resource.html?id=").concat(item.id, "\" target=\"_blank\"> ").concat(item.title, "</a></h4>\n                <div class=\"d-flex justify-content-between align-items-center\">\n                    <span class=\"fs-6 fw-bold\"> ").concat(resultScore[item.id], "</span>\n                    <ul class=\"d-flex align-items-center lh-1\">\n                    ").concat(starStr[item.id], "\n                    </ul>                                \n                    <span class=\"fs-7\">(").concat(commentNum[item.id], ")</span>\n                </div>\n            </div>\n        </div>\n        \n    </div>\n    </div>");
   }
 } //渲染最新免費資源
 
 
 function renderNewFreeList() {
-  var resultScore = getAverageScore();
-  var newResultScoreOjb = combineCommentStar(resultScore); //newResultScore
-
+  var commentScoreNum = getAverageScore();
+  var resultScore = commentScoreNum[0];
+  var commentNum = commentScoreNum[1];
+  var starStr = combineCommentStar(resultScore);
   var tabOnline = "";
   var tabOffline = "";
   var tabArticle = "";
-  resourcesData.forEach(function (item, index) {
-    if (item.classify.price === "免費") {
-      if (item.classify.type === "線上課程") {
-        tabOnline += combineResouorceItem(item, index, resultScore, newResultScoreOjb, resourceIdObj);
+  resourcesData.forEach(function (item) {
+    if (item.price === "免費") {
+      if (item.type === "線上課程") {
+        tabOnline += combineResouorceItem(item, resultScore, starStr, commentNum);
       }
 
-      if (item.classify.type === "實體課程") {
-        tabOffline += combineResouorceItem(item, index, resultScore, newResultScoreOjb, resourceIdObj);
+      if (item.type === "實體課程") {
+        tabOffline += combineResouorceItem(item, resultScore, starStr, commentNum);
       }
 
-      if (item.classify.type === "文章") {
-        tabArticle += combineResouorceItem(item, index, resultScore, newResultScoreOjb, resourceIdObj);
+      if (item.type === "文章") {
+        tabArticle += combineResouorceItem(item, resultScore, starStr, commentNum);
       }
     }
   });
@@ -296,8 +301,10 @@ function renderResource() {
       userName = "".concat(renderItem.user.lastName, " ").concat(renderItem.user.firstName, " ");
     }
 
-    var resultScore = getAverageScore();
-    var newResultScoreOjb = combineCommentStar(resultScore);
+    var commentScoreNum = getAverageScore();
+    var resultScore = commentScoreNum[0];
+    var commentNum = commentScoreNum[1];
+    var starStr = combineCommentStar(resultScore);
     var imageNBriefStr = "";
     var titleBoxStr = "";
     var btnBoxStr = "";
@@ -306,10 +313,10 @@ function renderResource() {
       renderItem.imgUrl = "./assets/images/resources_cover/noimgCover.jpg";
     }
 
-    if (resultScore[resId] === undefined || newResultScoreOjb[resId] === undefined) {
-      titleBoxStr = "<h2 class=\"fs-5 fw-bold mt-md-0 mt-3\">".concat(renderItem.title, "</h2>\n            <div class=\"d-flex flex-wrap align-items-center text-secondary\">\n                <span class=\"fs-8 fw-bold me-lg-2\">\u5C1A\u7121\u8A55\u50F9</span>\n            </div>\n            <div class=\"classify fs-7\">\n                <ul class=\"d-flex \">\n                    <li class=\"me-2\">  ").concat(renderItem.topics, "</li>\n                    <li class=\"me-2\">  ").concat(renderItem.classify.type, "</li>\n                    <li class=\"me-2\">  ").concat(renderItem.classify.level, "</li>\n                    <li class=\"me-2\">  ").concat(renderItem.classify.price, "</li>\n                </ul>\n                <ul>\n                    <li class=\"me-2\">  ").concat(renderItem.classify.lang, " </li>\n                    <li class=\"me-2\">\u5EFA\u7ACB\u8005 : ").concat(userName, " </li>\n                </ul>\n            </div>");
+    if (resultScore[resId] === undefined || starStr[resId] === undefined) {
+      titleBoxStr = "<h2 class=\"fs-5 fw-bold mt-md-0 mt-3\">".concat(renderItem.title, "</h2>\n            <div class=\"d-flex flex-wrap align-items-center text-secondary\">\n                <span class=\"fs-8 fw-bold me-lg-2\">\u5C1A\u7121\u8A55\u50F9</span>\n            </div>\n            <div class=\"classify fs-7\">\n                <ul class=\"d-flex \">\n                    <li class=\"me-2\">  ").concat(renderItem.topics, "</li>\n                    <li class=\"me-2\">  ").concat(renderItem.type, "</li>\n                    <li class=\"me-2\">  ").concat(renderItem.level, "</li>\n                    <li class=\"me-2\">  ").concat(renderItem.price, "</li>\n                </ul>\n                <ul>\n                    <li class=\"me-2\">  ").concat(renderItem.lang, " </li>\n                    <li class=\"me-2\">\u5EFA\u7ACB\u8005 : ").concat(userName, " </li>\n                </ul>\n            </div>");
     } else {
-      titleBoxStr = "<h2 class=\"fs-5 fw-bold mt-md-0 mt-3\">".concat(renderItem.title, "</h2>\n            <div class=\"d-flex flex-wrap align-items-center text-secondary\">\n                <span class=\"fs-5 fw-bold me-lg-2\"> ").concat(resultScore[resId], "</span>\n                <ul class=\"d-flex align-items-center lh-1 me-lg-2\">\n                ").concat(newResultScoreOjb[resId], "\n                </ul>                                \n                <span class=\"fs-8\">(").concat(resourceCommentData.length, ")</span>\n            </div>\n            <div class=\"classify fs-7\">\n                <ul class=\"d-flex \">\n                    <li class=\"me-2\">  ").concat(renderItem.topics, "</li>\n                    <li class=\"me-2\">  ").concat(renderItem.classify.type, "</li>\n                    <li class=\"me-2\">  ").concat(renderItem.classify.level, "</li>\n                    <li class=\"me-2\">  ").concat(renderItem.classify.price, "</li>\n                </ul>\n                <ul>\n                    <li class=\"me-2\">  ").concat(renderItem.classify.lang, " </li>\n                    <li class=\"me-2\">\u5EFA\u7ACB\u8005 : ").concat(userName, " </li>\n                </ul>\n            </div>");
+      titleBoxStr = "<h2 class=\"fs-5 fw-bold mt-md-0 mt-3\">".concat(renderItem.title, "</h2>\n            <div class=\"d-flex flex-wrap align-items-center text-secondary\">\n                <span class=\"fs-5 fw-bold me-lg-2\"> ").concat(resultScore[resId], "</span>\n                <ul class=\"d-flex align-items-center lh-1 me-lg-2\">\n                ").concat(starStr[resId], "\n                </ul>                                \n                <span class=\"fs-8\">(").concat(commentNum[resId], ")</span>\n            </div>\n            <div class=\"classify fs-7\">\n                <ul class=\"d-flex \">\n                    <li class=\"me-2\">  ").concat(renderItem.topics, "</li>\n                    <li class=\"me-2\">  ").concat(renderItem.type, "</li>\n                    <li class=\"me-2\">  ").concat(renderItem.level, "</li>\n                    <li class=\"me-2\">  ").concat(renderItem.price, "</li>\n                </ul>\n                <ul>\n                    <li class=\"me-2\">  ").concat(renderItem.lang, " </li>\n                    <li class=\"me-2\">\u5EFA\u7ACB\u8005 : ").concat(userName, " </li>\n                </ul>\n            </div>");
     }
 
     btnBoxStr = "\n        <a href=\"".concat(renderItem.url, "\" target=\"_blank\" type=\"button\" class=\"btn btn-sm btn-secondary my-2 text-white px-lg-4 py-2 fs-6\">\u524D\u5F80\u8CC7\u6E90</a>\n        <div class=\"d-flex justify-content-center flex-row flex-md-column flex-lg-row align-items-center\">                    \n            <a href=\"#\" role=\"button\" class=\"d-flex align-items-center me-2 \">\n                <span class=\"material-icons \">bookmark_border</span>\n                <!-- <span class=\"material-icons\">bookmark</span> -->\n                <span>\u6536\u85CF</span>\n            </a>\n\n            <a href=\"#\" role=\"button\" class=\" d-flex align-items-center me-2 \">\n                <span class=\"material-icons material-icons-outlined\">feedback</span>\n                <!-- <span class=\"material-icons\">feedback</span> -->\n                <span>\u56DE\u5831</span>\n            </a>\n        </div>");
@@ -423,7 +430,11 @@ initResourceList();
 var bannerBlockTitle = document.querySelector('.bannerBlock > h2');
 
 if (resTopic !== undefined && bannerBlockTitle !== null) {
-  bannerBlockTitle.textContent = resTopic;
+  bannerBlockTitle.textContent = resTopic; // resourcesData.forEach(item=>{
+  //   console.log(resTopic)
+  //   if(item.topics == resTopic){
+  //   }
+  // })
 }
 /*****************入門推薦 ***************/
 
@@ -432,11 +443,20 @@ var foundation1Basic = document.querySelector('#foundation1Basic > div.row');
 var foundation2Free = document.querySelector('#foundation2Free > div.row');
 var foundation3CN = document.querySelector('#foundation3CN > div.row');
 var resourcesData = [];
-var commentsData = []; //2. 取得資料
+var commentsData = [];
+var thisTopicData = []; //2. 取得資料
 
 function getResourcesForResources() {
   axios.get("".concat(url, "/resources")).then(function (res) {
-    resourcesData = res.data;
+    //resourcesData = res.data;
+    //console.log(resTopic);
+    resourcesData = res.data.filter(function (item) {
+      return item.topics == resTopic;
+    }); // thisTopicData = resourcesData.filter(item=>{
+    //   return item.topics == resTopic;
+    // })
+    //console.log(thisTopicData);
+
     renderFoundationRecommond();
     renderFilterResultList();
   })["catch"](function (error) {
@@ -450,12 +470,19 @@ function getCommentData() {
   })["catch"](function (error) {
     console.log(error);
   });
-} //3. 渲染入門推薦資料
+} // function getTopicData(){
+//   thisTopicData = resourcesData.filter(item=>{
+//     return item.topics = resTopic;
+//   })
+// }
+//3. 渲染入門推薦資料
 
 
 function renderFoundationRecommond() {
-  var resultScore = getAverageScore();
-  var newResultScoreOjb = combineCommentStar(resultScore); //newResultScore
+  var commentScoreNum = getAverageScore();
+  var resultScore = commentScoreNum[0];
+  var commentNum = commentScoreNum[1];
+  var starStr = combineCommentStar(resultScore); //newResultScore
 
   var itemNum1 = 0;
   var itemNum2 = 0;
@@ -466,30 +493,28 @@ function renderFoundationRecommond() {
   var freeStr = "";
   var cnStr = "";
   resourcesData.forEach(function (item, index) {
-    if (item.topics === "JavaScript") {
-      if (item.classify.level === "初階") {
-        if (itemNum1 < renderMaxNum) {
-          basicStr += combineResouorceItem(item, index, resultScore, newResultScoreOjb, resourceIdObj);
-          itemNum1 += 1;
-        }
+    if (item.level === "初階") {
+      if (itemNum1 < renderMaxNum) {
+        basicStr += combineResouorceItem(item, resultScore, starStr, commentNum);
+        itemNum1 += 1;
       }
-
-      if (item.classify.price === "免費") {
-        if (itemNum2 < renderMaxNum) {
-          freeStr += combineResouorceItem(item, index, resultScore, newResultScoreOjb, resourceIdObj);
-          itemNum2 += 1;
-        }
-      }
-
-      item.classify.lang.forEach(function (langItem) {
-        if (langItem === "繁體中文") {
-          if (itemNum3 < renderMaxNum) {
-            cnStr += combineResouorceItem(item, index, resultScore, newResultScoreOjb, resourceIdObj);
-            itemNum3 += 1;
-          }
-        }
-      });
     }
+
+    if (item.price === "免費") {
+      if (itemNum2 < renderMaxNum) {
+        freeStr += combineResouorceItem(item, resultScore, starStr, commentNum);
+        itemNum2 += 1;
+      }
+    }
+
+    item.lang.forEach(function (langItem) {
+      if (langItem === "繁體中文") {
+        if (itemNum3 < renderMaxNum) {
+          cnStr += combineResouorceItem(item, resultScore, starStr, commentNum);
+          itemNum3 += 1;
+        }
+      }
+    });
   });
 
   if (foundation1Basic !== null) {
@@ -502,43 +527,32 @@ function renderFoundationRecommond() {
 
   if (foundation3CN !== null) {
     foundation3CN.innerHTML = cnStr;
-  } // foundation1Basic.innerHTML = basicStr;
-  // foundation2Free.innerHTML = freeStr;
-  // foundation3CN.innerHTML = cnStr;
-
-} //計算資源評論平均分數
-
-
-var scoreTotal = {}; //每筆資源評價 總分
-
-var resourceIdObj = {}; //每筆資源評價 筆數
-
-var resultScore = {}; //每筆資源 平均分數(星星數)
+  }
+}
 
 function getAverageScore() {
+  var scoreTotal = {}; //每筆資源評價 總分
+
+  var resourceIdObj = {}; //每筆資源評價 筆數
+
+  var resultScore = {}; //每筆資源 平均分數(星星數)
+
   commentsData.forEach(function (item) {
-    if (resourceIdObj["".concat(item.resourceId)] === undefined) {
-      resourceIdObj["".concat(item.resourceId)] = 1;
-      scoreTotal["".concat(item.resourceId)] = item.score;
+    if (resourceIdObj[item.resourceId] === undefined) {
+      resourceIdObj[item.resourceId] = 1;
+      scoreTotal[item.resourceId] = item.score;
     } else {
       resourceIdObj[item.resourceId] += 1;
       scoreTotal[item.resourceId] += item.score;
     }
 
-    resultScore[item.resourceId] = (scoreTotal[item.resourceId] / resourceIdObj[item.resourceId]).toFixed(1); //console.log(resultScore);
-  }); //changeResourceAverageScore();
+    resultScore[item.resourceId] = (scoreTotal[item.resourceId] / resourceIdObj[item.resourceId]).toFixed(1);
+  }); // console.log("resourceIdObj",resourceIdObj);
+  // console.log("scoreTotal",scoreTotal);
+  // console.log("resultScore",resultScore);
 
-  return resultScore;
-} // 平均值存回 resourcesData
-// function changeResourceAverageScore(){
-//       axios.patch(`${url}/resources?id=${resId}`, {
-//         "averageScore" : `${resultScore[resId]}` 
-//       })
-//       .then(res => {
-//         console.log(res.data);
-//       });
-// }
-//4. 組星星字串
+  return [resultScore, resourceIdObj];
+} //4. 組星星字串
 
 
 function combineCommentStar(resultScore) {
@@ -585,347 +599,178 @@ function combineCommentStar(resultScore) {
 } //5. 入門推薦組單一資源項目html
 
 
-function combineResouorceItem(item, index, resultScore, newResultScoreOjb, resourceIdObj) {
+function combineResouorceItem(item, resultScore, starStr, commentNum) {
   if (item.imgUrl === "") {
     item.imgUrl = "./assets/images/resources_cover/noimgCover.jpg";
   }
 
-  if (resultScore["".concat(index + 1)] === undefined || newResultScoreOjb[item.id] === undefined || resourceIdObj["".concat(index + 1)] === undefined) {
-    return "\n    <div class=\"col-lg-2 col-md-4 col-6\">\n    <div>\n        <p class=\"text-center\">\n            <a href=\"./resource.html?id=".concat(item.id, "\" target=\"_blank\">\n            <img src=\"").concat(item.imgUrl, "\" alt=\"").concat(item.title, "\" onerror=\"this.src=./assets/images/resources_cover/noimgCover.jpg\"></a></p>\n        <div class=\"p-2\">\n            <h4 class=\"fs-7 ellipsis\"><a href=\"./resource.html?id=").concat(item.id, "\" target=\"_blank\"> ").concat(item.title, "</a></h4>\n            <div class=\"d-flex flex-wrap justify-content-between align-items-center\">                             \n                <span class=\"fs-8\"> \u5C1A\u7121\u8A55\u50F9 </span>\n            </div>\n  \n        </div>\n    </div>\n    </div>\n    ");
+  if (resultScore[item.id] === undefined || starStr[item.id] === undefined || commentNum[item.id] === undefined) {
+    return "\n    <div class=\"col-lg-2 col-md-4 col-6\">\n    <div>\n        <p class=\"text-center\">\n            <a href=\"./resource.html?id=".concat(item.id, "\" target=\"_blank\">\n            <img src=\"").concat(item.imgUrl, "\" alt=\"").concat(item.title, "\" onerror=\"this.src=./assets/images/resources_cover/noimgCover.jpg\"></a></p>\n        <div class=\"p-2\">\n            <h4 class=\"fs-7 ellipsis\"><a href=\"./resource.html?id=").concat(item.id, "\" target=\"_blank\"> ").concat(item.title, "</a></h4>\n            <div class=\"d-flex flex-wrap justify-content-between align-items-center\">                             \n                <span class=\"fs-8 text-gray\"> \u5C1A\u7121\u8A55\u50F9 </span>\n            </div>\n  \n        </div>\n    </div>\n    </div>\n    ");
   } else {
-    return "\n      <div class=\"col-lg-2 col-md-4 col-6\">\n      <div>\n          <p class=\"text-center\">\n              <a href=\"./resource.html?id=".concat(item.id, "\" target=\"_blank\">\n              <img src=\"").concat(item.imgUrl, "\" alt=\"").concat(item.title, "\" onerror=\"this.src=./assets/images/resources_cover/noimgCover.jpg\"></a></p>\n          <div class=\"p-2\">\n              <h4 class=\"fs-7 ellipsis\"><a href=\"./resource.html?id=").concat(item.id, "\" target=\"_blank\"> ").concat(item.title, "</a></h4>\n\n              <div class=\"d-flex flex-wrap justify-content-between align-items-center\">\n                  <span class=\"fs-7 fw-bold me-lg-2\"> ").concat(resultScore["".concat(index + 1)], "</span>\n                  <ul class=\"d-flex align-items-center lh-1 me-lg-2\">\n                  ").concat(newResultScoreOjb[item.id], "\n                  </ul>                                \n                  <span class=\"fs-8\">(").concat(resourceIdObj["".concat(index + 1)], ")</span>\n              </div>\n\n          </div>\n      </div>\n      </div>\n      ");
+    return "\n      <div class=\"col-lg-2 col-md-4 col-6\">\n      <div>\n          <p class=\"text-center\">\n              <a href=\"./resource.html?id=".concat(item.id, "\" target=\"_blank\">\n              <img src=\"").concat(item.imgUrl, "\" alt=\"").concat(item.title, "\" onerror=\"this.src=./assets/images/resources_cover/noimgCover.jpg\"></a></p>\n          <div class=\"p-2\">\n              <h4 class=\"fs-7 ellipsis\"><a href=\"./resource.html?id=").concat(item.id, "\" target=\"_blank\"> ").concat(item.title, "</a></h4>\n\n              <div class=\"d-flex flex-wrap justify-content-between align-items-center text-secondary\">\n                  <span class=\"fs-7 fw-bold me-lg-2\"> ").concat(resultScore[item.id], "</span>\n                  <ul class=\"d-flex align-items-center lh-1 me-lg-2\">\n                  ").concat(starStr[item.id], "\n                  </ul>                                \n                  <span class=\"fs-8\">(").concat(commentNum[item.id], ")</span>\n              </div>\n\n          </div>\n      </div>\n      </div>\n      ");
   }
-} //判斷圖片處理
-//圖片顯示比例問題 
-
+}
 /***************** 相關主題 ***************/
 
 /***************** 資源篩選 ***************/
 
 
-var resourceItem = document.querySelector('.resourceItem'); // const filter = document.querySelector('.filter');
+var resourceItem = document.querySelector('.resourceItem');
+var filterItemInput = document.querySelectorAll('.filterItem > input');
+var checkObj = {};
+var renderList = []; // checked 監聽 : 取得 checked 清單的關鍵字 + render
 
-var filterItemInput = document.querySelectorAll('.filterItem > input'); // final 渲染清單
-
-var newResourcesRenderList = getRenderList(resourcesData); // let newResourcesRenderList = [];
-//1. checked 監聽 : 取得 checked 清單的關鍵字 + render
-
-/************************暫時新增************************************* */
-
-var tempRenderList = [];
-var groupNameArr = []; // ['type', 'type', 'level']
-//let checkedKeyWords =[]; //
-//比對resourcesData原始資料, 符合條件的加入 tempRenderList 
-
-function addToTempRenderList(filterKeyword, groupName) {
-  resourcesData.forEach(function (resItem, resIndex) {
-    if (resItem.classify.lang.langth === 1) {
-      if (filterKeyword === resItem.classify[groupName] || filterKeyword === resItem.classify.lang[0]) {
-        tempRenderList.push(resItem);
-        groupNameArr.push(groupName); //checkedKeyWords.push(filterKeyword);
-      }
-    } else {
-      resItem.classify.lang.forEach(function (langItem) {
-        if (filterKeyword === resItem.classify[groupName] || filterKeyword === langItem) {
-          tempRenderList.push(resItem);
-          groupNameArr.push(groupName); // checkedKeyWords.push(filterKeyword);
-        }
-      });
-    } //每次加完先去除重複項目
-
-
-    var set = new Set();
-    tempRenderList = tempRenderList.filter(function (item) {
-      return !set.has(item.id) ? set.add(item.id) : false;
-    });
-    groupNameArr = groupNameArr.filter(function (item) {
-      return !set.has(item) ? set.add(item) : false;
-    });
-  });
-  console.log("tempRenderList");
-  console.log(tempRenderList);
-  console.log("groupNameArr");
-  console.log(groupNameArr);
-}
-
-function removeFromTempRenderList(filterKeyword, groupName) {
-  //1. 同 groupName 情況
-  tempRenderList.forEach(function (resItem, resIndex) {
-    // console.log("groupName",groupName);  //lang
-    // console.log("filterKeyword",filterKeyword); //繁體中文
-    if (groupName === "lang") {
-      // console.log(resItem.classify.lang.length); 
-      if (resItem.classify.lang.length === 1) {
-        if (filterKeyword === resItem.classify.lang[0]) {
-          tempRenderList.splice(resIndex, 1);
-        }
-      } else {
-        //如果 lang 有多筆
-        resItem.classify.lang.forEach(function (langItem) {
-          if (filterKeyword === langItem) {
-            tempRenderList.splice(resIndex, 1);
-          } // tempRenderList = tempRenderList.filter(item=>{
-          //   return  langItem != filterKeyword;
-          // })
-
-        }); // tempRenderList = tempRenderList.filter(item=>{
-        //     item.classify.lang.forEach(langItem=>{
-        //       return  langItem != filterKeyword;
-        //     })
-        // })
-      }
-    } else if (filterKeyword === resItem.classify[groupName]) {
-      tempRenderList = tempRenderList.filter(function (item) {
-        return item.classify[groupName] != filterKeyword;
-      });
-    } // if(groupName === "lang"){
-    //     if(resItem.classify.lang.length===1){
-    //       tempRenderList = tempRenderList.filter(item=>{
-    //         return item.classify.lang[0] != filterKeyword;
-    //       })
-    //     }
-    //     // else{
-    //     //   resItem.classify.lang.forEach(langItem=>{
-    //     //     tempRenderList = tempRenderList.filter(item=>{
-    //     //       return langItem != filterKeyword;
-    //     //     })
-    //     //   })
-    //     // }
-    // }else{
-    // }
-    // if(resItem.classify.lang.langth===1){
-    //   if(filterKeyword === resItem.classify.type ||
-    //     filterKeyword === resItem.classify.level ||
-    //     filterKeyword === resItem.classify.price ||  
-    //     filterKeyword === resItem.classify.lang[0] ){
-    //       tempRenderList.splice(resItem,1);
-    //       groupNameArr.splice(groupName,1); 
-    //   }
-    // }
-    // else{
-    //   resItem.classify.lang.forEach(langItem=>{
-    //      if(filterKeyword === resItem.classify.type ||
-    //        filterKeyword === resItem.classify.level ||
-    //        filterKeyword === resItem.classify.price ||  
-    //        filterKeyword === langItem ){
-    //          tempRenderList.splice(resItem,1);
-    //          groupNameArr.splice(groupName,1); 
-    //      }
-    //    })   
-    // }
-    // console.log("tempRenderList");
-    // console.log(tempRenderList);
-    // console.log("groupNameArr");
-    // console.log(groupNameArr);
-
-  });
-}
-
-filterItemInput.forEach(function (inputItem, index) {
-  inputItem.addEventListener("change", function (e) {
-    var filterKeyword = e.target.getAttribute("name");
-    var groupName = e.target.getAttribute("data-group");
+filterItemInput.forEach(function (item, index) {
+  item.addEventListener("change", function (e) {
+    var filterKeyword = item.getAttribute("name");
+    var groupName = item.getAttribute("data-group");
     console.log(filterKeyword, groupName);
 
     if (e.target.checked) {
-      //1. 檢查是否為第一筆資料 (即第一個checked 項目)
-      if (tempRenderList.length === 0 && groupNameArr.length === 0) {
-        //比對resourcesData原始資料, 符合條件的加入 tempRenderList 
-        addToTempRenderList(filterKeyword, groupName);
+      if (checkObj[groupName] === undefined) {
+        checkObj[groupName] = [];
+        checkObj[groupName].push(filterKeyword);
       } else {
-        groupNameArr.forEach(function (nameItem) {
-          // if(groupName===nameItem){
-          //   addToTempRenderList(filterKeyword,groupName);
-          // }else{
-          //   tempRenderList.forEach(tempItem=>{
-          //       if(groupName=="lang"){
-          //           if(tempItem.classify.lang.length === 1 &&
-          //             filterKeyword !== tempItem.classify.lang[0]){
-          //                 tempRenderList.splice(tempItem,1);
-          //                 groupNameArr.push(groupName); 
-          //           }
-          //       }else if(filterKeyword !== tempItem.classify[groupName]){
-          //           tempRenderList.splice(tempItem,1);
-          //           groupNameArr.push(groupName); 
-          //       }
-          //   })
-          // }
-
-          /****************上面是原本寫法***************88 */
-          // if(groupName===nameItem){
-          //     if(groupName=="lang"){
-          //       //addToTempRenderList(filterKeyword,groupName);
-          //     }else{
-          //       addToTempRenderList(filterKeyword,groupName);
-          //     }
-          // }
-          if (groupName === nameItem) {
-            addToTempRenderList(filterKeyword, groupName);
-          } else {
-            tempRenderList.forEach(function (tempItem) {
-              if (groupName == "lang") {
-                if (tempItem.classify.lang.length === 1) {
-                  if (filterKeyword !== tempItem.classify.lang[0]) {
-                    tempRenderList.splice(tempItem, 1);
-                  }
-                } else {
-                  tempItem.classify.lang.forEach(function (langItem) {
-                    console.log("langItem");
-                    console.log(langItem);
-                    console.log("tempItem");
-                    console.log(tempItem);
-                    console.log("filterKeyword");
-                    console.log(filterKeyword); // if(filterKeyword !== langItem){
-                    //   tempRenderList.splice(tempItem,1);
-                    // }
-
-                    tempRenderList = tempRenderList.filter(function (item) {
-                      return langItem !== filterKeyword;
-                    });
-                  });
-                }
-              } else {
-                if (filterKeyword !== tempItem.classify[groupName]) {
-                  tempRenderList.splice(tempItem, 1);
-                }
-              }
-
-              groupNameArr.push(groupName);
-            });
-          }
-
-          console.log("tempRenderList");
-          console.log(tempRenderList);
-          console.log("groupNameArr");
-          console.log(groupNameArr);
-        }); //end groupNameArr forEach
+        checkObj[groupName].push(filterKeyword);
       }
-    } else {//checked == false
-        //補 groupNameArr tempRenderList 去除重複 
-        //removeFromTempRenderList(filterKeyword,groupName);
-        //console.log("tempRenderList");
-        //console.log(tempRenderList);
-      }
-  });
-});
-/************************end 暫時新增************************************* */
-
-/************************暫時隱藏************************************* */
-
-var filterCheckedArr = [];
-filterItemInput.forEach(function (item, index) {
-  item.addEventListener("change", function (e) {
-    if (e.target.checked) {
-      var filterKeywords = item.getAttribute("name");
-      filterCheckedArr.push(filterKeywords);
     } else {
-      filterCheckedArr.forEach(function (arrItem, i) {
-        if (arrItem == item.getAttribute("name")) {
-          filterCheckedArr.splice(i, 1);
-        }
+      checkObj[groupName] = checkObj[groupName].filter(function (item) {
+        return filterKeyword != item;
       });
-    }
 
-    console.log("filterCheckedArr");
-    console.log(filterCheckedArr);
-    getRenderList(resourcesData);
+      if (checkObj[groupName].length === 0) {
+        delete checkObj[groupName];
+      }
+    } //  console.log("checkObj");
+    //  console.log(checkObj);
+
+
+    renderList = resourcesData.filter(function (resItem) {
+      var hasType = true;
+      var hasLevel = true;
+      var hasPrice = true;
+      var checkLang = true;
+
+      if (checkObj.type) {
+        hasType = checkObj.type.includes(resItem.type);
+      }
+
+      if (checkObj.level) {
+        hasLevel = checkObj.level.includes(resItem.level);
+      }
+
+      if (checkObj.price) {
+        hasPrice = checkObj.price.includes(resItem.price);
+      }
+
+      checkLang = resItem.lang.some(function (str) {
+        //console.log(str);
+        if (!checkObj.lang) {
+          return true;
+        }
+
+        return checkObj.lang.includes(str);
+      });
+      return hasType && hasLevel && hasPrice && checkLang;
+    }); // console.log(renderList);
+
     renderFilterResultList();
   });
 });
 
-function getRenderList(resourcesData) {
-  //console.log(resourcesData);
-  //2. 比對關鍵字filterCheckedArr & resourcesData 取得要 render 的清單先放進 resourcesRenderList
-  var resourcesRenderList = [];
-  resourcesData.forEach(function (item) {
-    if (item.topics === "JavaScript") {
-      var langItemStr = ""; //取得 lang 陣列中的文字
-
-      item.classify.lang.forEach(function (langItem) {
-        langItemStr = langItem;
-        filterCheckedArr.forEach(function (checkedItem) {
-          if (item.classify.type === checkedItem || item.classify.level === checkedItem || item.classify.price === checkedItem || langItemStr === checkedItem) {
-            resourcesRenderList.push(item); // console.log("resourcesRenderList")
-            // console.log(resourcesRenderList)
-          }
-        });
-      });
-    }
-  }); //3. 去除 resourcesRenderList 重複 id 項目
-
-  var set = new Set();
-  newResourcesRenderList = resourcesRenderList.filter(function (item) {
-    //return (!set1.has(item.id) ? set1.add(item.id) : false)
-    //如果陣列中沒有該項目, 就加入陣列
-    if (!set.has(item.id)) {
-      return set.add(item.id);
-    } else {
-      return false;
-    }
-  }); // console.log("newResourcesRenderList");
-  // console.log(newResourcesRenderList);
-} // end getRenderList(resourcesData)
-
-/************************暫時隱藏*************************************88 */
-//把 resourcesData 裡符合  filterCheckedArr 條件的項目丟進 resourcesRenderList 
-
-
 function renderFilterResultList() {
-  // n 個結果結果
-  //filterAndSort();
-  getRenderList(resourcesData); //取得 final 渲染清單 newResourcesRenderList
-  //每一次checked有異動, 就重新取得要渲染的清單
-  // console.log("newResourcesRenderList");
-  // console.log(newResourcesRenderList);
-  // console.log(newResourcesRenderList.length);
-  //取得分數
-  // let resultScore2 = getAverageScore();
-  // let newResultScoreOjb2 = combineCommentStar(resultScore2); 
-
+  var commentScoreNum = getAverageScore();
+  var resultScore = commentScoreNum[0];
+  var commentNum = commentScoreNum[1];
+  var starStr = combineCommentStar(resultScore);
   var renderfilterStr = "";
-  var finalRenderList = "";
 
-  if (newResourcesRenderList.length == 0) {
-    finalRenderList = resourcesData;
+  if (renderList.length === 0) {
+    resourcesData.forEach(function (renderItem) {
+      renderfilterStr += combineResouorceItemType2(renderItem, resultScore, starStr, commentNum);
+    });
+
+    if (resultNumber !== undefined) {
+      resultNumber.setAttribute("class", "d-none");
+    }
+
+    if (clearBtnText !== undefined) {
+      clearBtnText.setAttribute("class", "d-none");
+    }
+
+    if (checkObj.type !== undefined || checkObj.level !== undefined || checkObj.price !== undefined || checkObj.lang !== undefined) {
+      renderfilterStr = "沒有符合條件的項目";
+    }
   } else {
-    finalRenderList = newResourcesRenderList;
-  } // console.log("renderfilterStr");
-  // console.log(renderfilterStr);
-  //渲染資源
+    if (resultNumber !== undefined) {
+      resultNumber.setAttribute("class", "d-inline-block");
+      resultNumber.textContent = "".concat(renderList.length, " \u500B\u7BE9\u9078\u7D50\u679C");
+    }
 
+    if (clearBtnText !== undefined) {
+      clearBtnText.setAttribute("class", "d-inline-block");
+    }
 
-  finalRenderList.forEach(function (item) {
-    renderfilterStr += "<div class=\"row my-3 \">\n    <div class=\"col-2 \">\n        <img src=\"".concat(item.imgUrl, "\" alt=\"").concat(item.title, "\">   \n    </div>\n      <div class=\"col-6\">\n          <h4 class=\"fs-7\">").concat(item.title, "</h4>\n          <div class=\"d-flex flex-wrap align-items-center\">\n              <span class=\"fs-7 fw-bold me-lg-2\">3.5</span>\n              <ul class=\"d-flex align-items-center lh-1 me-lg-2\">\n                  <li><span class=\"material-icons material-icons-sharp fs-8\">star</span></li>\n                  <li><span class=\"material-icons material-icons-sharp fs-8\">star</span></li>\n                  <li><span class=\"material-icons material-icons-sharp fs-8\">star</span></li>\n                  <li><span class=\"material-icons material-icons-sharp fs-8\">star_half</span></li>\n                  <li><span class=\"material-icons material-icons-sharp fs-8\">star_outline</span></li>\n              </ul>                                \n              <span class=\"fs-8\">(35)</span>\n              <p>").concat(item.classify.type, ", ").concat(item.classify.level, " , ").concat(item.classify.price, ", ").concat(item.classify.lang, " </p>\n          </div>\n      </div>\n      <div class=\"col-4\">\n          <div class=\"d-flex flex-column align-items-end\">\n              <button type=\"button\" class=\"btn btn-tiffany my-2 w-75\">\u524D\u5F80\u8CC7\u6E90</button>\n              <button type=\"button\" class=\"btn btn-yellowBrown w-75 my-2\">\u67E5\u770B\u8A55\u8AD6</button>\n          </div>\n      </div>\n    </div>\n        ");
-  });
+    if (checkObj.type == undefined && checkObj.level == undefined && checkObj.price == undefined && checkObj.lang == undefined) {
+      resultNumber.setAttribute("class", "d-none");
+      clearBtnText.setAttribute("class", "d-none");
+    }
+
+    clearFilter();
+    renderList.forEach(function (renderItem) {
+      renderfilterStr += combineResouorceItemType2(renderItem, resultScore, starStr, commentNum);
+    });
+  }
 
   if (resourceItem !== null) {
     resourceItem.innerHTML = renderfilterStr;
   }
 }
-/***************************************8 */
 
+function combineResouorceItemType2(renderItem, resultScore, starStr, commentNum) {
+  if (renderItem.imgUrl === "") {
+    renderItem.imgUrl = "./assets/images/resources_cover/noimgCover.jpg";
+  }
+
+  if (resultScore[renderItem.id] === undefined || starStr[renderItem.id] === undefined || commentNum[renderItem.id] === undefined) {
+    return "<div class=\"row my-3 \">\n    <div class=\"col-2 \">\n      <a href=\"./resource.html?id=".concat(renderItem.id, "\" target=\"_blank\"><img src=\"").concat(renderItem.imgUrl, "\" alt=\"").concat(renderItem.title, "\"></a>\n    </div>\n      <div class=\"col-6\">\n          <h4 class=\"fs-7\"><a href=\"./resource.html?id=").concat(renderItem.id, "\" target=\"_blank\">").concat(renderItem.title, "</a></h4>\n          <div class=\"d-flex flex-wrap align-items-center\">\n              <span class=\"fs-8 text-gray fw-bold me-lg-2\"> \u5C1A\u7121\u8A55\u50F9</span>\n              <p class=\"text-dark fs-8\" >test:").concat(renderItem.type, ", ").concat(renderItem.level, " , ").concat(renderItem.price, ", ").concat(renderItem.lang, " </p>\n          </div>\n      </div>\n      <div class=\"col-4\">\n          <div class=\"d-flex flex-column flex-lg-row  align-items-end\">\n              <a href=\"").concat(renderItem.url, "\" target=\"_blank\" role=\"button\" class=\"btn btn-tiffany my-2 w-75 mx-2\">\u524D\u5F80\u8CC7\u6E90</a>\n              <a href=\"./resource.html?id=").concat(renderItem.id, "\" target=\"_blank\" role=\"button\" class=\"btn btn-yellowBrown my-2 w-75 mx-2\">\u67E5\u770B\u5167\u5BB9</a>\n          </div>\n      </div>\n    </div>");
+  } else {
+    return "<div class=\"row my-3 \">\n  <div class=\"col-2 \">\n     <a href=\"./resource.html?id=".concat(renderItem.id, "\" target=\"_blank\"><img src=\"").concat(renderItem.imgUrl, "\" alt=\"").concat(renderItem.title, "\"></a>  \n  </div>\n    <div class=\"col-6\">\n     <h4 class=\"fs-7\"><a href=\"./resource.html?id=").concat(renderItem.id, "\" target=\"_blank\">").concat(renderItem.title, "</a></h4>\n        <div class=\"d-flex flex-wrap align-items-center text-secondary\">\n            <span class=\"fs-7 fw-bold me-lg-2\"> ").concat(resultScore[renderItem.id], "</span>\n            <ul class=\"d-flex align-items-center lh-1 me-lg-2  \">\n            ").concat(starStr[renderItem.id], "\n            </ul>                                \n            <span class=\"fs-8\">(").concat(commentNum[renderItem.id], ")</span>\n            <p class=\"text-dark fs-8\">test ").concat(renderItem.type, ", ").concat(renderItem.level, " , ").concat(renderItem.price, ", ").concat(renderItem.lang, " </p>\n        </div>\n    </div>\n    <div class=\"col-4\">\n        <div class=\"d-flex flex-column flex-lg-row  align-items-end\">\n          <a href=\"").concat(renderItem.url, "\" target=\"_blank\" role=\"button\" class=\"btn btn-tiffany my-2 w-75 mx-2\">\u524D\u5F80\u8CC7\u6E90</a>\n          <a href=\"./resource.html?id=").concat(renderItem.id, "\" target=\"_blank\" role=\"button\" class=\"btn btn-yellowBrown my-2 w-75 mx-2\">\u67E5\u770B\u5167\u5BB9</a>\n        </div>  \n    </div>\n  </div>\n      ");
+  }
+}
 /***************** n 筆結果 / 清除篩選 / 排序 ***************/
 
 
 var resultNumber = document.querySelector('.resultNumber');
+var clearBtnText = document.querySelector('.clearBtnText');
 var clearFilterBtn = document.querySelector('#clearFilterBtn');
 var resourceSort = document.querySelector('#resourceSort');
 
-function filterAndSort() {
-  var filterResultNum = newResourcesRenderList.length;
-  var renderNum = 0; //console.log(filterResultNum);
+function clearFilter() {
+  clearFilterBtn.addEventListener("click", function (e) {
+    if (checkObj.type) {
+      delete checkObj.type;
+    }
 
-  if (filterResultNum == 0) {
-    resourcesData.forEach(function (item) {
-      if (item.topics == "JavaScript") {
-        renderNum += 1;
-      }
+    if (checkObj.level) {
+      delete checkObj.level;
+    }
+
+    if (checkObj.price) {
+      delete checkObj.price;
+    }
+
+    if (checkObj.lang) {
+      delete checkObj.lang;
+    }
+
+    filterItemInput.forEach(function (item) {
+      item.checked = false;
     });
-    filterResultNum = renderNum; //clearFilterBtn.textContent = "";  //清除篩選結果按鈕文字
-  } // resultNumber.textContent = `${filterResultNum}個結果`;
-
-
-  clearFilterBtn.addEventListener("click", function (e) {});
+    renderFilterResultList();
+    console.log("click check");
+    console.log(checkObj);
+  });
 }
 "use strict";
 
