@@ -66,11 +66,12 @@
             "imgUrl":"./assets/images/resources_cover/cover_css.jpg",
             "url":"https://www.w3schools.com/css/",
             "IsSafeUrl":true,
+            "type":"第三方技術網站",
+            "level":"初階",
+            "price":"免費",
+            "lang":["繁體中文","簡體中文","英文","多語系"],
             "classify":{
-                "type":"第三方技術網站",
-                "level":"初階",
-                "price":"免費",
-                "lang":["繁體中文","簡體中文","英文","多語系"]
+               
             },
             "averageScore":0,
             "feedbacks":[
@@ -91,12 +92,13 @@
             "intro":"這門課程適合沒有設計及程式基礎的初學者，可以學習到CSS常用語法及網頁排版技巧",
             "imgUrl":"./assets/images/resources_cover/hex_htmlcss.jpg",
             "url":"https://www.hexschool.com/courses/html_css.html",
-            "IsSafeUrl":true,
+            "IsSafeUrl":true, 
+            "type":"線上課程",
+            "level":"初階",
+            "price":"付費",
+            "lang":["繁體中文"],
             "classify":{
-                "type":"線上課程",
-                "level":"初階",
-                "price":"付費",
-                "lang":["繁體中文"]
+               
             },
             "averageScore":0,
             "feedbacks":[]
@@ -112,11 +114,12 @@
             "imgUrl":"./assets/images/resources_cover/cover01.jpg",
             "url":"https://blog.techbridge.cc/2018/11/10/javascript-hoisting/",
             "IsSafeUrl":true,
+            "type":"文章",
+            "level":"中階",
+            "price":"免費",
+            "lang":["繁體中文"],
             "classify":{
-                "type":"文章",
-                "level":"中階",
-                "price":"免費",
-                "lang":["繁體中文"]
+               
             },
             "averageScore":0,
             "feedbacks":[]
@@ -132,11 +135,12 @@
             "imgUrl":"./assets/images/resources_cover/cover02.jpg",
             "url":"https://www.youtube.com/watch?v=SRbewm2AUew",
             "IsSafeUrl":true,
+            "type":"線上課程",
+            "level":"初階",
+            "price":"免費",
+            "lang":["繁體中文"],
             "classify":{
-                "type":"線上課程",
-                "level":"初階",
-                "price":"免費",
-                "lang":["繁體中文"]
+               
             },
             "averageScore":0,
             "feedbacks":[]
@@ -152,11 +156,12 @@
             "imgUrl":"./assets/images/resources_cover/cover_b_js.jpg",
             "url":"https://www.books.com.tw/products/0010907641",
             "IsSafeUrl":true,
+            "type":"書籍",
+            "level":"中階",
+            "price":"付費",
+            "lang":["繁體中文"],
             "classify":{
-                "type":"書籍",
-                "level":"中階",
-                "price":"付費",
-                "lang":["繁體中文"]
+               
             },
             "averageScore":0,
             "feedbacks":[]
@@ -172,11 +177,12 @@
             "imgUrl":"./assets/images/resources_cover/cover_id6.jpg",
             "url":"https://hahow.in/courses/625f9ecc763ecd000637b62e/main",
             "IsSafeUrl":true,
+            "type":"線上課程",
+            "level":"初階",
+            "price":"付費",
+            "lang":["繁體中文"],
             "classify":{
-                "type":"線上課程",
-                "level":"初階",
-                "price":"付費",
-                "lang":["繁體中文"]
+               
             },
             "averageScore":0,
             "feedbacks":[]
@@ -192,11 +198,12 @@
             "imgUrl":"./assets/images/resources_cover/cover_id7.jpg",
             "url":"https://israynotarray.com/css/20200523/116058774/",
             "IsSafeUrl":true,
+            "type":"文章",
+            "level":"初階",
+            "price":"免費",
+            "lang":["繁體中文"],
             "classify":{
-                "type":"文章",
-                "level":"初階",
-                "price":"免費",
-                "lang":["繁體中文"]
+               
             },
             "averageScore":0,
             "feedbacks":[]
@@ -212,11 +219,12 @@
             "imgUrl":"./assets/images/resources_cover/cover_id8.jpg",
             "url":"https://www.youtube.com/watch?v=CLUPkcLQm64",
             "IsSafeUrl":true,
+            "type":"線上課程",
+            "level":"中階",
+            "price":"免費",
+            "lang":["繁體中文"],
             "classify":{
-                "type":"線上課程",
-                "level":"中階",
-                "price":"免費",
-                "lang":["繁體中文"]
+               
             },
             "averageScore":0,
             "feedbacks":[]
@@ -232,11 +240,12 @@
             "imgUrl":"",
             "url":"https://ithelp.ithome.com.tw/articles/10243994",
             "IsSafeUrl":true,
+            "type":"文章",
+            "level":"初階",
+            "price":"免費",
+            "lang":["繁體中文"],
             "classify":{
-                "type":"文章",
-                "level":"初階",
-                "price":"免費",
-                "lang":["繁體中文"]
+               
             },
             "averageScore":0,
             "feedbacks":[]
@@ -252,11 +261,12 @@
             "imgUrl":"",
             "url":"https://medium.com/unalai/%E8%AA%8D%E8%AD%98-search-indexof-includes-%E4%B8%89%E7%A8%AE%E6%90%9C%E5%B0%8B%E5%AD%97%E4%B8%B2%E7%9A%84%E7%9B%B8%E9%97%9C%E6%96%B9%E6%B3%95-704856176952",
             "IsSafeUrl":true,
+            "type":"文章",
+            "level":"初階",
+            "price":"免費",
+            "lang":["繁體中文"],
             "classify":{
-                "type":"文章",
-                "level":"初階",
-                "price":"免費",
-                "lang":["繁體中文"]
+               
             },
             "averageScore":0,
             "feedbacks":[]
@@ -272,11 +282,12 @@
             "imgUrl":"./assets/images/resources_cover/cover_id11.jpg",
             "url":"https://5xruby.tw/courses/javascript",
             "IsSafeUrl":true,
+            "type":"實體課程",
+            "level":"初階",
+            "price":"付費",
+            "lang":["繁體中文"],
             "classify":{
-                "type":"實體課程",
-                "level":"初階",
-                "price":"付費",
-                "lang":["繁體中文"]
+               
             },
             "averageScore":0,
             "feedbacks":[]
@@ -292,11 +303,12 @@
             "imgUrl":"./assets/images/resources_cover/cover_id12.jpg",
             "url":"https://training.pada-x.com/javascript-practical.htm",
             "IsSafeUrl":true,
+            "type":"實體課程",
+            "level":"初階",
+            "price":"付費",
+            "lang":["繁體中文"],
             "classify":{
-                "type":"實體課程",
-                "level":"初階",
-                "price":"付費",
-                "lang":["繁體中文"]
+              
             },
             "averageScore":0,
             "feedbacks":[]
@@ -312,11 +324,12 @@
             "imgUrl":"./assets/images/resources_cover/cover_id13.jpg",
             "url":"https://www.lccnet.com.tw/lccnet/single-class/JavaScript",
             "IsSafeUrl":true,
+            "type":"實體課程",
+            "level":"初階",
+            "price":"付費",
+            "lang":["繁體中文"],
             "classify":{
-                "type":"實體課程",
-                "level":"初階",
-                "price":"付費",
-                "lang":["繁體中文"]
+               
             },
             "averageScore":0,
             "feedbacks":[]
@@ -332,11 +345,12 @@
             "imgUrl":"./assets/images/resources_cover/cover_id14.jpg",
             "url":"https://www.hexschool.com/courses/js-plus.html",
             "IsSafeUrl":true,
+            "type":"實體課程",
+            "level":"初階",
+            "price":"付費",
+            "lang":["繁體中文"],
             "classify":{
-                "type":"實體課程",
-                "level":"初階",
-                "price":"付費",
-                "lang":["繁體中文"]
+               
             },
             "averageScore":0,
             "feedbacks":[]
@@ -352,11 +366,12 @@
             "imgUrl":"./assets/images/resources_cover/cover_id15.jpg",
             "url":"https://www.books.com.tw/products/0010832387",
             "IsSafeUrl":true,
+            "type":"書籍",
+            "level":"初階",
+            "price":"付費",
+            "lang":["繁體中文"],
             "classify":{
-                "type":"書籍",
-                "level":"初階",
-                "price":"付費",
-                "lang":["繁體中文"]
+               
             },
             "averageScore":0,
             "feedbacks":[]

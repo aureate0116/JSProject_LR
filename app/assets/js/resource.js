@@ -80,8 +80,10 @@ function renderResource(){
             userName =`${renderItem.user.lastName} ${renderItem.user.firstName} `;
         }
 
-        let resultScore = getAverageScore();
-        let newResultScoreOjb = combineCommentStar(resultScore);
+        let commentScoreNum = getAverageScore();
+        let resultScore = commentScoreNum[0];
+        let commentNum = commentScoreNum[1];
+        let starStr = combineCommentStar(resultScore);
 
         let imageNBriefStr="";
         let titleBoxStr="";
@@ -91,7 +93,7 @@ function renderResource(){
             renderItem.imgUrl = "./assets/images/resources_cover/noimgCover.jpg";
         }
 
-        if(resultScore[resId]===undefined || newResultScoreOjb[resId]=== undefined ){
+        if(resultScore[resId]===undefined || starStr[resId]=== undefined ){
             titleBoxStr = `<h2 class="fs-5 fw-bold mt-md-0 mt-3">${renderItem.title}</h2>
             <div class="d-flex flex-wrap align-items-center text-secondary">
                 <span class="fs-8 fw-bold me-lg-2">尚無評價</span>
@@ -99,12 +101,12 @@ function renderResource(){
             <div class="classify fs-7">
                 <ul class="d-flex ">
                     <li class="me-2">  ${renderItem.topics}</li>
-                    <li class="me-2">  ${renderItem.classify.type}</li>
-                    <li class="me-2">  ${renderItem.classify.level}</li>
-                    <li class="me-2">  ${renderItem.classify.price}</li>
+                    <li class="me-2">  ${renderItem.type}</li>
+                    <li class="me-2">  ${renderItem.level}</li>
+                    <li class="me-2">  ${renderItem.price}</li>
                 </ul>
                 <ul>
-                    <li class="me-2">  ${renderItem.classify.lang} </li>
+                    <li class="me-2">  ${renderItem.lang} </li>
                     <li class="me-2">建立者 : ${userName} </li>
                 </ul>
             </div>`;
@@ -113,19 +115,19 @@ function renderResource(){
             <div class="d-flex flex-wrap align-items-center text-secondary">
                 <span class="fs-5 fw-bold me-lg-2"> ${resultScore[resId]}</span>
                 <ul class="d-flex align-items-center lh-1 me-lg-2">
-                ${newResultScoreOjb[resId]}
+                ${starStr[resId]}
                 </ul>                                
-                <span class="fs-8">(${resourceCommentData.length})</span>
+                <span class="fs-8">(${commentNum[resId]})</span>
             </div>
             <div class="classify fs-7">
                 <ul class="d-flex ">
                     <li class="me-2">  ${renderItem.topics}</li>
-                    <li class="me-2">  ${renderItem.classify.type}</li>
-                    <li class="me-2">  ${renderItem.classify.level}</li>
-                    <li class="me-2">  ${renderItem.classify.price}</li>
+                    <li class="me-2">  ${renderItem.type}</li>
+                    <li class="me-2">  ${renderItem.level}</li>
+                    <li class="me-2">  ${renderItem.price}</li>
                 </ul>
                 <ul>
-                    <li class="me-2">  ${renderItem.classify.lang} </li>
+                    <li class="me-2">  ${renderItem.lang} </li>
                     <li class="me-2">建立者 : ${userName} </li>
                 </ul>
             </div>`;

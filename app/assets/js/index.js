@@ -3,6 +3,9 @@ let resTopic = location.href.split("=")[1];
 let resId = location.href.split("=")[1];
 let pageClassify = locationHref[3].split(".html")[0];
 
+
+// let resTopicNew = resTopic.split(" ");
+// console.log(resTopic);
 // console.log("pageClassify",pageClassify);
 // console.log("locationHref",locationHref);
 
@@ -67,8 +70,11 @@ function getCommentForIndex(){
 
 //渲染好評推薦資料
 function renderGoodRateList(){
-    let resultScore = getAverageScore();
-    let newResultScoreOjb = combineCommentStar(resultScore); 
+    let commentScoreNum = getAverageScore();
+    let resultScore = commentScoreNum[0];
+    let commentNum = commentScoreNum[1];
+    let starStr = combineCommentStar(resultScore); 
+
     let itemNum1 = 0;
     let itemNum2 = 0;
     let itemNum3 = 0;
@@ -77,27 +83,27 @@ function renderGoodRateList(){
     let tabHtml="";
     let tabPython="";
 
-    resourcesData.forEach( (item,index)=>{
+    resourcesData.forEach( (item)=>{
         // console.log("resultScore");
         // console.log(resultScore);
         switch (item.topics){
             case "JavaScript" :
                 if(itemNum1 <renderMaxNum){
-                    tabJS += combineResouorceItemType1(item,index,resultScore,newResultScoreOjb,resourceIdObj);
+                    tabJS += combineResouorceItemType1(item,resultScore,starStr,commentNum);
                    itemNum1 +=1;
                 }
                 break;
 
             case "HTML/CSS" :
                 if(itemNum2 < renderMaxNum){
-                    tabHtml += combineResouorceItemType1(item,index,resultScore,newResultScoreOjb,resourceIdObj);
+                    tabHtml += combineResouorceItemType1(item,resultScore,starStr,commentNum);
                     itemNum2+=1;
                 }
                 break;
 
             case "Python" :
                 if(itemNum3 < renderMaxNum){
-                     tabPython += combineResouorceItemType1(item,index,resultScore,newResultScoreOjb,resourceIdObj);
+                     tabPython += combineResouorceItemType1(item,resultScore,starStr,commentNum);
                 itemNum3+=1
                 }
                
@@ -128,13 +134,13 @@ function renderGoodRateList(){
 
 
 //組單一資源項目html - type 1
-function combineResouorceItemType1(item,index,resultScore,newResultScoreOjb,resourceIdObj){
+function combineResouorceItemType1(item,resultScore,starStr,commentNum){
 
   if( item.imgUrl ===""){
     item.imgUrl = "./assets/images/resources_cover/noimgCover.jpg";
   }
 
-  if(resultScore[`${index+1}`]===undefined || newResultScoreOjb[item.id]=== undefined || resourceIdObj[`${index+1}`]=== undefined ){
+  if(resultScore[item.id]===undefined || starStr[item.id]=== undefined || commentNum[item.id]=== undefined ){
 
     return  `
     <div class="col-md-6 col-lg-4">
@@ -165,11 +171,11 @@ function combineResouorceItemType1(item,index,resultScore,newResultScoreOjb,reso
             <div class="col-6">
                 <h4 class="ellipsis"><a href="./resource.html?id=${item.id}" target="_blank"> ${item.title}</a></h4>
                 <div class="d-flex justify-content-between align-items-center">
-                    <span class="fs-6 fw-bold"> ${resultScore[`${index+1}`]}</span>
+                    <span class="fs-6 fw-bold"> ${resultScore[item.id]}</span>
                     <ul class="d-flex align-items-center lh-1">
-                    ${newResultScoreOjb[item.id]}
+                    ${starStr[item.id]}
                     </ul>                                
-                    <span class="fs-7">(${resourceIdObj[`${index+1}`]})</span>
+                    <span class="fs-7">(${commentNum[item.id]})</span>
                 </div>
             </div>
         </div>
@@ -182,25 +188,27 @@ function combineResouorceItemType1(item,index,resultScore,newResultScoreOjb,reso
 
 //渲染最新免費資源
 function renderNewFreeList(){
-    let resultScore = getAverageScore();
-    let newResultScoreOjb = combineCommentStar(resultScore); //newResultScore
+    let commentScoreNum = getAverageScore();
+    let resultScore = commentScoreNum[0];
+    let commentNum = commentScoreNum[1];
+    let starStr = combineCommentStar(resultScore);
 
     let tabOnline ="";
     let tabOffline="";
     let tabArticle="";
 
-    resourcesData.forEach( (item,index)=>{
-        if(item.classify.price==="免費"){
-            if(item.classify.type==="線上課程"){
-                tabOnline += combineResouorceItem(item,index,resultScore,newResultScoreOjb,resourceIdObj);
+    resourcesData.forEach( (item)=>{
+        if(item.price==="免費"){
+            if(item.type==="線上課程"){
+                tabOnline += combineResouorceItem(item,resultScore,starStr,commentNum);
             }
 
-            if(item.classify.type==="實體課程"){
-                tabOffline += combineResouorceItem(item,index,resultScore,newResultScoreOjb,resourceIdObj);
+            if(item.type==="實體課程"){
+                tabOffline += combineResouorceItem(item,resultScore,starStr,commentNum);
             }
 
-            if(item.classify.type==="文章"){
-                tabArticle += combineResouorceItem(item,index,resultScore,newResultScoreOjb,resourceIdObj);
+            if(item.type==="文章"){
+                tabArticle += combineResouorceItem(item,resultScore,starStr,commentNum);
             }
         }
  

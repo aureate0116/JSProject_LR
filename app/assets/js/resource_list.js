@@ -15,6 +15,13 @@ const bannerBlockTitle = document.querySelector('.bannerBlock > h2');
 
 if(resTopic!==undefined && bannerBlockTitle!==null){
   bannerBlockTitle.textContent = resTopic;
+  // resourcesData.forEach(item=>{
+  //   console.log(resTopic)
+  //   if(item.topics == resTopic){
+      
+
+  //   }
+  // })
 
 }
 
@@ -26,16 +33,24 @@ const foundation3CN = document.querySelector('#foundation3CN > div.row');
 
 let resourcesData = [];
 let commentsData = [];
+let thisTopicData = [];
 
 //2. 取得資料
 function getResourcesForResources(){
   axios.get(`${url}/resources`)
   .then(res=>{
-    resourcesData = res.data;
+    //resourcesData = res.data;
+    //console.log(resTopic);
+    resourcesData = res.data.filter(item=>{
+      return item.topics == resTopic;
+    })
+    // thisTopicData = resourcesData.filter(item=>{
+    //   return item.topics == resTopic;
+    // })
+    //console.log(thisTopicData);
     renderFoundationRecommond();
     renderFilterResultList();
-    
-  
+
   }).catch(error=>{
     console.log(error);
   })
@@ -51,11 +66,19 @@ function getCommentData(){
 }
 
 
+// function getTopicData(){
+//   thisTopicData = resourcesData.filter(item=>{
+//     return item.topics = resTopic;
+//   })
+// }
+
 //3. 渲染入門推薦資料
 function renderFoundationRecommond(){
 
-  let resultScore = getAverageScore();
-  let newResultScoreOjb = combineCommentStar(resultScore); //newResultScore
+  let commentScoreNum = getAverageScore();
+  let resultScore = commentScoreNum[0];
+  let commentNum = commentScoreNum[1];
+  let starStr = combineCommentStar(resultScore); //newResultScore
 
   let itemNum1 = 0;
   let itemNum2 = 0;
@@ -68,35 +91,33 @@ function renderFoundationRecommond(){
 
   resourcesData.forEach( (item,index)=>{
     
-    if(item.topics==="JavaScript"){
-      if(item.classify.level === "初階"){
+   
+      if(item.level === "初階"){
         if(itemNum1 <renderMaxNum){
-           basicStr += combineResouorceItem(item,index,resultScore,newResultScoreOjb,resourceIdObj);
+           basicStr += combineResouorceItem(item,resultScore,starStr,commentNum);
            itemNum1+=1;
         }
          
       }
       
-      if(item.classify.price === "免費"){
+      if(item.price === "免費"){
         if(itemNum2 <renderMaxNum){
-          freeStr += combineResouorceItem(item,index,resultScore,newResultScoreOjb,resourceIdObj); 
+          freeStr += combineResouorceItem(item,resultScore,starStr,commentNum); 
           itemNum2+=1;
         }
          
       }
       
-      item.classify.lang.forEach(langItem=>{
+      item.lang.forEach(langItem=>{
         if(langItem === "繁體中文"){
           if(itemNum3 <renderMaxNum){
-            cnStr += combineResouorceItem(item,index,resultScore,newResultScoreOjb,resourceIdObj);
+            cnStr += combineResouorceItem(item,resultScore,starStr,commentNum);
             itemNum3+=1;
           }
           
         }
       })
-    }
-        
-
+    
   })
 
   if(foundation1Basic!==null){
@@ -110,47 +131,33 @@ function renderFoundationRecommond(){
   if(foundation3CN!==null){
     foundation3CN.innerHTML = cnStr;
   }
-
-  // foundation1Basic.innerHTML = basicStr;
-  // foundation2Free.innerHTML = freeStr;
-  // foundation3CN.innerHTML = cnStr;
 }
 
 
-//計算資源評論平均分數
+function getAverageScore(){
+
 let scoreTotal = {};  //每筆資源評價 總分
 let resourceIdObj = {}; //每筆資源評價 筆數
 let resultScore = {};  //每筆資源 平均分數(星星數)
-function getAverageScore(){
-  commentsData.forEach(item=>{
-      if(resourceIdObj[`${item.resourceId}`] === undefined){
-          resourceIdObj[`${item.resourceId}`] = 1;
-          scoreTotal[`${item.resourceId}`] = item.score;
 
+  commentsData.forEach(item=>{
+      if(resourceIdObj[item.resourceId] === undefined){
+          resourceIdObj[item.resourceId] = 1;
+          scoreTotal[item.resourceId] = item.score;
+         
       }else{
           resourceIdObj[item.resourceId] +=1;
           scoreTotal[item.resourceId] += item.score;
-
+          
       }
       resultScore[item.resourceId] = (scoreTotal[item.resourceId] /  resourceIdObj[item.resourceId]).toFixed(1);
-      //console.log(resultScore);
 
   })
-  //changeResourceAverageScore();
-  return resultScore;
+  // console.log("resourceIdObj",resourceIdObj);
+  // console.log("scoreTotal",scoreTotal);
+  // console.log("resultScore",resultScore);
+  return [resultScore,resourceIdObj];
 }
-
-// 平均值存回 resourcesData
-// function changeResourceAverageScore(){
-//       axios.patch(`${url}/resources?id=${resId}`, {
-//         "averageScore" : `${resultScore[resId]}` 
-//       })
-//       .then(res => {
-//         console.log(res.data);
-//       });
-// }
-
-
 
 //4. 組星星字串
 function combineCommentStar(resultScore){
@@ -194,13 +201,13 @@ function combineCommentStar(resultScore){
 }
 
 //5. 入門推薦組單一資源項目html
-function combineResouorceItem(item,index,resultScore,newResultScoreOjb,resourceIdObj){
+function combineResouorceItem(item,resultScore,starStr,commentNum){
 
   if( item.imgUrl ===""){
     item.imgUrl = "./assets/images/resources_cover/noimgCover.jpg";
   }
 
-  if(resultScore[`${index+1}`]===undefined || newResultScoreOjb[item.id]=== undefined || resourceIdObj[`${index+1}`]=== undefined ){
+  if(resultScore[item.id]===undefined || starStr[item.id]=== undefined || commentNum[item.id]=== undefined ){
 
     return  `
     <div class="col-lg-2 col-md-4 col-6">
@@ -211,7 +218,7 @@ function combineResouorceItem(item,index,resultScore,newResultScoreOjb,resourceI
         <div class="p-2">
             <h4 class="fs-7 ellipsis"><a href="./resource.html?id=${item.id}" target="_blank"> ${item.title}</a></h4>
             <div class="d-flex flex-wrap justify-content-between align-items-center">                             
-                <span class="fs-8"> 尚無評價 </span>
+                <span class="fs-8 text-gray"> 尚無評價 </span>
             </div>
   
         </div>
@@ -228,12 +235,12 @@ function combineResouorceItem(item,index,resultScore,newResultScoreOjb,resourceI
           <div class="p-2">
               <h4 class="fs-7 ellipsis"><a href="./resource.html?id=${item.id}" target="_blank"> ${item.title}</a></h4>
 
-              <div class="d-flex flex-wrap justify-content-between align-items-center">
-                  <span class="fs-7 fw-bold me-lg-2"> ${resultScore[`${index+1}`]}</span>
+              <div class="d-flex flex-wrap justify-content-between align-items-center text-secondary">
+                  <span class="fs-7 fw-bold me-lg-2"> ${resultScore[item.id]}</span>
                   <ul class="d-flex align-items-center lh-1 me-lg-2">
-                  ${newResultScoreOjb[item.id]}
+                  ${starStr[item.id]}
                   </ul>                                
-                  <span class="fs-8">(${resourceIdObj[`${index+1}`]})</span>
+                  <span class="fs-8">(${commentNum[item.id]})</span>
               </div>
 
           </div>
@@ -244,12 +251,6 @@ function combineResouorceItem(item,index,resultScore,newResultScoreOjb,resourceI
       
 }
 
-//判斷圖片處理
-
-
-//圖片顯示比例問題 
-
-
 /***************** 相關主題 ***************/
 
 
@@ -257,431 +258,212 @@ function combineResouorceItem(item,index,resultScore,newResultScoreOjb,resourceI
 /***************** 資源篩選 ***************/
 
 const resourceItem = document.querySelector('.resourceItem');
-// const filter = document.querySelector('.filter');
 const filterItemInput = document.querySelectorAll('.filterItem > input');  
 
+let checkObj={};
+let renderList=[];
 
+// checked 監聽 : 取得 checked 清單的關鍵字 + render
+filterItemInput.forEach((item,index)=>{
 
-// final 渲染清單
-let newResourcesRenderList = getRenderList(resourcesData);
-// let newResourcesRenderList = [];
-
-//1. checked 監聽 : 取得 checked 清單的關鍵字 + render
-
-
-/************************暫時新增************************************* */
-
-let tempRenderList = [];
-let groupNameArr=[];  // ['type', 'type', 'level']
-//let checkedKeyWords =[]; //
-
-
-//比對resourcesData原始資料, 符合條件的加入 tempRenderList 
-function addToTempRenderList(filterKeyword,groupName){
-  resourcesData.forEach((resItem,resIndex)=>{
-    if(resItem.classify.lang.langth===1){
-      if(filterKeyword === resItem.classify[groupName] || 
-        filterKeyword === resItem.classify.lang[0] ){
-          tempRenderList.push(resItem);
-          groupNameArr.push(groupName); 
-          //checkedKeyWords.push(filterKeyword);
-      }
-    }else{
-      resItem.classify.lang.forEach(langItem=>{
-         if(filterKeyword === resItem.classify[groupName] ||
-           filterKeyword === langItem ){
-             tempRenderList.push(resItem);
-             groupNameArr.push(groupName); 
-            // checkedKeyWords.push(filterKeyword);
-         }
-       })   
-    }
-
-    //每次加完先去除重複項目
-    const set = new Set();
-    tempRenderList = tempRenderList.filter((item) => {
-      return (!set.has(item.id) ? set.add(item.id) : false)
-    });
-
-    groupNameArr = groupNameArr.filter((item) => {
-      return (!set.has(item) ? set.add(item) : false)
-    });
-
-
-  })
-  console.log("tempRenderList");
-  console.log(tempRenderList);
-  console.log("groupNameArr");
-  console.log(groupNameArr);
-}
-
-
-function removeFromTempRenderList(filterKeyword,groupName){
-
-  //1. 同 groupName 情況
-  tempRenderList.forEach((resItem,resIndex)=>{
-
-    // console.log("groupName",groupName);  //lang
-    // console.log("filterKeyword",filterKeyword); //繁體中文
-
-    if(groupName === "lang"){
-      // console.log(resItem.classify.lang.length); 
-      if(resItem.classify.lang.length===1){
-        if(filterKeyword === resItem.classify.lang[0] ){
-          tempRenderList.splice(resIndex,1);
-        }
-
-      }else{
-        //如果 lang 有多筆
-        resItem.classify.lang.forEach(langItem=>{
-          if(filterKeyword === langItem){
-            tempRenderList.splice(resIndex,1);
-          }
-          // tempRenderList = tempRenderList.filter(item=>{
-
-          //   return  langItem != filterKeyword;
-          // })
-        })
-
-        // tempRenderList = tempRenderList.filter(item=>{
-        //     item.classify.lang.forEach(langItem=>{
-        //       return  langItem != filterKeyword;
-        //     })
-        // })
-      }
-
-    }else if(filterKeyword === resItem.classify[groupName]){
-      tempRenderList = tempRenderList.filter(item=>{
-        return item.classify[groupName] != filterKeyword;
-      })
-    }
-
-   
-      
-      // if(groupName === "lang"){
-      //     if(resItem.classify.lang.length===1){
-      //       tempRenderList = tempRenderList.filter(item=>{
-      //         return item.classify.lang[0] != filterKeyword;
-      //       })
-      //     }
-      //     // else{
-      //     //   resItem.classify.lang.forEach(langItem=>{
-      //     //     tempRenderList = tempRenderList.filter(item=>{
-      //     //       return langItem != filterKeyword;
-      //     //     })
-      //     //   })
-      //     // }
-      // }else{
-         
-      // }
-    
-
-    // if(resItem.classify.lang.langth===1){
-    //   if(filterKeyword === resItem.classify.type ||
-    //     filterKeyword === resItem.classify.level ||
-    //     filterKeyword === resItem.classify.price ||  
-    //     filterKeyword === resItem.classify.lang[0] ){
-
-    //       tempRenderList.splice(resItem,1);
-    //       groupNameArr.splice(groupName,1); 
-
-    //   }
-    // }
-    // else{
-    //   resItem.classify.lang.forEach(langItem=>{
-    //      if(filterKeyword === resItem.classify.type ||
-    //        filterKeyword === resItem.classify.level ||
-    //        filterKeyword === resItem.classify.price ||  
-    //        filterKeyword === langItem ){
-
-    //          tempRenderList.splice(resItem,1);
-    //          groupNameArr.splice(groupName,1); 
-    //      }
-    //    })   
-    // }
-    // console.log("tempRenderList");
-    // console.log(tempRenderList);
-    // console.log("groupNameArr");
-    // console.log(groupNameArr);
-  })
-}
-
-filterItemInput.forEach((inputItem,index)=>{
-  inputItem.addEventListener("change",e=>{
-    
-    let filterKeyword = e.target.getAttribute("name"); 
-    let groupName = e.target.getAttribute("data-group");
+  item.addEventListener("change",e=>{
+    let filterKeyword = item.getAttribute("name");
+    let groupName = item.getAttribute("data-group");
     console.log(filterKeyword,groupName);
 
     if (e.target.checked) {
-      //1. 檢查是否為第一筆資料 (即第一個checked 項目)
-      if(tempRenderList.length === 0 && groupNameArr.length === 0){
-        //比對resourcesData原始資料, 符合條件的加入 tempRenderList 
-        addToTempRenderList(filterKeyword,groupName);
-        
+      if(checkObj[groupName]===undefined){
+        checkObj[groupName]=[];
+        checkObj[groupName].push(filterKeyword);
       }else{
-        groupNameArr.forEach(nameItem=>{
-          // if(groupName===nameItem){
-          //   addToTempRenderList(filterKeyword,groupName);
-          // }else{
-          //   tempRenderList.forEach(tempItem=>{
-          //       if(groupName=="lang"){
-          //           if(tempItem.classify.lang.length === 1 &&
-          //             filterKeyword !== tempItem.classify.lang[0]){
-          //                 tempRenderList.splice(tempItem,1);
-          //                 groupNameArr.push(groupName); 
-          //           }
-          //       }else if(filterKeyword !== tempItem.classify[groupName]){
-        
-          //           tempRenderList.splice(tempItem,1);
-          //           groupNameArr.push(groupName); 
+        checkObj[groupName].push(filterKeyword);
+      }
+    }else {
+        checkObj[groupName] = checkObj[groupName].filter(item=>{
+          return filterKeyword !=item;
+        })  
+        if(checkObj[groupName].length===0){
+          delete checkObj[groupName];
+        }
+    }
 
-          //       }
-          //   })
-          // }
-          /****************上面是原本寫法***************88 */
-          // if(groupName===nameItem){
-          //     if(groupName=="lang"){
-              
-          //       //addToTempRenderList(filterKeyword,groupName);
-          //     }else{
-          //       addToTempRenderList(filterKeyword,groupName);
-          //     }
-          // }
+    //  console.log("checkObj");
+    //  console.log(checkObj);
 
-          if(groupName===nameItem){
-            addToTempRenderList(filterKeyword,groupName);
-          }else{
-            tempRenderList.forEach(tempItem=>{
-                if(groupName=="lang"){
-                    if(tempItem.classify.lang.length === 1){
-                      if(filterKeyword !== tempItem.classify.lang[0]){
-                          tempRenderList.splice(tempItem,1);    
-                      }  
-                    }else{
-                      tempItem.classify.lang.forEach(langItem=>{
-                        console.log("langItem");
-                        console.log(langItem);
-                        console.log("tempItem");
-                        console.log(tempItem);
-                        console.log("filterKeyword");
-                        console.log(filterKeyword);
-                        // if(filterKeyword !== langItem){
-                        //   tempRenderList.splice(tempItem,1);
-                        // }
-                        tempRenderList = tempRenderList.filter(item=>{
-                          return langItem !== filterKeyword ;
-                        })
-                      })
-                    }
-                }else{
-                  if(filterKeyword !== tempItem.classify[groupName]){
-                    tempRenderList.splice(tempItem,1);
-                    
-                  }
-                }
-                groupNameArr.push(groupName);
-            })
-          }
+    renderList = resourcesData.filter(resItem=>{
+      
+      let hasType = true ;  
+      let hasLevel =true;
+      let hasPrice =true;
+      let checkLang = true;
+  
+      if(checkObj.type){
+        hasType = checkObj.type.includes(resItem.type);
+      }
+      if(checkObj.level){
+        hasLevel = checkObj.level.includes(resItem.level);
+      }
+      if(checkObj.price){
+        hasPrice = checkObj.price.includes(resItem.price);
+      }
+  
+      checkLang = resItem.lang.some((str) => {
+        //console.log(str);
+        if (!checkObj.lang) {
+          return true;
+        }
+        return checkObj.lang.includes(str);
+      });
+  
+      return hasType && hasLevel && hasPrice && checkLang ;
+  
+    })
+    // console.log(renderList);
+    renderFilterResultList(); 
 
-          console.log("tempRenderList");
-          console.log(tempRenderList);
-          console.log("groupNameArr");
-          console.log(groupNameArr);
-        }) //end groupNameArr forEach
+  })
+})
+
+
+
+function renderFilterResultList(){ 
+
+  let commentScoreNum = getAverageScore();
+  let resultScore = commentScoreNum[0];
+  let commentNum = commentScoreNum[1];
+  let starStr = combineCommentStar(resultScore);
+
+    let renderfilterStr="";
+    if(renderList.length===0){
+      resourcesData.forEach(renderItem=>{
+        renderfilterStr += combineResouorceItemType2(renderItem,resultScore,starStr,commentNum);
+      })
+
+      if(resultNumber!==undefined){
+        resultNumber.setAttribute("class","d-none");
+      }
+      if(clearBtnText!==undefined){
+        clearBtnText.setAttribute("class","d-none");
       }
       
-    } else{
-      //checked == false
-      //補 groupNameArr tempRenderList 去除重複 
-      //removeFromTempRenderList(filterKeyword,groupName);
-      //console.log("tempRenderList");
-      //console.log(tempRenderList);
-    }
 
-  })
+      if(checkObj.type !== undefined || checkObj.level !== undefined || checkObj.price !== undefined || checkObj.lang !== undefined ){
+        renderfilterStr = "沒有符合條件的項目";
+      }
+    }else{
+      if(resultNumber!==undefined){
+         resultNumber.setAttribute("class","d-inline-block");
+          resultNumber.textContent = `${renderList.length} 個篩選結果`;
+      }
+      if(clearBtnText!==undefined){
+        clearBtnText.setAttribute("class","d-inline-block");
+      }
+      
+    
+      if(checkObj.type==undefined && checkObj.level==undefined && checkObj.price==undefined && checkObj.lang==undefined ){
+        resultNumber.setAttribute("class","d-none");
+        clearBtnText.setAttribute("class","d-none");
+      }
 
-})
+      clearFilter();
+      
 
-
-
-
-/************************end 暫時新增************************************* */
-
-
-
-/************************暫時隱藏************************************* */
-let filterCheckedArr=[];
-filterItemInput.forEach((item,index)=>{
-  item.addEventListener("change",e=>{
-    if (e.target.checked) {
-      let filterKeywords = item.getAttribute("name");
-      filterCheckedArr.push(filterKeywords);
-    } else {
-      filterCheckedArr.forEach((arrItem,i)=>{
-          if(arrItem==item.getAttribute("name")){
-            filterCheckedArr.splice(i,1);
-          }
-        })
-    }
-    console.log("filterCheckedArr");
-    console.log(filterCheckedArr);
-    getRenderList(resourcesData);
-    renderFilterResultList();
-  })
-})
-
-
-function getRenderList(resourcesData){
-  //console.log(resourcesData);
-  //2. 比對關鍵字filterCheckedArr & resourcesData 取得要 render 的清單先放進 resourcesRenderList
-  let resourcesRenderList = [];
-  resourcesData.forEach(item=>{  
-
-    if(item.topics==="JavaScript"){
-      let langItemStr="";  //取得 lang 陣列中的文字
-      item.classify.lang.forEach(langItem=>{  
-        langItemStr = langItem;
-        filterCheckedArr.forEach(checkedItem=>{    
-
-          if(item.classify.type === checkedItem ||
-            item.classify.level === checkedItem ||
-            item.classify.price === checkedItem ||
-            langItemStr === checkedItem
-          ){
-            
-              resourcesRenderList.push(item);
-            
-              // console.log("resourcesRenderList")
-              // console.log(resourcesRenderList)
-          }     
-        })
+      renderList.forEach(renderItem=>{
+        renderfilterStr += combineResouorceItemType2(renderItem,resultScore,starStr,commentNum);
       })
     }
-    
-  })
 
-  //3. 去除 resourcesRenderList 重複 id 項目
-  const set = new Set();
-  newResourcesRenderList = resourcesRenderList.filter((item) => {
-    //return (!set1.has(item.id) ? set1.add(item.id) : false)
-    //如果陣列中沒有該項目, 就加入陣列
-    if(!set.has(item.id)){  
-      return set.add(item.id)
-    }else {
-      return false;
+    if(resourceItem!==null){
+      resourceItem.innerHTML = renderfilterStr;
     }
-  });
-  // console.log("newResourcesRenderList");
-  // console.log(newResourcesRenderList);
-  
-}  // end getRenderList(resourcesData)
-
-/************************暫時隱藏*************************************88 */
-
-
-//把 resourcesData 裡符合  filterCheckedArr 條件的項目丟進 resourcesRenderList 
-function renderFilterResultList(){
-  // n 個結果結果
-  //filterAndSort();
-
-  getRenderList(resourcesData); //取得 final 渲染清單 newResourcesRenderList
-  //每一次checked有異動, 就重新取得要渲染的清單
-  // console.log("newResourcesRenderList");
-  // console.log(newResourcesRenderList);
-  // console.log(newResourcesRenderList.length);
- 
-  //取得分數
-  // let resultScore2 = getAverageScore();
-  // let newResultScoreOjb2 = combineCommentStar(resultScore2); 
-
-  let renderfilterStr="";
-  let finalRenderList = "";
-  if(newResourcesRenderList.length==0){
-    finalRenderList = resourcesData;
-  }else{
-    finalRenderList = newResourcesRenderList;
-  }
-
-  // console.log("renderfilterStr");
-  // console.log(renderfilterStr);
-
-  //渲染資源
-  finalRenderList.forEach(item=>{
-    renderfilterStr +=`<div class="row my-3 ">
-    <div class="col-2 ">
-        <img src="${item.imgUrl}" alt="${item.title}">   
-    </div>
-      <div class="col-6">
-          <h4 class="fs-7">${item.title}</h4>
-          <div class="d-flex flex-wrap align-items-center">
-              <span class="fs-7 fw-bold me-lg-2">3.5</span>
-              <ul class="d-flex align-items-center lh-1 me-lg-2">
-                  <li><span class="material-icons material-icons-sharp fs-8">star</span></li>
-                  <li><span class="material-icons material-icons-sharp fs-8">star</span></li>
-                  <li><span class="material-icons material-icons-sharp fs-8">star</span></li>
-                  <li><span class="material-icons material-icons-sharp fs-8">star_half</span></li>
-                  <li><span class="material-icons material-icons-sharp fs-8">star_outline</span></li>
-              </ul>                                
-              <span class="fs-8">(35)</span>
-              <p>${item.classify.type}, ${item.classify.level} , ${item.classify.price}, ${item.classify.lang} </p>
-          </div>
-      </div>
-      <div class="col-4">
-          <div class="d-flex flex-column align-items-end">
-              <button type="button" class="btn btn-tiffany my-2 w-75">前往資源</button>
-              <button type="button" class="btn btn-yellowBrown w-75 my-2">查看評論</button>
-          </div>
-      </div>
-    </div>
-        `;
-  })
-  
-  
-  if(resourceItem!==null){
-    resourceItem.innerHTML = renderfilterStr;
-  }
-
-
 }
 
 
-/***************************************8 */
+function combineResouorceItemType2(renderItem,resultScore,starStr,commentNum){
+  if( renderItem.imgUrl ===""){
+    renderItem.imgUrl = "./assets/images/resources_cover/noimgCover.jpg";
+  }
 
-
-
+  if(resultScore[renderItem.id]===undefined || starStr[renderItem.id]=== undefined || commentNum[renderItem.id]=== undefined ){
+    return `<div class="row my-3 ">
+    <div class="col-2 ">
+      <a href="./resource.html?id=${renderItem.id}" target="_blank"><img src="${renderItem.imgUrl}" alt="${renderItem.title}"></a>
+    </div>
+      <div class="col-6">
+          <h4 class="fs-7"><a href="./resource.html?id=${renderItem.id}" target="_blank">${renderItem.title}</a></h4>
+          <div class="d-flex flex-wrap align-items-center">
+              <span class="fs-8 text-gray fw-bold me-lg-2"> 尚無評價</span>
+              <p class="text-dark fs-8" >test:${renderItem.type}, ${renderItem.level} , ${renderItem.price}, ${renderItem.lang} </p>
+          </div>
+      </div>
+      <div class="col-4">
+          <div class="d-flex flex-column flex-lg-row  align-items-end">
+              <a href="${renderItem.url}" target="_blank" role="button" class="btn btn-tiffany my-2 w-75 mx-2">前往資源</a>
+              <a href="./resource.html?id=${renderItem.id}" target="_blank" role="button" class="btn btn-yellowBrown my-2 w-75 mx-2">查看內容</a>
+          </div>
+      </div>
+    </div>`;
+  }else{
+    return `<div class="row my-3 ">
+  <div class="col-2 ">
+     <a href="./resource.html?id=${renderItem.id}" target="_blank"><img src="${renderItem.imgUrl}" alt="${renderItem.title}"></a>  
+  </div>
+    <div class="col-6">
+     <h4 class="fs-7"><a href="./resource.html?id=${renderItem.id}" target="_blank">${renderItem.title}</a></h4>
+        <div class="d-flex flex-wrap align-items-center text-secondary">
+            <span class="fs-7 fw-bold me-lg-2"> ${resultScore[renderItem.id]}</span>
+            <ul class="d-flex align-items-center lh-1 me-lg-2  ">
+            ${starStr[renderItem.id]}
+            </ul>                                
+            <span class="fs-8">(${commentNum[renderItem.id]})</span>
+            <p class="text-dark fs-8">test ${renderItem.type}, ${renderItem.level} , ${renderItem.price}, ${renderItem.lang} </p>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="d-flex flex-column flex-lg-row  align-items-end">
+          <a href="${renderItem.url}" target="_blank" role="button" class="btn btn-tiffany my-2 w-75 mx-2">前往資源</a>
+          <a href="./resource.html?id=${renderItem.id}" target="_blank" role="button" class="btn btn-yellowBrown my-2 w-75 mx-2">查看內容</a>
+        </div>  
+    </div>
+  </div>
+      `;
+  }
+  
+}
 
 
 
 /***************** n 筆結果 / 清除篩選 / 排序 ***************/
 
 const resultNumber = document.querySelector('.resultNumber');
+const clearBtnText = document.querySelector('.clearBtnText');
 const clearFilterBtn = document.querySelector('#clearFilterBtn');
 const resourceSort = document.querySelector('#resourceSort');
 
-function filterAndSort(){
-  let filterResultNum = newResourcesRenderList.length;
-  let renderNum = 0;
-  //console.log(filterResultNum);
-  if(filterResultNum == 0){
-    resourcesData.forEach(item=>{
-      if(item.topics=="JavaScript"){
-        renderNum +=1;
-      }
-    })
-
-    filterResultNum = renderNum; 
-
-    //clearFilterBtn.textContent = "";  //清除篩選結果按鈕文字
-
-  }
- // resultNumber.textContent = `${filterResultNum}個結果`;
-
-
+function clearFilter(){
   clearFilterBtn.addEventListener("click",e=>{
-    
+    if(checkObj.type){
+      delete checkObj.type;
+    }
+    if(checkObj.level){
+      delete checkObj.level;
+    }
+    if(checkObj.price){
+      delete checkObj.price;
+    }
+    if(checkObj.lang){
+      delete checkObj.lang;
+    }
+    filterItemInput.forEach(item=>{
+      item.checked = false;
+    })
+    renderFilterResultList();
+    console.log("click check");
+    console.log(checkObj);
   })
-
+  
 }
+
+
 
 
