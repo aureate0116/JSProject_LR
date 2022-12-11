@@ -15,13 +15,6 @@ const bannerBlockTitle = document.querySelector('.bannerBlock > h2');
 
 if(resTopic!==undefined && bannerBlockTitle!==null){
   bannerBlockTitle.textContent = resTopic;
-  // resourcesData.forEach(item=>{
-  //   console.log(resTopic)
-  //   if(item.topics == resTopic){
-      
-
-  //   }
-  // })
 
 }
 

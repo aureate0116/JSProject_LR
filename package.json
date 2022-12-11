@@ -40,5 +40,9 @@
     "morgan": "^1.9.1",
     "node-sass": "^4.14.1",
     "popper.js": "^1.16.1"
+  },
+  "devDependencies": {
+    "json-server": "^0.17.1",
+    "json-server-auth": "^2.1.0"
   }
 }

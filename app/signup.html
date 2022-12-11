@@ -8,36 +8,48 @@ current: signup
 <main>
 
     <div class="signup container p-5 p-lg-8 p-md-4">
-        <form action="./signup.html" method="post">
+        <form class="signUpForm"> <!--action="./signup.html" method="post"-->
             <h3 class="fs-7 my-3">會員註冊</h3>
             <div class="form-floating mb-3"> 
-                <input type="text" id="signupName" placeholder="名字" class="form-control">
-                <label for="signupName" class="text-gray">名字</label>
+                <input type="text" id="signupLastName" placeholder="姓" class="form-control signupInput" name="lastname">
+                <span class="message lastname fs-8 text-danger"></span>
+                <label for="signupLastName" class="text-gray">姓</label>
             </div>
 
             <div class="form-floating mb-3"> 
-                <input type="email" id="signupMail" placeholder="電子信箱" class="form-control">
+                <input type="text" id="signupfirstName" placeholder="名字" class="form-control signupInput" name="firstname">
+                <span class="message firstname fs-8 text-danger"></span>
+                <label for="signupfirstName" class="text-gray">名字</label>
+            </div>
+
+            <div class="form-floating mb-3"> 
+                <input type="email" id="signupMail" placeholder="電子信箱" class="form-control signupInput" name="email">
+                <span class="message email fs-8 text-danger"></span>
                 <label for="signupMail" class="text-gray">電子信箱</label>
             </div>
 
             <div class="form-floating mb-3"> 
-                <input type="password" id="signupPw" placeholder="密碼" class="form-control">
+                <input type="password" id="signupPw" placeholder="密碼" class="form-control signupInput" name="password">
+                <span class="message password fs-8 text-danger"></span>
                 <label for="signupPw" class="text-gray">密碼</label>
             </div>
 
             <div class="form-floating mb-3"> 
-                <input type="password" id="signupPw2" placeholder="確認密碼" class="form-control">
-                <label for="signupPw2" class="text-gray">確認密碼</label>
+                <input type="password" id="signupPwConfirm" placeholder="確認密碼" class="form-control signupInput" name="confirmpw">
+                <span class="message confirmpw fs-8 text-danger"></span>
+                <label for="signupPwConfirm" class="text-gray">確認密碼</label>
             </div>
         
 
             <div class="mt-6">
-                <button type="submit" class="btn btn-primary text-white">註冊</button>
+                <button type="submit" id="btnSignUp" class="btn btn-primary text-white">註冊</button>
                 <p class="fs-8 text-gray my-3">點擊「註冊」即表示你同意我們的使用條款及私隱政策。<br/>
-                已經註冊 ? <a href="#"> 立即登入</a></p>
+                已經註冊 ? <a href="./login.html"> 立即登入</a></p>
                
             </div>
         </form>
     </div>
 
 </main>
+
+<script src="http://cdnjs.cloudflare.com/ajax/libs/validate.js/0.12.0/validate.min.js"></script>
