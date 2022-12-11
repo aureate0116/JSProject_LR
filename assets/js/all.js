@@ -228,6 +228,81 @@ function renderNewFreeList() {
   }
 }
 "use strict";
+"use strict";
+
+var loginAccount = document.querySelector('#loginAccount');
+var loginPw = document.querySelector('#loginPw');
+var btnLogin = document.querySelector('#btnLogin'); // const signUpFormInputs = document.querySelectorAll('input.form-control');  //input
+
+function initLogin() {
+  getUserList();
+}
+
+initLogin(); //取得用戶清單
+
+var usersData = [];
+
+function getUserList() {
+  axios.get("http://localhost:3000/users").then(function (res) {
+    usersData = res.data;
+  })["catch"](function (err) {
+    console.log(err.response);
+  });
+} //欄位檢查
+
+
+if (document.querySelector("#loginAccount") !== null) {
+  document.querySelector("#loginAccount").addEventListener("change", function (e) {
+    if (loginAccount.value == "") {
+      document.querySelector('.account').textContent = "請輸入帳號";
+    } else {
+      document.querySelector('.account').textContent = "";
+    }
+
+    usersData.forEach(function (userItem) {
+      if (userItem.email !== loginAccount.value) {
+        document.querySelector('.account').textContent = "此帳號不存在";
+      } else {
+        document.querySelector('.account').textContent = "";
+      }
+    });
+  });
+}
+
+if (document.querySelector("#loginPw") !== null) {
+  document.querySelector("#loginPw").addEventListener("change", function (e) {
+    if (loginPw.value == "") {
+      document.querySelector('.password').textContent = "請輸入密碼";
+    } else {
+      document.querySelector('.password').textContent = "";
+    }
+  });
+}
+
+if (btnLogin !== null) {
+  btnLogin.addEventListener("click", function (e) {
+    e.preventDefault();
+
+    if (loginAccount.value === "" || loginPw.value === "") {
+      return;
+    }
+
+    if (document.querySelector('.account').textContent == "" && document.querySelector('.password').textContent == "") {
+      axios.post("http://localhost:3000/login", {
+        "email": loginAccount.value,
+        "password": loginPw.value
+      }).then(function (res) {
+        localStorage.setItem('accessToken', " ".concat(res.data.accessToken));
+        localStorage.setItem('userId', res.data.user.id);
+        location.href = "./index.html";
+      })["catch"](function (err) {
+        document.querySelector('.password').textContent = "密碼錯誤";
+        localStorage.clear();
+      });
+    }
+  });
+}
+"use strict";
 
 var resId = location.href.split("=")[1];
 
@@ -430,11 +505,7 @@ initResourceList();
 var bannerBlockTitle = document.querySelector('.bannerBlock > h2');
 
 if (resTopic !== undefined && bannerBlockTitle !== null) {
-  bannerBlockTitle.textContent = resTopic; // resourcesData.forEach(item=>{
-  //   console.log(resTopic)
-  //   if(item.topics == resTopic){
-  //   }
-  // })
+  bannerBlockTitle.textContent = resTopic;
 }
 /*****************入門推薦 ***************/
 
@@ -770,6 +841,155 @@ function clearFilter() {
     renderFilterResultList();
     console.log("click check");
     console.log(checkObj);
+  });
+}
+"use strict";
+
+var signUpForm = document.querySelector('form.signUpForm'); //form
+
+var signupLastName = document.querySelector('#signupLastName');
+var signupfirstName = document.querySelector('#signupfirstName');
+var signupMail = document.querySelector('#signupMail');
+var signupPw = document.querySelector('#signupPw');
+var signupPwConfirm = document.querySelector('#signupPwConfirm');
+var signUpFormInputs = document.querySelectorAll('input.signupInput'); //input
+
+var btnSignUp = document.querySelector('#btnSignUp'); //console.log(signUpFormInputs);
+
+function initSignup() {
+  getUserList();
+}
+
+initSignup(); //驗證欄位內容
+
+var constraints = {
+  lastname: {
+    presence: {
+      message: "必填欄位"
+    }
+  },
+  firstname: {
+    presence: {
+      message: "必填欄位"
+    }
+  },
+  email: {
+    presence: {
+      message: "必填欄位"
+    },
+    email: {
+      email: true,
+      message: "請填寫正確的信箱格式"
+    }
+  },
+  password: {
+    presence: {
+      message: "必填欄位"
+    },
+    length: {
+      minimum: 5,
+      message: "密碼長度請大於5"
+    }
+  },
+  confirmpw: {
+    presence: {
+      message: "必填欄位"
+    },
+    equality: {
+      attribute: "password",
+      message: "與前者輸入密碼不同" // comparator: function(v1, v2) {
+      //     return v1 === v2;
+      //   }
+
+    }
+  }
+};
+signUpFormInputs.forEach(function (item) {
+  item.addEventListener("change", function (e) {
+    item.nextElementSibling.textContent = '';
+    var errors = validate(signUpForm, constraints);
+    console.log(item.value);
+    usersData.forEach(function (userItem) {
+      if (userItem.email === signupMail.value) {
+        // console.log(userItem.email);
+        // console.log(signupMail.value);
+        document.querySelector('.email').textContent = "此信箱已存在"; //return;
+      } else {
+        document.querySelector('.email').textContent = ""; //item.nextElementSibling.textContent = ""
+      }
+    }); //有錯就呈現在畫面上
+
+    if (errors) {
+      Object.keys(errors).forEach(function (keys) {
+        //console.log(keys);
+        document.querySelector(".".concat(keys)).textContent = errors[keys][0].split(" ")[1];
+      });
+    }
+  });
+}); //取得用戶清單
+
+var usersData = [];
+
+function getUserList() {
+  axios.get("http://localhost:3000/users").then(function (res) {
+    usersData = res.data;
+  })["catch"](function (err) {
+    console.log(err.response);
+  });
+} //註冊 post
+
+
+if (btnSignUp !== null) {
+  btnSignUp.addEventListener("click", function (e) {
+    e.preventDefault();
+
+    if (signupLastName.value === "" || signupfirstName.value === "" || signupMail.value === "" || signupPw.value === "" || signupPwConfirm.value === "") {
+      console.log("有空欄位");
+      console.log("signupLastName:", signupLastName.value);
+      console.log("signupfirstName:", signupfirstName.value);
+      console.log("signupMail:", signupMail.value);
+      console.log("signupPw:", signupPw.value);
+      console.log("signupPwConfirm:", signupPwConfirm.value);
+      return;
+    } // usersData.forEach(item=>{
+    //     if(item.email===signupMail.value){
+    //         document.querySelector('.email').textContent = "此信箱已存在"
+    //         return;
+    //     }else{
+    //         document.querySelector('.email').textContent ="";
+    //     }
+    // })
+
+
+    signUpFormInputs.forEach(function (item) {
+      if (item.nextElementSibling.textContent !== '') {
+        console.log("有錯誤訊息");
+        return;
+      }
+    });
+
+    if (signupPw.value !== signupPwConfirm.value) {
+      return;
+    }
+
+    axios.post("http://localhost:3000/users", {
+      "lastName": signupLastName.value,
+      "firstName": signupfirstName.value,
+      "email": signupMail.value,
+      "password": signupPw.value,
+      "role": "user"
+    }).then(function (res) {
+      console.log(res.data);
+      alert('成功註冊'); // document.querySelector('#signupLastName').value="";
+      // document.querySelector('#signupfirstName').value="";
+      // document.querySelector('#signupMail').value="";
+      // document.querySelector('#signupPw').value="";
+      // document.querySelector('#signupPwConfirm').value="";
+
+      location.href = './index.html';
+    })["catch"](function (err) {
+      console.log(err.response);
+    });
   });
 }
 "use strict";
