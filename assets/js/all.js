@@ -1,3 +1,158 @@
+"use strict";
+
+var url = "http://localhost:3000";
+var userId = location.href.split("=")[1];
+var localStorageUserId = localStorage.getItem("userId");
+var localStorageToken = localStorage.getItem("accessToken");
+var pageClassify = location.href.split("/")[3].split(".html")[0];
+var headers = {
+  Authorization: "Bearer ".concat(localStorageToken)
+};
+var homePage = location.href.split("/")[0] + "//" + location.href.split("/")[2]; //如果localStorage userid 是空的 或是 該id 跟 這個page的id 不同 ，就轉跳至首頁
+//取得該用戶資料
+
+var userData = [];
+
+function initAccount() {
+  if (localStorageUserId == userId && localStorageUserId !== "") {
+    axios.get("".concat(url, "/users?id=").concat(localStorageUserId), headers).then(function (res) {
+      userData = res.data; //console.log(userData);
+
+      renderUserAccount();
+    })["catch"](function (err) {
+      console.log(err.response);
+    });
+  } else {
+    if (location.href !== "".concat(homePage, "/index.html")) {
+      if (pageClassify !== "resource" && pageClassify !== "resource_list" && location.href !== homePage + "/login.html" && location.href !== homePage + "/signup.html" && location.href !== homePage + "/acc_account.html" && location.href !== homePage + "/acc_resources.html") {
+        location.href = "./index.html";
+      }
+    }
+  }
+}
+
+initAccount(); //渲染既有資料
+
+var userEmail = document.querySelector('#userEmail');
+var userPW = document.querySelector('#userPW');
+var leftMenu = document.querySelector('.leftMenu');
+
+function renderUserAccount() {
+  userEmail.value = userData[0].email;
+  var leftMenuStr = "<ul class=\"nav flex-row flex-lg-column\">\n        <li class=\"nav-item \">\n        <a class=\"nav-link active ps-0 px-lg-3\" aria-current=\"page\" href=\"./acc_profile.html?userid=".concat(localStorageUserId, "\">\u500B\u4EBA\u8CC7\u6599</a>\n        </li>\n        <li class=\"nav-item\">\n        <a class=\"nav-link ps-0 px-lg-3\" href=\"./acc_account.html?userid=").concat(localStorageUserId, "\">\u5E33\u6236\u5B89\u5168</a>\n        </li>\n        <!-- <li class=\"nav-item ps-0 px-lg-3\">\n        <a class=\"nav-link\" href=\"#\">\u901A\u77E5</a>\n        </li> -->\n    </ul>  ");
+  leftMenu.innerHTML = leftMenuStr;
+}
+"use strict";
+
+var url = "http://localhost:3000";
+var userId = location.href.split("=")[1];
+var localStorageUserId = localStorage.getItem("userId");
+var localStorageToken = localStorage.getItem("accessToken");
+var pageClassify = location.href.split("/")[3].split(".html")[0];
+var headers = {
+  Authorization: "Bearer ".concat(localStorageToken)
+};
+var homePage = location.href.split("/")[0] + "//" + location.href.split("/")[2]; //如果localStorage userid 是空的 或是 該id 跟 這個page的id 不同 ，就轉跳至首頁
+//取得該用戶資料
+
+var userData = [];
+
+function initProfile() {
+  if (localStorageUserId == userId && localStorageUserId !== "") {
+    axios.get("".concat(url, "/users?id=").concat(localStorageUserId), headers).then(function (res) {
+      userData = res.data; //console.log(userData);
+
+      renderUserData();
+    })["catch"](function (err) {
+      console.log(err.response);
+    });
+  } else {
+    if (location.href !== "".concat(homePage, "/index.html")) {
+      if (pageClassify !== "resource" && pageClassify !== "resource_list" && location.href !== homePage + "/login.html" && location.href !== homePage + "/signup.html" && location.href !== homePage + "/acc_account.html" && location.href !== homePage + "/acc_resources.html") {
+        location.href = "./index.html";
+      }
+    }
+  }
+}
+
+initProfile(); //渲染用戶既有資料
+
+var firstName = document.querySelector('#firstName');
+var lastName = document.querySelector('#lastName');
+var userTitle = document.querySelector('#userTitle');
+var userExp = document.querySelector('#userExp'); // const websiteUrl = document.querySelector('#websiteUrl');
+
+var profileImg = document.querySelector('.profileImg'); //左側選單
+
+var leftMenu = document.querySelector('.leftMenu');
+
+function renderUserData() {
+  firstName.value = userData[0].firstName;
+  lastName.value = userData[0].lastName;
+
+  if (userData[0].title != undefined) {
+    userTitle.value = userData[0].title;
+  }
+
+  if (userData[0].experiences != undefined) {
+    userExp.value = userData[0].experiences;
+  } // if( userData[0].links.websiteUrl!=undefined){
+  //     websiteUrl.value = userData[0].links.websiteUrl;
+  // }
+  // console.log(profileImg);
+
+
+  var prefix = userData[0].firstName[0].toUpperCase();
+  var profileImgStr = "\n    <span class=\"userImg d-inline-block bg-primary p-4 rounded-circle fw-bold lh-1 text-white text-center\">".concat(prefix, "</span>");
+  profileImg.innerHTML = profileImgStr;
+  var leftMenuStr = "<ul class=\"nav flex-row flex-lg-column\">\n        <li class=\"nav-item \">\n        <a class=\"nav-link active ps-0 px-lg-3\" aria-current=\"page\" href=\"./acc_profile.html?userid=".concat(localStorageUserId, "\">\u500B\u4EBA\u8CC7\u6599</a>\n        </li>\n        <li class=\"nav-item\">\n        <a class=\"nav-link ps-0 px-lg-3\" href=\"./acc_account.html?userid=").concat(localStorageUserId, "\">\u5E33\u6236\u5B89\u5168</a>\n        </li>\n        <!-- <li class=\"nav-item ps-0 px-lg-3\">\n        <a class=\"nav-link\" href=\"#\">\u901A\u77E5</a>\n        </li> -->\n    </ul>  ");
+  leftMenu.innerHTML = leftMenuStr;
+} //如果欄位編輯, 檢查欄位格式
+
+
+var profileInputs = document.querySelectorAll('.profileInput');
+
+if (profileInputs !== null) {
+  profileInputs.forEach(function (item) {
+    item.addEventListener("change", function (e) {
+      item.nextElementSibling.textContent = '';
+
+      if (firstName.value == "") {
+        document.querySelector('.firstName').textContent = '必填欄位';
+      }
+
+      if (lastName.value == "") {
+        document.querySelector('.lastName').textContent = '必填欄位';
+      }
+
+      if (userTitle.value.length > 15) {
+        document.querySelector('.userTitle').textContent = '字述請少於15';
+      } // if(websiteUrl.value){
+      // }
+
+    });
+  });
+} //上傳圖片
+//儲存按鈕監聽,格式正確才儲存
+
+
+var btnSaveProfile = document.querySelector('.btnSaveProfile');
+
+if (btnSaveProfile !== null) {
+  btnSaveProfile.addEventListener("click", function (e) {
+    if (firstName.value !== "" && lastName.value !== "" && userTitle.value.length < 15) {
+      axios.patch("".concat(url, "/users/").concat(localStorageUserId), {
+        "lastName": lastName.value,
+        "firstName": firstName.value,
+        "title": userTitle.value,
+        "experiences": userExp.value
+      }).then(function (res) {//console.log(res.data);
+      })["catch"](function (err) {
+        console.log(err.response);
+      });
+    }
+  });
+}
 // let commentsData = [];
 // function getAllComment(){
 //     axios.get(`${url}/comments`)
@@ -29,7 +184,6 @@
 // })
 "use strict";
 "use strict";
-"use strict";
 
 var url = "http://localhost:3000"; // const url="./json/db.json"
 // const url="http://localhost:3000/users"
@@ -41,7 +195,10 @@ var url = "http://localhost:3000"; // const url="./json/db.json"
 var locationHref = location.href.split("/");
 var resTopic = location.href.split("=")[1];
 var resId = location.href.split("=")[1];
-var pageClassify = locationHref[3].split(".html")[0]; // let resTopicNew = resTopic.split(" ");
+var userId = location.href.split("=")[1];
+var localStorageUserId = localStorage.getItem("userId");
+var pageClassify = locationHref[3].split(".html")[0];
+var homePage = locationHref[0] + "//" + locationHref[2]; // let resTopicNew = resTopic.split(" ");
 // console.log(resTopic);
 // console.log("pageClassify",pageClassify);
 // console.log("locationHref",locationHref);
@@ -228,6 +385,50 @@ function renderNewFreeList() {
   }
 }
 "use strict";
+
+var localStorageUserId = localStorage.getItem("userId"); // console.log(localStorageUserId);
+
+var beforeLogin = document.querySelector('.beforeLogin');
+var afterLogin = document.querySelector('.afterLogin');
+var accountMenuImg = document.querySelector('.accountMenuImg');
+var accountMenu = document.querySelector('.accountMenu');
+var logOut = document.querySelector('.logOut'); //如果有取得 userid  就表示有登入
+
+if (localStorageUserId == null || localStorageUserId == "") {
+  afterLogin.setAttribute("class", "d-none");
+} else {
+  if (beforeLogin !== null) {
+    beforeLogin.setAttribute("class", "d-none");
+  } //get userData
+
+
+  var userData = [];
+  axios.get("".concat(url, "/users?id=").concat(localStorageUserId)).then(function (res) {
+    userData = res.data;
+    renderAccountMenu(userData);
+  })["catch"](function (err) {
+    console.log(err.response);
+  });
+} //隱藏登入註冊, 顯示會員功能, 帶入相關會員資訊 , 切換至會員頁時帶入會員 id 資料等
+//將 userid 渲染至選單連結中
+
+
+function renderAccountMenu(userData) {
+  var prefix = userData[0].firstName[0].toUpperCase();
+  var accountMenuImgStr = "\n    <span class=\"userImg d-inline-block bg-primary px-2 py-2 rounded-circle fw-bold fs-7 lh-1 text-white text-center\">".concat(prefix, "</span>");
+  var accountMenuStr = "<li><a class=\"dropdown-item\" href=\"./acc_profile.html?userid=".concat(localStorageUserId, "\">\u500B\u4EBA\u8CC7\u6599</a></li>\n    <li><a class=\"dropdown-item\" href=\"./acc_resources.html?userid=").concat(localStorageUserId, "\">\u6211\u7684\u8CC7\u6E90</a></li>\n    <li><a class=\"dropdown-item\" href=\"#\">\u6211\u7684\u52DF\u96C6</a></li>\n    <li><a class=\"dropdown-item\" href=\"#\">\u6211\u7684\u5B78\u7FD2</a></li>\n    <li><a class=\"dropdown-item\" href=\"#\">\u8A2D\u5B9A</a></li>");
+  accountMenuImg.innerHTML = accountMenuImgStr;
+  accountMenu.innerHTML = accountMenuStr;
+} //如果登出,就清空 localStorage userId
+
+
+logOut.addEventListener("click", function (e) {
+  localStorage.setItem('accessToken', "");
+  localStorage.setItem('userId', "");
+  beforeLogin.setAttribute("class", "d-block");
+  afterLogin.setAttribute("class", "d-none");
+  location.href = "./index.html";
+});
 "use strict";
 
 var loginAccount = document.querySelector('#loginAccount');
@@ -977,7 +1178,12 @@ if (btnSignUp !== null) {
       "firstName": signupfirstName.value,
       "email": signupMail.value,
       "password": signupPw.value,
-      "role": "user"
+      "role": "user",
+      "title": "",
+      "experiences": "",
+      "links": {
+        "websiteUrl": ""
+      }
     }).then(function (res) {
       console.log(res.data);
       alert('成功註冊'); // document.querySelector('#signupLastName').value="";
@@ -986,7 +1192,7 @@ if (btnSignUp !== null) {
       // document.querySelector('#signupPw').value="";
       // document.querySelector('#signupPwConfirm').value="";
 
-      location.href = './index.html';
+      location.href = './login.html';
     })["catch"](function (err) {
       console.log(err.response);
     });
@@ -994,45 +1200,39 @@ if (btnSignUp !== null) {
 }
 "use strict";
 
-//  Unix时间戳转换为当前时间多久之前
-//  @param timespan  int         Unix时间戳
-//  @return timeSpanStr  string      转换之后的前台需要的字符串
-//  https://beltxman.com/1576.html
-// console.log(Ftime (1670564031));
 function Ftime(timespan) {
   var dateTime = new Date(timespan * 1000);
   var year = dateTime.getFullYear();
   var month = dateTime.getMonth() + 1;
   var day = dateTime.getDate();
   var hour = dateTime.getHours();
-  var minute = dateTime.getMinutes(); //当前时间
-
-  var now = Date.parse(new Date()); //typescript转换写法
+  var minute = dateTime.getMinutes();
+  var now = Date.parse(new Date()); //typescript轉換
 
   var milliseconds = 0;
-  var timeSpanStr; //计算时间差
+  var timeSpanStr; //時間差
 
-  milliseconds = now / 1000 - timespan; //一分钟以内
+  milliseconds = now / 1000 - timespan; // < 1min
 
   if (milliseconds <= 60) {
     timeSpanStr = '剛剛';
-  } //大于一分钟小于一小时
+  } // > 1min < 60min
   else if (60 < milliseconds && milliseconds <= 60 * 60) {
       timeSpanStr = Math.ceil(milliseconds / 60) + '分鐘前';
-    } //大于一小时小于等于一天
+    } // >1hr < 24hr 
     else if (60 * 60 < milliseconds && milliseconds <= 60 * 60 * 24) {
         timeSpanStr = Math.ceil(milliseconds / (60 * 60)) + '小時前';
-      } //大于一天小于等于15天
+      } // >1day > 15day 
       else if (60 * 60 * 24 < milliseconds && milliseconds <= 60 * 60 * 24 * 30) {
           timeSpanStr = Math.ceil(milliseconds / (60 * 60 * 24)) + '天前';
-        } //大于一个月小于一年
+        } // > 1month < 12 month 
         else if (60 * 60 * 24 * 30 < milliseconds && milliseconds <= 60 * 60 * 24 * 30 * 12) {
             timeSpanStr = Math.ceil(milliseconds / (60 * 60 * 24 * 30)) + '個月前';
-          } //超过一年显示
+          } // > 1year
           else {
               timeSpanStr = year + '年' + month + '月' + day + '日 ' + hour + ':' + minute;
             }
 
   return timeSpanStr;
-}
+} //  https://beltxman.com/1576.html
 //# sourceMappingURL=all.js.map

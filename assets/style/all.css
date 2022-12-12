@@ -13427,6 +13427,11 @@ ul {
   }
 }
 
+.userImg {
+  width: 2rem;
+  height: 2rem;
+}
+
 .footer-brand {
   width: 75px;
   height: 40px;
@@ -13786,6 +13791,12 @@ ul {
     width: 25%;
     text-align: center;
   }
+}
+
+.profilePhoto .userImg {
+  width: 10rem;
+  height: 10rem;
+  font-size: 100px;
 }
 
 .signup {

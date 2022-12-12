@@ -49,7 +49,7 @@
           </ul>
 
           <!-- 登入前 -->
-          <ul class="navbar-nav">
+          <ul class="navbar-nav beforeLogin">
             <li class="nav-item d-flex">
               <a class="nav-link btn btn-primary mx-2 text-white" href="./login.html" role="button">登入</a>
               <a class="nav-link btn btn-secondary mx-2 text-white" href="./signup.html" role="button">註冊</a>
@@ -57,7 +57,7 @@
           </ul>
 
           <!-- 登入後顯示 lg 桌機-->
-          <ul class="w-25 navbar-nav d-lg-flex align-items-lg-center lh-1">
+          <ul class="afterLogin w-25 justify-content-end navbar-nav d-lg-flex align-items-lg-center lh-1">
             <li class="nav-item">
               <!-- 有通知 -->
               <!-- <span class="material-icons text-danger">notifications</span> -->
@@ -73,18 +73,24 @@
                 <li><a class="dropdown-item" href="#">新增募集</a></li>
               </ul>
             </li>
-            <li class="nav-item dropdown w-25">            
-                <a class="nav-link dropdown-toggle" href="#" id="accountMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  <img class="rounded-circle" width="40%" src="./assets/images/icon_image.png" alt="">
+            <li class="nav-item dropdown w-25 ">
+                <a class="nav-link dropdown-toggle accountMenuImg" href="#" id="accountMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <img class="rounded-circle" width="40%" src="./assets/images/icon_image.png" alt="">
                 </a>
+ 
                 <ul class="dropdown-menu" aria-labelledby="accountMenu">
-                  <li><a class="dropdown-item" href="./acc_profile.html">個人資料</a></li>
-                  <li><a class="dropdown-item" href="./acc_resources.html">我的資源</a></li>
-                  <li><a class="dropdown-item" href="#">我的募集</a></li>
-                  <li><a class="dropdown-item" href="#">我的學習</a></li>
-                  <li><a class="dropdown-item" href="#">設定</a></li>
-                  <li><a class="dropdown-item" href="#">登出</a></li>
+                  <li>
+                    <ul class="accountMenu">
+                      <li><a class="dropdown-item" href="./acc_profile.html">個人資料</a></li>
+                      <li><a class="dropdown-item" href="./acc_resources.html">我的資源</a></li>
+                      <li><a class="dropdown-item" href="#">我的募集</a></li>
+                      <li><a class="dropdown-item" href="#">我的學習</a></li>
+                      <li><a class="dropdown-item" href="#">設定</a></li>
+                    </ul>
+                  </li>
+                  <li><a class="dropdown-item logOut" href="#">登出</a></li>
                 </ul>
+
             </li>
           </ul>
 
@@ -126,7 +132,7 @@
             <div class="leftMenu ">
                 <ul class="nav  flex-row">
                     <li class="nav-item ">
-                      <a class="nav-link active ps-0 px-lg-3" aria-current="page" href="./acc_profile.html">公開個人資料</a>
+                      <a class="nav-link active ps-0 px-lg-3" aria-current="page" href="./acc_profile.html">個人資料</a>
                     </li>
                     <li class="nav-item">
                       <a class="nav-link ps-0 px-lg-3" href="./acc_account.html">帳戶安全</a>
@@ -146,8 +152,8 @@
                     <h3 class="fs-7 my-3">電子郵件</h3>
 
                     <div class="form-floating mb-3"> 
-                    <input type="password" id="password" placeholder="email 自動帶入註冊時使用信箱" class="form-control">
-                    <label for="password">您的電子郵件</label>
+                    <input type="text" id="userEmail" placeholder="" class="form-control" disabled>
+                    <label for="userEmail">您的電子郵件</label>
                     </div>
 
                     <!-- <div class="input-group mb-3">
@@ -159,8 +165,8 @@
                     <h3 class="fs-7 my-3 mt-5">更改密碼</h3>
 
                     <div class="form-floating mb-3"> 
-                    <input type="password" id="password" placeholder="目前密碼" class="form-control">
-                    <label for="password">輸入目前密碼</label>
+                    <input type="password" id="userPW" placeholder="目前密碼" class="form-control">
+                    <label for="userPW">輸入目前密碼</label>
                     </div>
 
                     <div class="form-floating mb-3"> 

@@ -49,7 +49,7 @@
           </ul>
 
           <!-- 登入前 -->
-          <ul class="navbar-nav">
+          <ul class="navbar-nav beforeLogin">
             <li class="nav-item d-flex">
               <a class="nav-link btn btn-primary mx-2 text-white" href="./login.html" role="button">登入</a>
               <a class="nav-link btn btn-secondary mx-2 text-white" href="./signup.html" role="button">註冊</a>
@@ -57,7 +57,7 @@
           </ul>
 
           <!-- 登入後顯示 lg 桌機-->
-          <ul class="w-25 navbar-nav d-lg-flex align-items-lg-center lh-1">
+          <ul class="afterLogin w-25 justify-content-end navbar-nav d-lg-flex align-items-lg-center lh-1">
             <li class="nav-item">
               <!-- 有通知 -->
               <!-- <span class="material-icons text-danger">notifications</span> -->
@@ -73,18 +73,24 @@
                 <li><a class="dropdown-item" href="#">新增募集</a></li>
               </ul>
             </li>
-            <li class="nav-item dropdown w-25">            
-                <a class="nav-link dropdown-toggle" href="#" id="accountMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  <img class="rounded-circle" width="40%" src="./assets/images/icon_image.png" alt="">
+            <li class="nav-item dropdown w-25 ">
+                <a class="nav-link dropdown-toggle accountMenuImg" href="#" id="accountMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <img class="rounded-circle" width="40%" src="./assets/images/icon_image.png" alt="">
                 </a>
+ 
                 <ul class="dropdown-menu" aria-labelledby="accountMenu">
-                  <li><a class="dropdown-item" href="./acc_profile.html">個人資料</a></li>
-                  <li><a class="dropdown-item" href="./acc_resources.html">我的資源</a></li>
-                  <li><a class="dropdown-item" href="#">我的募集</a></li>
-                  <li><a class="dropdown-item" href="#">我的學習</a></li>
-                  <li><a class="dropdown-item" href="#">設定</a></li>
-                  <li><a class="dropdown-item" href="#">登出</a></li>
+                  <li>
+                    <ul class="accountMenu">
+                      <li><a class="dropdown-item" href="./acc_profile.html">個人資料</a></li>
+                      <li><a class="dropdown-item" href="./acc_resources.html">我的資源</a></li>
+                      <li><a class="dropdown-item" href="#">我的募集</a></li>
+                      <li><a class="dropdown-item" href="#">我的學習</a></li>
+                      <li><a class="dropdown-item" href="#">設定</a></li>
+                    </ul>
+                  </li>
+                  <li><a class="dropdown-item logOut" href="#">登出</a></li>
                 </ul>
+
             </li>
           </ul>
 
@@ -145,45 +151,53 @@
                     <h3 class="fs-7 my-3">基本資料</h3>
                     <div>
                         <div class="form-floating mb-3"> 
-                            <input type="text" id="firstName" placeholder="名字" class="form-control">
+                            <input type="text" id="firstName" placeholder="名字" class="form-control profileInput">
+                            <span class="message firstName fs-8 text-danger"></span>
                             <label for="firstName">名字</label>
                         </div>
                     
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="lastName" placeholder="姓">
+                            <input type="text" class="form-control profileInput" id="lastName" placeholder="姓">
+                            <span class="message lastName fs-8 text-danger"></span>
                             <label for="lastName">姓</label>
                         </div>
                         
                     
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="yourTitle" placeholder="頭銜">
-                            <label for="yourTitle">頭銜</label>
+                            <input type="text" class="form-control profileInput" id="userTitle" placeholder="頭銜">
+                            <span class="message userTitle fs-8 text-danger"></span> 
+                            <label for="userTitle">頭銜</label>
                         </div>
                     
                     
                         <div class="form-floating">
-                            <textarea class="form-control" placeholder="Leave a comment here" id="yourExp" style="height: 100px"></textarea>
-                            <label for="yourExp">經歷</label>
+                            <textarea class="form-control profileInput" placeholder="Leave a comment here" id="userExp" style="height: 100px"></textarea>
+                            <span class="message userExp fs-8 text-danger"></span>
+                            <label for="userExp">經歷</label>
                         </div>
         
-                        <h3 class="fs-7 my-3 mt-5">連結</h3>
+                        <!-- <h3 class="fs-7 my-3 mt-5">連結</h3>
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="website">個人網站</span>
-                            <input type="url" class="form-control" id="websiteInput" aria-describedby="website" placeholder="http(s)://">
-                        </div>
+                            <input type="url" class="form-control profileInput" id="websiteUrl" aria-describedby="website" placeholder="http(s)://">
+                            <span class="message email fs-8 text-danger"></span>
+                        </div> -->
                     </div>
                 </div>
 
                 <div class="col text-center my-4">
                     <div class="profilePhoto ms-md-6 mb-4 w-50 mt-md-8 mx-auto">
-                        <img class="rounded-circle " src="./assets/images/icon_image.png" alt="photo">
+                        <div class="profileImg">
+                             <img class="rounded-circle " src="./assets/images/icon_image.png" alt="photo">
+                        </div>
+                       
                         <a href="#" role="button" class="btn btn-outline-primary mt-2 fs-8">編輯</a>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <dov class="col text-center">
-                    <button type="submit" class="btn btn-primary text-white px-5">儲存</button>
+                <dov class="col text-center my-6">
+                    <button type="submit" class="btnSaveProfile btn btn-primary text-white px-5">儲存</button>
                 </dov>
             </div>
             <!-- </form> -->
@@ -192,6 +206,8 @@
   
 
 </main>
+
+
 
 <footer class="footer container-fluid py-5 p-lg-5 bg-primary">
   <div class="container d-flex justify-content-between">
