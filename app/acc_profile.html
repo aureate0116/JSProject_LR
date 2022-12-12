@@ -30,45 +30,53 @@ current: acc_profile
                     <h3 class="fs-7 my-3">基本資料</h3>
                     <div>
                         <div class="form-floating mb-3"> 
-                            <input type="text" id="firstName" placeholder="名字" class="form-control">
+                            <input type="text" id="firstName" placeholder="名字" class="form-control profileInput">
+                            <span class="message firstName fs-8 text-danger"></span>
                             <label for="firstName">名字</label>
                         </div>
                     
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="lastName" placeholder="姓">
+                            <input type="text" class="form-control profileInput" id="lastName" placeholder="姓">
+                            <span class="message lastName fs-8 text-danger"></span>
                             <label for="lastName">姓</label>
                         </div>
                         
                     
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="yourTitle" placeholder="頭銜">
-                            <label for="yourTitle">頭銜</label>
+                            <input type="text" class="form-control profileInput" id="userTitle" placeholder="頭銜">
+                            <span class="message userTitle fs-8 text-danger"></span> 
+                            <label for="userTitle">頭銜</label>
                         </div>
                     
                     
                         <div class="form-floating">
-                            <textarea class="form-control" placeholder="Leave a comment here" id="yourExp" style="height: 100px"></textarea>
-                            <label for="yourExp">經歷</label>
+                            <textarea class="form-control profileInput" placeholder="Leave a comment here" id="userExp" style="height: 100px"></textarea>
+                            <span class="message userExp fs-8 text-danger"></span>
+                            <label for="userExp">經歷</label>
                         </div>
         
-                        <h3 class="fs-7 my-3 mt-5">連結</h3>
+                        <!-- <h3 class="fs-7 my-3 mt-5">連結</h3>
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="website">個人網站</span>
-                            <input type="url" class="form-control" id="websiteInput" aria-describedby="website" placeholder="http(s)://">
-                        </div>
+                            <input type="url" class="form-control profileInput" id="websiteUrl" aria-describedby="website" placeholder="http(s)://">
+                            <span class="message email fs-8 text-danger"></span>
+                        </div> -->
                     </div>
                 </div>
 
                 <div class="col text-center my-4">
                     <div class="profilePhoto ms-md-6 mb-4 w-50 mt-md-8 mx-auto">
-                        <img class="rounded-circle " src="./assets/images/icon_image.png" alt="photo">
+                        <div class="profileImg">
+                             <img class="rounded-circle " src="./assets/images/icon_image.png" alt="photo">
+                        </div>
+                       
                         <a href="#" role="button" class="btn btn-outline-primary mt-2 fs-8">編輯</a>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <dov class="col text-center">
-                    <button type="submit" class="btn btn-primary text-white px-5">儲存</button>
+                <dov class="col text-center my-6">
+                    <button type="submit" class="btnSaveProfile btn btn-primary text-white px-5">儲存</button>
                 </dov>
             </div>
             <!-- </form> -->
@@ -77,3 +85,4 @@ current: acc_profile
   
 
 </main>
+

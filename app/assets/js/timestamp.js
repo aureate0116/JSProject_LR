@@ -1,9 +1,4 @@
-//  Unix时间戳转换为当前时间多久之前
-//  @param timespan  int         Unix时间戳
-//  @return timeSpanStr  string      转换之后的前台需要的字符串
-//  https://beltxman.com/1576.html
 
-// console.log(Ftime (1670564031));
 
 function Ftime (timespan) {
     var dateTime = new Date(timespan * 1000);
@@ -12,36 +7,39 @@ function Ftime (timespan) {
     var day = dateTime.getDate();
     var hour = dateTime.getHours();
     var minute = dateTime.getMinutes();
-    //当前时间
-    var now = Date.parse(new Date());  //typescript转换写法
+   
+    var now = Date.parse(new Date());  //typescript轉換
     var milliseconds = 0;
     var timeSpanStr;
-    //计算时间差
+    //時間差
     milliseconds = (now / 1000) - timespan;
 
-    //一分钟以内
+    // < 1min
     if (milliseconds <= 60) {
         timeSpanStr = '剛剛';
     }
-    //大于一分钟小于一小时
+    // > 1min < 60min
     else if (60 < milliseconds && milliseconds <= 60 * 60) {
         timeSpanStr = Math.ceil((milliseconds / (60))) + '分鐘前';
     }
-    //大于一小时小于等于一天
+    // >1hr < 24hr 
     else if (60 * 60 < milliseconds && milliseconds <= 60 * 60 * 24) {
         timeSpanStr = Math.ceil(milliseconds / (60 * 60)) + '小時前';
     }
-    //大于一天小于等于15天
+    // >1day > 15day 
     else if (60 * 60 * 24 < milliseconds && milliseconds <= 60 * 60 * 24 * 30) {
         timeSpanStr = Math.ceil(milliseconds / (60 * 60 * 24)) + '天前';
     }
-    //大于一个月小于一年
+    // > 1month < 12 month 
     else if (60 * 60 * 24 * 30 < milliseconds && milliseconds <= 60 * 60 * 24 * 30 * 12){
         timeSpanStr = Math.ceil(milliseconds / (60 * 60 * 24 * 30)) + '個月前';
     }
-    //超过一年显示
+    // > 1year
     else {
         timeSpanStr = year + '年' + month + '月' + day + '日 ' + hour + ':' + minute;   
     }
     return timeSpanStr;
 }
+
+
+//  https://beltxman.com/1576.html

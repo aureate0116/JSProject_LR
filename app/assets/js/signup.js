@@ -138,7 +138,10 @@ if(btnSignUp!==null){
         "firstName": signupfirstName.value,
         "email": signupMail.value,
         "password": signupPw.value,
-        "role": "user"
+        "role": "user",
+        "title":"",
+        "experiences":"",
+        "links":{"websiteUrl":""}
 
     }).then(res=>{
         console.log(res.data);
@@ -148,15 +151,11 @@ if(btnSignUp!==null){
         // document.querySelector('#signupMail').value="";
         // document.querySelector('#signupPw').value="";
         // document.querySelector('#signupPwConfirm').value="";
-        location.href ='./index.html';
+        location.href ='./login.html';
 
     }).catch(err=>{
         console.log(err.response);
     })
-
-    
-
-   
 
 })
 }
