@@ -136,13 +136,13 @@
     <div class="resourceContent container d-md-flex flex-md-row flex-column-reverse mb-7">
        <div class="leftRelated ">
             <div class="imageNBrief rounded-3 border p-3 bg-white">
-                <img class="d-md-block d-none" src="./assets/images/icon_image.png" alt="linkImg">
+                <img class="d-md-block" src="./assets/images/icon_image.png" alt="linkImg">
                 <div class="mt-md-3 text-dark">w3schools 提供基礎到進階的JavaScript語法，提供許多淺顯易懂的範例程式，讓初學者更容易理解</div>
             </div>
 
             <!--related item-->
             <div class="mt-7 d-none d-md-block">
-                <h3 class="fs-6">相關資源</h3>
+                <h3 class="fs-6 relatedTitle">相關資源</h3>
                 <div class="relatedResource">
                     <div class="my-4">
                         <h4 class="fs-7">w3schools JavaScript Tutorial w3schools...</h4>
@@ -214,11 +214,15 @@
             <div class="resourceComment ">
                 <!--登入後顯示-->
                 <div class="loginComment">
-                    <a class="btn btn-outline-primary" data-bs-toggle="collapse" href="#collapseComment" role="button" aria-expanded="false" aria-controls="collapseComment">
-                        立即評論</a>
-                    <div class="collapse border border-2 rounded-3 p-lg-4 my-2 p-2" id="collapseComment">
-                        <div class="d-flex p-3 align-items-center justify-content-between"> <!--card card-body -->
-                            <h3 class="card-title fs-7 d-flex align-items-center ">
+                    <a class="btnComment btn btn-outline-primary w-100" data-bs-toggle="collapse" href="#collapseComment" role="button" aria-expanded="false" aria-controls="collapseComment">
+                        立即評論
+                    </a>
+
+
+                    <div class="commentContent collapse border border-2 rounded-3 p-lg-4 my-2 p-2" id="collapseComment">
+                        <div class="d-flex p-3 align-items-center justify-content-between"> 
+                            <!--card card-body -->
+                            <h3 class="userInfo card-title fs-7 d-flex align-items-center ">
                                 <img class="rounded-circle" src="./assets/images/icon_image.png" alt="">
                                 <p class="mb-0 mx-2 text-start">
                                     Jenny<br/>
@@ -226,7 +230,7 @@
 
                                 </p>
                             </h3>
-                            <ul class="card-text d-flex align-items-center lh-1">
+                            <ul class="commentStar card-text d-flex align-items-center lh-1">
                                 <li><a href="#" role="button"><span class="material-icons material-icons-sharp ">star_outline</span></a></li> 
                                 <li><a href="#" role="button"><span class="material-icons material-icons-sharp ">star_outline</span></a></li> 
                                 <li><a href="#" role="button"><span class="material-icons material-icons-sharp ">star_outline</span></a></li> 
@@ -238,9 +242,10 @@
                         <div class="d-flex flex-column">
                             <div class="form-floating">
                                 <textarea class="form-control" placeholder="" id="commentTextarea" style="height: 100px"></textarea>
+                                <span class="message commentTextarea text-danger fs-8 "></span>
                                 <label for="commentTextarea">Comments</label>
                             </div>
-                            <a href="#" role="button" class="btn btn-primary text-white mt-4">送出評論</a>
+                            <a href="#" role="button" class="btnCommentSubmit btn btn-primary text-white mt-4">送出評論</a>
                         </div>
                     </div>
                 </div>
@@ -853,10 +858,10 @@
 
 </div>
 
+<script scr="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="./assets/js/all.js"></script>
 </body>

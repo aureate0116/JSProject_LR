@@ -42,6 +42,39 @@ function renderUserAccount() {
   var leftMenuStr = "<ul class=\"nav flex-row flex-lg-column\">\n        <li class=\"nav-item \">\n        <a class=\"nav-link active ps-0 px-lg-3\" aria-current=\"page\" href=\"./acc_profile.html?userid=".concat(localStorageUserId, "\">\u500B\u4EBA\u8CC7\u6599</a>\n        </li>\n        <li class=\"nav-item\">\n        <a class=\"nav-link ps-0 px-lg-3\" href=\"./acc_account.html?userid=").concat(localStorageUserId, "\">\u5E33\u6236\u5B89\u5168</a>\n        </li>\n        <!-- <li class=\"nav-item ps-0 px-lg-3\">\n        <a class=\"nav-link\" href=\"#\">\u901A\u77E5</a>\n        </li> -->\n    </ul>  ");
   leftMenu.innerHTML = leftMenuStr;
 }
+
+var constraints = {
+  oldPassowrd: {
+    presence: {
+      message: "必填欄位"
+    },
+    length: {
+      minimum: 5,
+      message: "密碼長度請大於5"
+    }
+  },
+  newPassword: {
+    presence: {
+      message: "必填欄位"
+    },
+    length: {
+      minimum: 5,
+      message: "密碼長度請大於5"
+    }
+  },
+  confirmpw: {
+    presence: {
+      message: "必填欄位"
+    },
+    equality: {
+      attribute: "newPassword2",
+      message: "與前者輸入密碼不同" // comparator: function(v1, v2) {
+      //     return v1 === v2;
+      //   }
+
+    }
+  }
+};
 "use strict";
 
 var url = "http://localhost:3000";
@@ -50,7 +83,9 @@ var localStorageUserId = localStorage.getItem("userId");
 var localStorageToken = localStorage.getItem("accessToken");
 var pageClassify = location.href.split("/")[3].split(".html")[0];
 var headers = {
-  Authorization: "Bearer ".concat(localStorageToken)
+  headers: {
+    "authorization": "Bearer ".concat(localStorageToken)
+  }
 };
 var homePage = location.href.split("/")[0] + "//" + location.href.split("/")[2]; //如果localStorage userid 是空的 或是 該id 跟 這個page的id 不同 ，就轉跳至首頁
 //取得該用戶資料
@@ -141,12 +176,23 @@ var btnSaveProfile = document.querySelector('.btnSaveProfile');
 if (btnSaveProfile !== null) {
   btnSaveProfile.addEventListener("click", function (e) {
     if (firstName.value !== "" && lastName.value !== "" && userTitle.value.length < 15) {
-      axios.patch("".concat(url, "/users/").concat(localStorageUserId), {
+      axios.patch("".concat(url, "/600/users/").concat(localStorageUserId), {
         "lastName": lastName.value,
         "firstName": firstName.value,
         "title": userTitle.value,
         "experiences": userExp.value
-      }).then(function (res) {//console.log(res.data);
+      }, headers).then(function (res) {
+        alert("已成功更新"); //document.write(`<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>`)
+        //Swal.fire('Any fool can use a computer')
+        // Swal.fire({
+        //     position: 'top-end',
+        //     icon: 'success',
+        //     title: 'Your work has been saved',
+        //     showConfirmButton: false,
+        //     timer: 1500
+        // })
+
+        console.log(res.data);
       })["catch"](function (err) {
         console.log(err.response);
       });
@@ -239,6 +285,7 @@ var commentsData = []; //取得資源資料
 function getResourcesForIndex() {
   axios.get("".concat(url, "/resources")).then(function (res) {
     resourcesData = res.data;
+    document.title = "Eng!neer 程式學習資源網";
     renderGoodRateList();
     renderNewFreeList();
   })["catch"](function (error) {
@@ -446,6 +493,7 @@ var usersData = [];
 function getUserList() {
   axios.get("http://localhost:3000/users").then(function (res) {
     usersData = res.data;
+    login();
   })["catch"](function (err) {
     console.log(err.response);
   });
@@ -454,24 +502,29 @@ function getUserList() {
 
 if (document.querySelector("#loginAccount") !== null) {
   document.querySelector("#loginAccount").addEventListener("change", function (e) {
+    document.querySelector('.account').textContent = "";
+
     if (loginAccount.value == "") {
       document.querySelector('.account').textContent = "請輸入帳號";
     } else {
       document.querySelector('.account').textContent = "";
     }
 
-    usersData.forEach(function (userItem) {
-      if (userItem.email !== loginAccount.value) {
-        document.querySelector('.account').textContent = "此帳號不存在";
-      } else {
-        document.querySelector('.account').textContent = "";
-      }
-    });
+    var result = usersData.filter(function (userItem) {
+      return userItem.email === loginAccount.value;
+    }); // console.log("result");
+    // console.log(result);
+
+    if (result.length == 0) {
+      document.querySelector('.account').textContent = "此帳號不存在";
+    }
   });
 }
 
 if (document.querySelector("#loginPw") !== null) {
   document.querySelector("#loginPw").addEventListener("change", function (e) {
+    document.querySelector('.password').textContent = "";
+
     if (loginPw.value == "") {
       document.querySelector('.password').textContent = "請輸入密碼";
     } else {
@@ -493,7 +546,7 @@ if (btnLogin !== null) {
         "email": loginAccount.value,
         "password": loginPw.value
       }).then(function (res) {
-        localStorage.setItem('accessToken', " ".concat(res.data.accessToken));
+        localStorage.setItem('accessToken', "".concat(res.data.accessToken));
         localStorage.setItem('userId', res.data.user.id);
         location.href = "./index.html";
       })["catch"](function (err) {
@@ -505,24 +558,29 @@ if (btnLogin !== null) {
 }
 "use strict";
 
-var resId = location.href.split("=")[1];
+var resId = parseFloat(location.href.split("=")[1]);
+var headers = {
+  headers: {
+    "authorization": "Bearer ".concat(localStorageToken)
+  }
+};
 
 function initResourcePage() {
   getResourcesForResources();
   getCommentData();
   getResourcesItem(resId);
   getResourcesComment(resId);
+  getUserData();
 }
 
 initResourcePage();
 var resourcesData = [];
-var commentsData = []; //2. 取得資料
+var commentsData = []; // 取得所有資源資料
 
 function getResourcesForResources() {
   axios.get("".concat(url, "/resources")).then(function (res) {
     resourcesData = res.data; //getCommentData();
-
-    renderRelatedResource();
+    //renderRelatedResource();
   })["catch"](function (error) {
     console.log(error);
   });
@@ -538,7 +596,7 @@ function getCommentData() {
 }
 
 var resourceContent = [];
-var resourceCommentData = [];
+var resourceCommentData = []; //取得單一資源>>用於渲染資源建立者
 
 function getResourcesItem(id) {
   axios.get("".concat(url, "/resources?id=").concat(id, "&_expand=user")).then(function (res) {
@@ -571,6 +629,8 @@ function renderResource() {
   var userName = "";
 
   if (renderItem !== undefined) {
+    document.title = renderItem.title;
+
     if (renderItem.user.role === "admin") {
       userName = "admin";
     } else {
@@ -596,7 +656,7 @@ function renderResource() {
     }
 
     btnBoxStr = "\n        <a href=\"".concat(renderItem.url, "\" target=\"_blank\" type=\"button\" class=\"btn btn-sm btn-secondary my-2 text-white px-lg-4 py-2 fs-6\">\u524D\u5F80\u8CC7\u6E90</a>\n        <div class=\"d-flex justify-content-center flex-row flex-md-column flex-lg-row align-items-center\">                    \n            <a href=\"#\" role=\"button\" class=\"d-flex align-items-center me-2 \">\n                <span class=\"material-icons \">bookmark_border</span>\n                <!-- <span class=\"material-icons\">bookmark</span> -->\n                <span>\u6536\u85CF</span>\n            </a>\n\n            <a href=\"#\" role=\"button\" class=\" d-flex align-items-center me-2 \">\n                <span class=\"material-icons material-icons-outlined\">feedback</span>\n                <!-- <span class=\"material-icons\">feedback</span> -->\n                <span>\u56DE\u5831</span>\n            </a>\n        </div>");
-    imageNBriefStr = "\n        <img class=\"d-md-block d-none\" src=\"".concat(renderItem.imgUrl, "\" alt=\"").concat(renderItem.title, "\">\n                    <div class=\"mt-md-3 text-dark\">").concat(renderItem.intro, "</div>");
+    imageNBriefStr = "\n        <img class=\"d-md-block\" src=\"".concat(renderItem.imgUrl, "\" alt=\"").concat(renderItem.title, "\">\n                    <div class=\"mt-md-3 text-dark\">").concat(renderItem.intro, "</div>");
 
     if (imageNBrief !== null) {
       imageNBrief.innerHTML = imageNBriefStr;
@@ -615,6 +675,7 @@ function renderResource() {
 
 
 var commentList = document.querySelector('.resourceComment > .commentList');
+var commentSort = document.querySelector('#commentSort');
 
 function renderComment() {
   var commentStr = "";
@@ -639,42 +700,52 @@ function renderComment() {
     if (item.user.role === "admin") {
       userName = "admin";
     } else {
-      userName = "".concat(item.user.lastName, " ").concat(item.user.firstName, " ");
+      userName = "".concat(item.user.firstName, " ").concat(item.user.lastName);
     }
 
+    var prefix = item.user.firstName[0].toUpperCase();
     var commentTimeAge = Ftime(item.commentTime);
-    commentStr += "\n        <div class=\"col mb-3 position-relatvie\" style=\"z-index:10;\">\n            <div class=\"card card-body position-relatvie\" style=\"z-index:10;\">\n                <div class=\"d-flex p-lg-3 align-items-lg-center flex-column flex-lg-row justify-content-between\"> \n                    <h3 class=\"card-title fs-7 d-flex align-items-center justify-content-lg-start justify-content-between\">\n                        <img class=\"rounded-circle\" src=\"./assets/images/icon_image.png\" alt=\"\">\n                        <p class=\"mb-0 mx-2 text-start\">\n                            ".concat(userName, "<br/>\n                            <span class=\"fs-9 text-gray\">").concat(item.user.title, "</span>\n                        </p>\n                        \n                    </h3>\n                    <div class=\"d-flex flex-lg-column justify-content-between\">\n                        <ul class=\"card-text d-flex align-items-center lh-1\">\n                        ").concat(newResultScoreOjb[1], "\n                        \n                        </ul> \n                        <p class=\"mb-0 text-end\">\n                            <span class=\"fs-9 text-gray\">").concat(commentTimeAge, "</span></p>\n                    </div>\n                </div>\n\n                <div class=\"d-flex flex-column\">\n                    <div class=\"form-floating my-3\"> \n                        <p>").concat(item.content, "</p>\n                    </div>\n                </div>\n\n                <div class=\"d-flex justify-content-between fs-8\">\n                    <!-- like & dislike -->\n                    <div class=\"d-flex align-items-center\">\n                        <a href=\"#\">\n                            <span class=\"material-icons-outlined fs-6\">thumb_up_alt</span></a>\n                        <span class=\"mx-2\">").concat(item.likeNum, "</span>\n                        <!-- <a href=\"#\">\n                        <span class=\"material-icons fs-6\">thumb_up_alt</span></a> -->\n\n                            <a href=\"#\">\n                            <span class=\"material-icons-outlined fs-6\">thumb_down_alt</span></a>\n                            <span class=\"mx-2\">").concat(item.dislikeNum, "</span>\n                            <!-- <a href=\"#\">\n                            <span class=\"material-icons fs-6\">thumb_down_alt</span></a> -->\n\n                    </div>\n\n                    <div class=\"position-relatvie\" >\n                        <a class=\"d-flex align-items-center\" data-bs-toggle=\"collapse\" href=\"#commentOffense").concat(commentNum + 1, "\" role=\"button\" aria-expanded=\"false\" aria-controls=\"commentOffense\">\n                            <span class=\"material-icons-outlined\">report</span>\n                            <span>\u6AA2\u8209</span>\n                        </a>\n\n                        <div class=\"offenseItem border bg-light rounded-3 p-3 collapse position-absolute end-0\" id=\"commentOffense").concat(commentNum + 1, "\" style=\"z-index:0;\">\n                            <div class=\"form-check\">\n                                <input class=\"form-check-input\" type=\"radio\" name=\"offenseItem\" id=\"offenseItem1\">\n                                <label class=\"form-check-label\" for=\"offenseItem1\">\n                                    \u504F\u96E2\u4E3B\u984C\n                                </label>\n                            </div>\n                            <div class=\"form-check\">\n                                <input class=\"form-check-input\" type=\"radio\" name=\"offenseItem\" id=\"offenseItem2\">\n                                <label class=\"form-check-label\" for=\"offenseItem2\">\n                                    \u5783\u573E\u5167\u5BB9\u53CA\u5EE3\u544A\u5BA3\u50B3\n                                </label>\n                            </div>\n                            <div class=\"form-check\">\n                                <input class=\"form-check-input\" type=\"radio\" name=\"offenseItem\" id=\"offenseItem3\">\n                                <label class=\"form-check-label\" for=\"offenseItem3\">\n                                    \u9A37\u64FE\u5167\u5BB9\u53CA\u4E0D\u96C5\u7528\u8A9E\n                                </label>\n                            </div>\n                            <button class=\"btn btn-primary btn-sm text-white\" type=\"submit\">\u9001\u51FA</button>\n                        </div>\n                    </div>\n                </div>\n            </div><!--end card-->\n        </div>");
+    commentStr += "\n        <div class=\"col mb-3 position-relatvie\" style=\"z-index:10;\">\n            <div class=\"card card-body position-relatvie d-flex justify-content-between\" style=\"z-index:10;\">\n                <div class=\"d-flex align-items-lg-center flex-column flex-lg-row justify-content-between\"> \n                    <h3 class=\"card-title fs-7 d-flex align-items-center justify-content-lg-start justify-content-between\">\n\n                        <span class=\"userImg d-inline-block bg-primary px-2 py-2 rounded-circle fw-bold fs-7 lh-1 text-white text-center\">".concat(prefix, "</span>\n\n                        <p class=\"mb-0 mx-2 text-start\">\n                            ").concat(userName, "<br/>\n                            <span class=\"fs-9 text-gray\">").concat(item.user.title, "</span>\n                        </p>\n                        \n                    </h3>\n                    <div class=\"d-flex flex-lg-column justify-content-between\">\n                        <ul class=\"card-text d-flex align-items-center lh-1\">\n                        ").concat(newResultScoreOjb[1], "\n                        \n                        </ul> \n                        <p class=\"mb-0 text-end\">\n                            <span class=\"fs-9 text-gray\">").concat(commentTimeAge, "</span></p>\n                    </div>\n                </div>\n\n                <div class=\"d-flex flex-column\">\n                    <div class=\"form-floating my-3\"> \n                        <p>").concat(item.content, "</p>\n                    </div>\n                </div>\n\n                <div class=\"d-flex justify-content-between fs-8\">\n                    <!-- like & dislike -->\n                    <div class=\"d-flex align-items-center\">\n                        <a href=\"#\">\n                            <span class=\"material-icons-outlined fs-6\">thumb_up_alt</span></a>\n                        <span class=\"mx-2\">").concat(item.likeNum, "</span>\n                        <!-- <a href=\"#\">\n                        <span class=\"material-icons fs-6\">thumb_up_alt</span></a> -->\n\n                            <a href=\"#\">\n                            <span class=\"material-icons-outlined fs-6\">thumb_down_alt</span></a>\n                            <span class=\"mx-2\">").concat(item.dislikeNum, "</span>\n                            <!-- <a href=\"#\">\n                            <span class=\"material-icons fs-6\">thumb_down_alt</span></a> -->\n\n                    </div>\n\n                    <div class=\"position-relatvie\" >\n                        <a class=\"d-flex align-items-center\" data-bs-toggle=\"collapse\" href=\"#commentOffense").concat(commentNum + 1, "\" role=\"button\" aria-expanded=\"false\" aria-controls=\"commentOffense\">\n                            <span class=\"material-icons-outlined\">report</span>\n                            <span>\u6AA2\u8209</span>\n                        </a>\n\n                        <div class=\"offenseItem border bg-light rounded-3 p-3 collapse position-absolute end-0\" id=\"commentOffense").concat(commentNum + 1, "\" style=\"z-index:0;\">\n                            <div class=\"form-check\">\n                                <input class=\"form-check-input\" type=\"radio\" name=\"offenseItem\" id=\"offenseItem1\">\n                                <label class=\"form-check-label\" for=\"offenseItem1\">\n                                    \u504F\u96E2\u4E3B\u984C\n                                </label>\n                            </div>\n                            <div class=\"form-check\">\n                                <input class=\"form-check-input\" type=\"radio\" name=\"offenseItem\" id=\"offenseItem2\">\n                                <label class=\"form-check-label\" for=\"offenseItem2\">\n                                    \u5783\u573E\u5167\u5BB9\u53CA\u5EE3\u544A\u5BA3\u50B3\n                                </label>\n                            </div>\n                            <div class=\"form-check\">\n                                <input class=\"form-check-input\" type=\"radio\" name=\"offenseItem\" id=\"offenseItem3\">\n                                <label class=\"form-check-label\" for=\"offenseItem3\">\n                                    \u9A37\u64FE\u5167\u5BB9\u53CA\u4E0D\u96C5\u7528\u8A9E\n                                </label>\n                            </div>\n                            <button class=\"btn btn-primary btn-sm text-white\" type=\"submit\">\u9001\u51FA</button>\n                        </div>\n                    </div>\n                </div>\n            </div><!--end card-->\n        </div>");
     commentNum += 1;
   });
 
   if (commentList !== null) {
     commentList.innerHTML = commentStr;
   }
+
+  if (commentStr == "") {
+    commentSort.setAttribute("class", "d-none");
+    commentList.innerHTML = "<div class=\"text-center\">\u76EE\u524D\u5C1A\u7121\u8A55\u8AD6\uFF0C\u6B61\u8FCE\u60A8\u7559\u8A00\u5206\u4EAB\u5BF6\u8CB4\u7684\u7D93\u9A57\u5537!</div>";
+  }
 }
 /******************相關資源***********************/
 
 
 var relatedResource = document.querySelector('.relatedResource');
+var relatedTitle = document.querySelector('h3.relatedTitle');
 
 function renderRelatedResource() {
   var relatedStr = "";
   var renderNum = 1;
+  var commentScoreNum = getAverageScore();
+  var resultScore = commentScoreNum[0];
+  var commentNum = commentScoreNum[1];
+  var starStr = combineCommentStar(resultScore);
 
   if (resourcesData !== undefined) {
     resourcesData.forEach(function (resItem) {
-      var resultScore = getAverageScore();
-      var newResultScoreOjb = combineCommentStar(resultScore);
-
+      // let resultScore = getAverageScore();
+      // let newResultScoreOjb = combineCommentStar(resultScore);
       if (resourceContent.length !== 0) {
         //console.log(resourceContent);
         if (resItem.topics === resourceContent[0].topics && resItem.id !== resourceContent[0].id) {
           renderNum += 1;
 
           if (renderNum <= 5) {
-            if (resultScore[resItem.id] == undefined || newResultScoreOjb[resItem.id] == undefined) {
+            if (resultScore[resItem.id] == undefined || starStr[resItem.id] == undefined || commentNum[resItem.id] == undefined) {
               relatedStr += "\n                        <div class=\"my-4\">\n                        <h4 class=\"fs-7\"><a href=\"./resource.html?id=".concat(resItem.id, "\" target=\"_blank\"> ").concat(resItem.title, "</a></h4>\n                            <div class=\"d-flex flex-wrap justify-content-start align-items-center\">\n                                <span class=\"fs-8 text-gray me-lg-2\">\u5C1A\u7121\u8A55\u50F9</span>                           \n                            </div>\n                        </div>\n                        ");
             } else {
-              relatedStr += "\n                        <div class=\"my-4\">\n                        <h4 class=\"fs-7\"><a href=\"./resource.html?id=".concat(resItem.id, "\" target=\"_blank\"> ").concat(resItem.title, "</a></h4>\n                        <div class=\"d-flex flex-wrap justify-content-start align-items-center text-secondary\">\n                            <span class=\"fs-7 fw-bold me-lg-2\">").concat(resultScore[resItem.id], "</span>\n                            <ul class=\"d-flex align-items-center lh-1 me-lg-2 \">\n                            ").concat(newResultScoreOjb[resItem.id], "\n                            </ul>                                \n                        </div>\n                        </div>\n                        ");
+              relatedStr += "\n                        <div class=\"my-4\">\n                        <h4 class=\"fs-7\"><a href=\"./resource.html?id=".concat(resItem.id, "\" target=\"_blank\"> ").concat(resItem.title, "</a></h4>\n                        <div class=\"d-flex flex-wrap justify-content-start align-items-center text-secondary\">\n                            <span class=\"fs-7 fw-bold me-lg-2\">").concat(resultScore[resItem.id], "</span>\n                            <ul class=\"d-flex align-items-center lh-1 me-lg-2 \">\n                            ").concat(starStr[resItem.id], "\n                            </ul>   \n                            <span class=\"fs-8\">(").concat(commentNum[resItem.id], ")</span>                             \n                        </div>\n                        </div>\n                        ");
             }
           }
         }
@@ -685,7 +756,116 @@ function renderRelatedResource() {
   if (relatedResource !== null) {
     relatedResource.innerHTML = relatedStr;
   }
+
+  if (relatedTitle !== null) {
+    if (relatedStr == "") {
+      relatedTitle.setAttribute("class", "d-none");
+    }
+  }
 }
+/******************立即評論***********************/
+
+
+var btnComment = document.querySelector('.btnComment');
+var commentContent = document.querySelector('.commentContent');
+var userInfo = document.querySelector('h3.userInfo');
+var btnCommentSubmit = document.querySelector('.btnCommentSubmit');
+var commentStar = document.querySelectorAll('.commentStar > li > a >span');
+var commentTextarea = document.querySelector('#commentTextarea'); //取得該用戶資料
+
+var localStorageUserId = localStorage.getItem("userId");
+var localStorageToken = localStorage.getItem("accessToken");
+var userData = [];
+
+function getUserData() {
+  axios.get("".concat(url, "/users?id=").concat(localStorageUserId)).then(function (res) {
+    userData = res.data;
+    console.log(userData);
+    renderBtnCommentContent();
+  })["catch"](function (error) {
+    console.log(error);
+  });
+} //渲染按鈕 //更新 collapseComment id
+
+
+function renderBtnCommentContent() {
+  //console.log(localStorageUserId,localStorageToken);
+  btnComment.setAttribute("href", "#collapseComment".concat(resId));
+  btnComment.setAttribute("aria-controls", "collapseComment".concat(resId));
+  commentContent.setAttribute("id", "collapseComment".concat(resId)); // console.log("resId");
+  // console.log(resId);
+  //如果有登入
+
+  var userInfoStr = "";
+
+  if (localStorageUserId !== "" && localStorageUserId !== null) {
+    var prefix = userData[0].firstName[0].toUpperCase();
+    userInfoStr = "\n        <span class=\"userImg d-inline-block bg-primary px-2 py-2 rounded-circle fw-bold fs-7 lh-1 text-white text-center\">".concat(prefix, "</span>\n        <p class=\"mb-0 mx-2 text-start\">\n            ").concat(userData[0].firstName, " ").concat(userData[0].lastName, "<br/>\n            <span class=\"fs-9 text-gray\">").concat(userData[0].title, "</span>\n\n        </p>");
+    userInfo.innerHTML = userInfoStr;
+  } else {
+    btnComment.setAttribute("href", "");
+    commentContent.setAttribute("class", "d-none");
+    btnComment.addEventListener("click", function (e) {
+      alert("請先登入");
+      location.href = "./login.html";
+    });
+  }
+}
+
+var thisTime = (Date.now() / 1000).toFixed(0); // console.log("thisTime");
+// console.log(thisTime);
+
+var starNum = 0; //checked 星星
+// console.log(commentStar);
+
+commentStar.forEach(function (starItem, index) {
+  starItem.addEventListener("click", function (e) {
+    for (var i = 0; i <= commentStar.length - 1; i++) {
+      commentStar[i].textContent = "star_outline";
+      starNum = 0;
+    }
+
+    for (var _i = 0; _i <= index; _i++) {
+      commentStar[_i].textContent = "star";
+      starNum += 1;
+    } //console.log(starNum);
+
+
+    console.log(starNum); //return starNum;
+    //console.log(starNum);
+  }); // submitComment();
+}); //檢查留言字數
+
+if (commentTextarea !== null) {
+  commentTextarea.addEventListener("change", function (e) {
+    if (commentTextarea.value.length < 20) {
+      document.querySelector('.commentTextarea').textContent = "字數須超過20字";
+      return;
+    } else {
+      document.querySelector('.commentTextarea').textContent = "";
+    }
+  });
+} //送出評論
+// function submitComment(){
+
+
+if (btnCommentSubmit != null) {
+  btnCommentSubmit.addEventListener("click", function (e) {
+    axios.post("".concat(url, "/600/comments/"), {
+      "resourceId": resId,
+      "userId": localStorageUserId,
+      "commentTime": thisTime,
+      "score": starNum,
+      "content": commentTextarea.value,
+      "likeNum": 0,
+      "dislikeNum": 0
+    }, headers).then(function (res) {
+      location.reload(); //console.log(res.data)
+    })["catch"](function (err) {
+      console.log(err.response);
+    });
+  });
+} // }
 "use strict";
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
@@ -720,15 +900,9 @@ var thisTopicData = []; //2. 取得資料
 
 function getResourcesForResources() {
   axios.get("".concat(url, "/resources")).then(function (res) {
-    //resourcesData = res.data;
-    //console.log(resTopic);
     resourcesData = res.data.filter(function (item) {
       return item.topics == resTopic;
-    }); // thisTopicData = resourcesData.filter(item=>{
-    //   return item.topics == resTopic;
-    // })
-    //console.log(thisTopicData);
-
+    });
     renderFoundationRecommond();
     renderFilterResultList();
   })["catch"](function (error) {
@@ -742,12 +916,7 @@ function getCommentData() {
   })["catch"](function (error) {
     console.log(error);
   });
-} // function getTopicData(){
-//   thisTopicData = resourcesData.filter(item=>{
-//     return item.topics = resTopic;
-//   })
-// }
-//3. 渲染入門推薦資料
+} //3. 渲染入門推薦資料
 
 
 function renderFoundationRecommond() {
@@ -790,14 +959,17 @@ function renderFoundationRecommond() {
   });
 
   if (foundation1Basic !== null) {
+    document.title = resTopic;
     foundation1Basic.innerHTML = basicStr;
   }
 
   if (foundation2Free !== null) {
+    document.title = resTopic;
     foundation2Free.innerHTML = freeStr;
   }
 
   if (foundation3CN !== null) {
+    document.title = resTopic;
     foundation3CN.innerHTML = cnStr;
   }
 }
@@ -1109,16 +1281,16 @@ signUpFormInputs.forEach(function (item) {
   item.addEventListener("change", function (e) {
     item.nextElementSibling.textContent = '';
     var errors = validate(signUpForm, constraints);
-    console.log(item.value);
-    usersData.forEach(function (userItem) {
-      if (userItem.email === signupMail.value) {
-        // console.log(userItem.email);
-        // console.log(signupMail.value);
-        document.querySelector('.email').textContent = "此信箱已存在"; //return;
-      } else {
-        document.querySelector('.email').textContent = ""; //item.nextElementSibling.textContent = ""
-      }
-    }); //有錯就呈現在畫面上
+    var result = usersData.filter(function (userItem) {
+      return userItem.email === signupMail.value;
+    });
+
+    if (result.length !== 0) {
+      document.querySelector('.email').textContent = "此帳號已存在";
+    } else {
+      document.querySelector('.email').textContent = "";
+    } //有錯就呈現在畫面上
+
 
     if (errors) {
       Object.keys(errors).forEach(function (keys) {
@@ -1145,22 +1317,9 @@ if (btnSignUp !== null) {
     e.preventDefault();
 
     if (signupLastName.value === "" || signupfirstName.value === "" || signupMail.value === "" || signupPw.value === "" || signupPwConfirm.value === "") {
-      console.log("有空欄位");
-      console.log("signupLastName:", signupLastName.value);
-      console.log("signupfirstName:", signupfirstName.value);
-      console.log("signupMail:", signupMail.value);
-      console.log("signupPw:", signupPw.value);
-      console.log("signupPwConfirm:", signupPwConfirm.value);
+      // console.log("有空欄位");
       return;
-    } // usersData.forEach(item=>{
-    //     if(item.email===signupMail.value){
-    //         document.querySelector('.email').textContent = "此信箱已存在"
-    //         return;
-    //     }else{
-    //         document.querySelector('.email').textContent ="";
-    //     }
-    // })
-
+    }
 
     signUpFormInputs.forEach(function (item) {
       if (item.nextElementSibling.textContent !== '') {
@@ -1186,12 +1345,7 @@ if (btnSignUp !== null) {
       }
     }).then(function (res) {
       console.log(res.data);
-      alert('成功註冊'); // document.querySelector('#signupLastName').value="";
-      // document.querySelector('#signupfirstName').value="";
-      // document.querySelector('#signupMail').value="";
-      // document.querySelector('#signupPw').value="";
-      // document.querySelector('#signupPwConfirm').value="";
-
+      alert('成功註冊');
       location.href = './login.html';
     })["catch"](function (err) {
       console.log(err.response);
