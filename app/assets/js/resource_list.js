@@ -32,15 +32,9 @@ let thisTopicData = [];
 function getResourcesForResources(){
   axios.get(`${url}/resources`)
   .then(res=>{
-    //resourcesData = res.data;
-    //console.log(resTopic);
     resourcesData = res.data.filter(item=>{
       return item.topics == resTopic;
     })
-    // thisTopicData = resourcesData.filter(item=>{
-    //   return item.topics == resTopic;
-    // })
-    //console.log(thisTopicData);
     renderFoundationRecommond();
     renderFilterResultList();
 
@@ -58,12 +52,6 @@ function getCommentData(){
   })
 }
 
-
-// function getTopicData(){
-//   thisTopicData = resourcesData.filter(item=>{
-//     return item.topics = resTopic;
-//   })
-// }
 
 //3. 渲染入門推薦資料
 function renderFoundationRecommond(){
@@ -114,14 +102,17 @@ function renderFoundationRecommond(){
   })
 
   if(foundation1Basic!==null){
+    document.title = resTopic;
     foundation1Basic.innerHTML = basicStr;
   }
   
   if(foundation2Free!==null){
+    document.title = resTopic;
     foundation2Free.innerHTML = freeStr;
   }
   
   if(foundation3CN!==null){
+    document.title = resTopic;
     foundation3CN.innerHTML = cnStr;
   }
 }

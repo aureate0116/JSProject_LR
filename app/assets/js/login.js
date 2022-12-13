@@ -16,40 +16,49 @@ let usersData = [];
 function getUserList(){
     axios.get("http://localhost:3000/users").then(res=>{
         usersData = res.data;
+        login();
     }).catch(err=>{
         console.log(err.response);
     })
 }
 
 //欄位檢查
-if(document.querySelector("#loginAccount")!==null){
-    document.querySelector("#loginAccount").addEventListener("change",e=>{
-    if(loginAccount.value==""){
-        document.querySelector('.account').textContent="請輸入帳號";
-    }else{
-        document.querySelector('.account').textContent="";
-    }
-    usersData.forEach(userItem=>{
-        if(userItem.email !==loginAccount.value){
-            document.querySelector('.account').textContent="此帳號不存在";
-        }else{
+
+    if(document.querySelector("#loginAccount")!==null){
+        document.querySelector("#loginAccount").addEventListener("change",e=>{
             document.querySelector('.account').textContent="";
-        }
-    })
-})
-}
+            if(loginAccount.value==""){
+                document.querySelector('.account').textContent="請輸入帳號";
+            }else{
+                document.querySelector('.account').textContent="";
+            }
+            
+            let result = usersData.filter(userItem=>{
+                return userItem.email ===loginAccount.value;
+            })
+            // console.log("result");
+            // console.log(result);
+            if(result.length==0){
+                document.querySelector('.account').textContent="此帳號不存在";
+            }
 
-if(document.querySelector("#loginPw")!==null){
-    document.querySelector("#loginPw").addEventListener("change",e=>{
-        if(loginPw.value==""){
-            document.querySelector('.password').textContent="請輸入密碼";
-        }else{
+           
+            })
+    }
+    if(document.querySelector("#loginPw")!==null){
+        document.querySelector("#loginPw").addEventListener("change",e=>{
             document.querySelector('.password').textContent="";
-        }
-    })
-}
+            if(loginPw.value==""){
+                document.querySelector('.password').textContent="請輸入密碼";
+            }else{
+                document.querySelector('.password').textContent="";
+            }
+        })
+    }
 
-if(btnLogin!==null){
+    
+
+    if(btnLogin!==null){
 
     btnLogin.addEventListener("click",e=>{
     e.preventDefault();
@@ -66,7 +75,7 @@ if(btnLogin!==null){
                 "password":loginPw.value
 
             }).then(res=>{
-                localStorage.setItem('accessToken', ` ${res.data.accessToken}`);
+                localStorage.setItem('accessToken', `${res.data.accessToken}`);
                 localStorage.setItem('userId', res.data.user.id);
                 location.href = "./index.html";
 
@@ -78,6 +87,8 @@ if(btnLogin!==null){
         }
 
 
-})
-}
+    })
+    }   
+
+
 

@@ -4,7 +4,9 @@ let localStorageUserId = localStorage.getItem("userId");
 let localStorageToken = localStorage.getItem("accessToken");
 let pageClassify = location.href.split("/")[3].split(".html")[0];
 let headers = {
-    Authorization: `Bearer ${localStorageToken}` 
+    headers:{
+        "authorization": `Bearer ${localStorageToken}` 
+    }
 }
 let homePage = location.href.split("/")[0]+`//`+location.href.split("/")[2];
 
@@ -119,14 +121,24 @@ if(btnSaveProfile!==null){
     btnSaveProfile.addEventListener("click",e=>{
         if(firstName.value !=="" && lastName.value!=="" && userTitle.value.length < 15){
                
-            axios.patch(`${url}/users/${localStorageUserId}`,{
+            axios.patch(`${url}/600/users/${localStorageUserId}`,{
                 "lastName" : lastName.value,
                 "firstName" : firstName.value,
                 "title" : userTitle.value,
                 "experiences" : userExp.value,
-            })
+            },headers)
             .then(res=>{
-                //console.log(res.data);
+                alert("已成功更新");
+                //document.write(`<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>`)
+                //Swal.fire('Any fool can use a computer')
+                // Swal.fire({
+                //     position: 'top-end',
+                //     icon: 'success',
+                //     title: 'Your work has been saved',
+                //     showConfirmButton: false,
+                //     timer: 1500
+                // })
+                console.log(res.data);
             }).catch(err=>{
                 console.log(err.response);
             })
@@ -134,6 +146,7 @@ if(btnSaveProfile!==null){
         }
     })
 }
+
 
 
 

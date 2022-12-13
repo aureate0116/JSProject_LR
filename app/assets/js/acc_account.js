@@ -61,3 +61,32 @@ function renderUserAccount(){
     
     leftMenu.innerHTML = leftMenuStr;
 }
+
+
+
+const constraints ={
+    oldPassowrd:{
+        presence: {message: "必填欄位"},
+        length: {
+            minimum: 5, 
+            message: "密碼長度請大於5"
+        }
+    },
+    newPassword:{
+        presence: {message: "必填欄位"},
+        length: {
+            minimum: 5, 
+            message: "密碼長度請大於5"
+        }
+    },
+    confirmpw:{
+        presence: {message: "必填欄位"},
+        equality:{
+            attribute:"newPassword2",
+            message: "與前者輸入密碼不同",
+            // comparator: function(v1, v2) {
+            //     return v1 === v2;
+            //   }
+        }
+    }
+}

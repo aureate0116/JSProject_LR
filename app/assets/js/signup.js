@@ -60,20 +60,17 @@ signUpFormInputs.forEach(item=>{
        
         item.nextElementSibling.textContent = '';
         let errors = validate(signUpForm, constraints);
-        console.log(item.value);
 
-        
-        usersData.forEach(userItem=>{
-            if(userItem.email===signupMail.value){
-                // console.log(userItem.email);
-                // console.log(signupMail.value);
-                document.querySelector('.email').textContent = "此信箱已存在"         
-                //return;
-            }else{
-                document.querySelector('.email').textContent ="";
-                //item.nextElementSibling.textContent = ""
-            }
+        let result = usersData.filter(userItem=>{
+            return userItem.email === signupMail.value;
         })
+
+        if(result.length!==0){
+            document.querySelector('.email').textContent="此帳號已存在";
+        }else{
+            document.querySelector('.email').textContent ="";
+        }
+
     
         //有錯就呈現在畫面上
         if (errors) {
@@ -104,23 +101,9 @@ if(btnSignUp!==null){
     e.preventDefault();
 
     if(signupLastName.value===""||signupfirstName.value===""||signupMail.value===""||signupPw.value===""||signupPwConfirm.value===""){
-        console.log("有空欄位");
-        console.log("signupLastName:",signupLastName.value);
-        console.log("signupfirstName:",signupfirstName.value);
-        console.log("signupMail:",signupMail.value);
-        console.log("signupPw:",signupPw.value);
-        console.log("signupPwConfirm:",signupPwConfirm.value);
+        // console.log("有空欄位");
         return;
     }
-
-    // usersData.forEach(item=>{
-    //     if(item.email===signupMail.value){
-    //         document.querySelector('.email').textContent = "此信箱已存在"
-    //         return;
-    //     }else{
-    //         document.querySelector('.email').textContent ="";
-    //     }
-    // })
 
     signUpFormInputs.forEach(item=>{
         if(item.nextElementSibling.textContent !== '' ){
@@ -146,11 +129,6 @@ if(btnSignUp!==null){
     }).then(res=>{
         console.log(res.data);
         alert('成功註冊')
-        // document.querySelector('#signupLastName').value="";
-        // document.querySelector('#signupfirstName').value="";
-        // document.querySelector('#signupMail').value="";
-        // document.querySelector('#signupPw').value="";
-        // document.querySelector('#signupPwConfirm').value="";
         location.href ='./login.html';
 
     }).catch(err=>{

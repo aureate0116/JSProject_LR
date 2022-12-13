@@ -1,23 +1,30 @@
-let resId = location.href.split("=")[1];
+let resId = parseFloat(location.href.split("=")[1]);
+let headers = {
+    headers:{
+        "authorization": `Bearer ${localStorageToken}` 
+    }
+}
 
 function initResourcePage(){
     getResourcesForResources();
     getCommentData();
     getResourcesItem(resId);
     getResourcesComment(resId);
+
+    getUserData();
 }
 initResourcePage();
 
 let resourcesData = [];
 let commentsData = [];
 
-//2. 取得資料
+// 取得所有資源資料
 function getResourcesForResources(){
   axios.get(`${url}/resources`)
   .then(res=>{
     resourcesData = res.data;
     //getCommentData();
-    renderRelatedResource();
+    //renderRelatedResource();
 
   }).catch(error=>{
     console.log(error);
@@ -38,6 +45,7 @@ function getCommentData(){
 let resourceContent=[];
 let resourceCommentData=[];
 
+//取得單一資源>>用於渲染資源建立者
 function getResourcesItem(id){
     axios.get(`${url}/resources?id=${id}&_expand=user`)
     .then(res=>{
@@ -49,7 +57,6 @@ function getResourcesItem(id){
       console.log(error);
     })
 }
-
 function getResourcesComment(id){
     axios.get(`${url}/comments?_expand=resouceId&&resourceId=${id}&&_expand=user`)
     .then(res=>{
@@ -70,10 +77,13 @@ const btnBox = document.querySelector('.btnBox');
 
 
 function renderResource(){
+    
+
     let renderItem=resourceContent[0];
     let userName ="";
 
     if(renderItem!==undefined){
+        document.title = renderItem.title;
         if( renderItem.user.role==="admin"){
             userName = "admin"
         }else{
@@ -151,7 +161,7 @@ function renderResource(){
         </div>`;
 
         imageNBriefStr = `
-        <img class="d-md-block d-none" src="${renderItem.imgUrl}" alt="${renderItem.title}">
+        <img class="d-md-block" src="${renderItem.imgUrl}" alt="${renderItem.title}">
                     <div class="mt-md-3 text-dark">${renderItem.intro}</div>`;
         
         
@@ -173,6 +183,7 @@ function renderResource(){
 /******************資源評論***********************/
 
 const commentList=document.querySelector('.resourceComment > .commentList');
+const commentSort=document.querySelector('#commentSort');
 
 
 function renderComment(){
@@ -198,17 +209,19 @@ function renderComment(){
         if(item.user.role==="admin"){
             userName = "admin"
         }else{
-            userName =`${item.user.lastName} ${item.user.firstName} `;
+            userName =`${item.user.firstName} ${item.user.lastName}`;
         }
 
-        
+        let prefix = (item.user.firstName)[0].toUpperCase();
         let commentTimeAge = Ftime(item.commentTime);
         commentStr+=`
         <div class="col mb-3 position-relatvie" style="z-index:10;">
-            <div class="card card-body position-relatvie" style="z-index:10;">
-                <div class="d-flex p-lg-3 align-items-lg-center flex-column flex-lg-row justify-content-between"> 
+            <div class="card card-body position-relatvie d-flex justify-content-between" style="z-index:10;">
+                <div class="d-flex align-items-lg-center flex-column flex-lg-row justify-content-between"> 
                     <h3 class="card-title fs-7 d-flex align-items-center justify-content-lg-start justify-content-between">
-                        <img class="rounded-circle" src="./assets/images/icon_image.png" alt="">
+
+                        <span class="userImg d-inline-block bg-primary px-2 py-2 rounded-circle fw-bold fs-7 lh-1 text-white text-center">${prefix}</span>
+
                         <p class="mb-0 mx-2 text-start">
                             ${userName}<br/>
                             <span class="fs-9 text-gray">${item.user.title}</span>
@@ -287,29 +300,42 @@ function renderComment(){
     if(commentList!==null){
          commentList.innerHTML = commentStr;
     }
-   
+    if(commentStr==""){
+        commentSort.setAttribute("class","d-none");
+        commentList.innerHTML = `<div class="text-center">目前尚無評論，歡迎您留言分享寶貴的經驗唷!</div>`;
+
+    }
 
 }
+
 
 /******************相關資源***********************/
 
 const relatedResource = document.querySelector('.relatedResource');
+const relatedTitle = document.querySelector('h3.relatedTitle');
+
 
 function renderRelatedResource(){
     let relatedStr="";
     let renderNum = 1;
+
+    let commentScoreNum = getAverageScore();
+    let resultScore = commentScoreNum[0];
+    let commentNum = commentScoreNum[1];
+    let starStr = combineCommentStar(resultScore);
     
     if(resourcesData!==undefined){
         resourcesData.forEach(resItem=>{
-        let resultScore = getAverageScore();
-        let newResultScoreOjb = combineCommentStar(resultScore);
+        // let resultScore = getAverageScore();
+        // let newResultScoreOjb = combineCommentStar(resultScore);
+
         if(resourceContent.length!==0){
             //console.log(resourceContent);
             if(resItem.topics === resourceContent[0].topics 
                 && resItem.id !== resourceContent[0].id){
                 renderNum +=1;   
                 if(renderNum <=5 ){
-                    if(resultScore[resItem.id]==undefined||newResultScoreOjb[resItem.id]==undefined){
+                    if(resultScore[resItem.id]==undefined||starStr[resItem.id]==undefined || commentNum[resItem.id] == undefined){
                         relatedStr+=`
                         <div class="my-4">
                         <h4 class="fs-7"><a href="./resource.html?id=${resItem.id}" target="_blank"> ${resItem.title}</a></h4>
@@ -325,8 +351,9 @@ function renderRelatedResource(){
                         <div class="d-flex flex-wrap justify-content-start align-items-center text-secondary">
                             <span class="fs-7 fw-bold me-lg-2">${resultScore[resItem.id]}</span>
                             <ul class="d-flex align-items-center lh-1 me-lg-2 ">
-                            ${newResultScoreOjb[resItem.id]}
-                            </ul>                                
+                            ${starStr[resItem.id]}
+                            </ul>   
+                            <span class="fs-8">(${commentNum[resItem.id]})</span>                             
                         </div>
                         </div>
                         `;
@@ -338,11 +365,153 @@ function renderRelatedResource(){
         }
         
         
-    })
+        })
     }
     
 
     if(relatedResource!==null){
         relatedResource.innerHTML = relatedStr;
     }
+    if(relatedTitle!==null){
+        if(relatedStr==""){
+            relatedTitle.setAttribute("class","d-none");
+        }
+    }
 }
+
+
+/******************立即評論***********************/
+
+const btnComment = document.querySelector('.btnComment');
+const commentContent = document.querySelector('.commentContent');
+const userInfo = document.querySelector('h3.userInfo');
+const btnCommentSubmit = document.querySelector('.btnCommentSubmit');
+
+const commentStar = document.querySelectorAll('.commentStar > li > a >span');
+const commentTextarea = document.querySelector('#commentTextarea');
+
+
+//取得該用戶資料
+let localStorageUserId = localStorage.getItem("userId");  
+let localStorageToken = localStorage.getItem("accessToken");
+
+let userData=[];
+function getUserData(){
+    
+    axios.get(`${url}/users?id=${localStorageUserId}`)
+    .then(res=>{
+        userData = res.data;
+        console.log(userData);
+        renderBtnCommentContent();
+  
+    }).catch(error=>{
+      console.log(error);
+    })
+
+}
+
+//渲染按鈕 //更新 collapseComment id
+function renderBtnCommentContent(){
+    //console.log(localStorageUserId,localStorageToken);
+
+    btnComment.setAttribute("href",`#collapseComment${resId}`);
+    btnComment.setAttribute("aria-controls",`collapseComment${resId}`);
+    commentContent.setAttribute("id",`collapseComment${resId}`);
+
+    // console.log("resId");
+    // console.log(resId);
+
+    //如果有登入
+    let userInfoStr="";
+    if(localStorageUserId !=="" && localStorageUserId !== null){
+        let prefix = (userData[0].firstName)[0].toUpperCase();
+        
+        userInfoStr=`
+        <span class="userImg d-inline-block bg-primary px-2 py-2 rounded-circle fw-bold fs-7 lh-1 text-white text-center">${prefix}</span>
+        <p class="mb-0 mx-2 text-start">
+            ${userData[0].firstName} ${userData[0].lastName}<br/>
+            <span class="fs-9 text-gray">${userData[0].title}</span>
+
+        </p>`;
+        
+        userInfo.innerHTML = userInfoStr;
+
+    }else{
+         btnComment.setAttribute("href",``);
+         commentContent.setAttribute("class","d-none");
+         btnComment.addEventListener("click",e=>{
+            alert("請先登入");
+            location.href="./login.html"
+        })
+    }
+}
+
+let thisTime = ((Date.now())/1000).toFixed(0);
+// console.log("thisTime");
+// console.log(thisTime);
+
+let starNum = 0;
+
+//checked 星星
+// console.log(commentStar);
+
+
+commentStar.forEach((starItem,index)=>{
+    starItem.addEventListener("click",e=>{
+        
+        for(let i=0 ; i<= commentStar.length-1 ; i++){
+            commentStar[i].textContent = "star_outline"
+            starNum =0;
+        }
+
+        for(let i=0 ; i<= index ; i++){
+            commentStar[i].textContent = "star";
+            starNum +=1;
+        }
+        //console.log(starNum);
+        console.log(starNum);
+        
+        //return starNum;
+        //console.log(starNum);
+    })
+   // submitComment();
+    
+})
+
+
+//檢查留言字數
+if(commentTextarea!==null){
+    commentTextarea.addEventListener("change",e=>{
+        if( commentTextarea.value.length < 20){
+            document.querySelector('.commentTextarea').textContent ="字數須超過20字"
+            return;
+        }else{
+            document.querySelector('.commentTextarea').textContent ="";
+        }
+    
+    })
+}
+
+
+//送出評論
+// function submitComment(){
+    if(btnCommentSubmit!=null){
+    btnCommentSubmit.addEventListener("click",e=>{
+        axios.post(`${url}/600/comments/`,{
+            "resourceId": resId,
+            "userId": localStorageUserId,
+            "commentTime": thisTime,
+            "score": starNum,
+            "content": commentTextarea.value,
+            "likeNum": 0,
+            "dislikeNum": 0
+        },headers).then(res=>{
+            location.reload();
+            //console.log(res.data)
+        }).catch(err=>{
+            console.log(err.response);
+        })
+    
+    })
+}
+// }

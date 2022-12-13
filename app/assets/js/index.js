@@ -25,6 +25,7 @@ function initIndex(){
         }
     }
     
+    
 }
 initIndex();
 
@@ -53,6 +54,7 @@ function getResourcesForIndex(){
   axios.get(`${url}/resources`)
   .then(res=>{
     resourcesData = res.data;
+    document.title = "Eng!neer 程式學習資源網";
     renderGoodRateList();
     renderNewFreeList();
   
