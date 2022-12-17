@@ -10,16 +10,16 @@ let homePage = locationHref[0]+`//`+locationHref[2];
 //1. 頁面初始化
 function initIndex(){
     getResourcesForIndex();
-    if(pageClassify=="resource"){
-        if(resId == undefined){
-            location.href = `./index.html`;
-        }
-    }
-    else if(pageClassify=="resource_list"){
-        if(resTopic == undefined){
-            location.href = `./index.html`;
-        }
-    }
+    // if(pageClassify=="resource"){
+    //     if(resId == undefined){
+    //         location.href = `./index.html`;
+    //     }
+    // }
+    // else if(pageClassify=="resource_list"){
+    //     if(resTopic == undefined){
+    //         location.href = `./index.html`;
+    //     }
+    // }
 }
 initIndex();
 
