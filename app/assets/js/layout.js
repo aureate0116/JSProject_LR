@@ -1,5 +1,5 @@
 let localStorageUserId = localStorage.getItem("userId");
-// console.log(localStorageUserId);
+let localStorageUserToken = localStorage.getItem("accessToken");
 
 const beforeLogin = document.querySelector('.beforeLogin');
 const afterLogin = document.querySelector('.afterLogin');
@@ -9,23 +9,29 @@ const accountMenu = document.querySelector('.accountMenu');
 
 const logOut = document.querySelector('.logOut');
 
+
+
+
 //如果有取得 userid  就表示有登入
-if(localStorageUserId == null || localStorageUserId==""){
-    afterLogin.setAttribute("class","d-none");
+if(localStorageUserId == null || localStorageUserId == "" ){
+    if(afterLogin!==null){
+        afterLogin.setAttribute("class","d-none");
+    }
 }else{
     if(beforeLogin!==null){
         beforeLogin.setAttribute("class","d-none");
     }
-
-    //get userData
     let userData=[];
-   
-    axios.get(`${url}/users?id=${localStorageUserId}`).then(res=>{
+    axios.get(`${url}/users?id=${localStorageUserId}`,headers).then(res=>{
         userData=res.data;
         renderAccountMenu(userData);
        
     }).catch(err=>{
-        console.log(err.response);
+        if(err?.reponse?.status === 401){
+            clearLocalStorage();
+            test();
+        }
+        console.log(err);
     })
 }
 
@@ -33,18 +39,21 @@ if(localStorageUserId == null || localStorageUserId==""){
 //隱藏登入註冊, 顯示會員功能, 帶入相關會員資訊 , 切換至會員頁時帶入會員 id 資料等
 //將 userid 渲染至選單連結中
 function renderAccountMenu(userData){
-    let prefix = (userData[0].firstName)[0].toUpperCase();
+    if(userData.length!=0){
+        let prefix = (userData[0].firstName)[0].toUpperCase();
+    
+        let accountMenuImgStr=`
+        <span class="userImg d-inline-block bg-primary px-2 py-2 rounded-circle fw-bold fs-7 lh-1 text-white text-center">${prefix}</span>`;
+        let accountMenuStr=`<li><a class="dropdown-item" href="./acc_profile.html?userid=${localStorageUserId}">個人資料</a></li>
+        <li><a class="dropdown-item" href="./acc_resources.html?userid=${localStorageUserId}">我的資源</a></li>
+        <li><a class="dropdown-item" href="#">我的募集</a></li>
+        <li><a class="dropdown-item" href="#">我的學習</a></li>
+        <li><a class="dropdown-item" href="#">設定</a></li>`;
+    
+        accountMenuImg.innerHTML=accountMenuImgStr;
+        accountMenu.innerHTML=accountMenuStr;
 
-    let accountMenuImgStr=`
-    <span class="userImg d-inline-block bg-primary px-2 py-2 rounded-circle fw-bold fs-7 lh-1 text-white text-center">${prefix}</span>`;
-    let accountMenuStr=`<li><a class="dropdown-item" href="./acc_profile.html?userid=${localStorageUserId}">個人資料</a></li>
-    <li><a class="dropdown-item" href="./acc_resources.html?userid=${localStorageUserId}">我的資源</a></li>
-    <li><a class="dropdown-item" href="#">我的募集</a></li>
-    <li><a class="dropdown-item" href="#">我的學習</a></li>
-    <li><a class="dropdown-item" href="#">設定</a></li>`;
-
-    accountMenuImg.innerHTML=accountMenuImgStr;
-    accountMenu.innerHTML=accountMenuStr;
+    }
 }
 
 
@@ -52,8 +61,13 @@ function renderAccountMenu(userData){
 logOut.addEventListener("click",e=>{
     localStorage.setItem('accessToken', "");
     localStorage.setItem('userId',"");
-    beforeLogin.setAttribute("class","d-block");
-    afterLogin.setAttribute("class","d-none");
-    location.href = "./index.html";
+    if(beforeLogin!==null){
+            beforeLogin.setAttribute("class","d-block");
+    }
+    if(afterLogin!==null){
+        afterLogin.setAttribute("class","d-none");
+    }
+    // location.href = "./index.html";
+    location.reload();
 })
 

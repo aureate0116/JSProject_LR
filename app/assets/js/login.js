@@ -6,19 +6,18 @@ const btnLogin = document.querySelector('#btnLogin');
 
 
 function initLogin(){
-    getUserList();
+    getUserListbyLoginPage();
 }
 initLogin();
 
 
 //取得用戶清單
 let usersData = [];
-function getUserList(){
-    axios.get("http://localhost:3000/users").then(res=>{
+function getUserListbyLoginPage(){
+    axios.get(`${url}/users`).then(res=>{
         usersData = res.data;
-        login();
     }).catch(err=>{
-        console.log(err.response);
+        console.log(err);
     })
 }
 
@@ -82,6 +81,7 @@ function getUserList(){
             }).catch(err=>{
                 document.querySelector('.password').textContent="密碼錯誤";
                 localStorage.clear();
+                
             })
 
         }

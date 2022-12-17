@@ -13,17 +13,6 @@ current: resource_list
             <h2 class="text-white text-center">JavaScript</h2>
         </div>
     </div>
-    
-    <!-- breadcrumb -->
-    <!-- <div class="container py-5 p-lg-8">
-        <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
-            <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-              <li class="breadcrumb-item active" aria-current="page">探索資源</li>
-            </ol>
-        </nav>
-    </div> -->
-
 
     <!-- foundation --> 
     <div class="container py-5 p-lg-8">
@@ -91,17 +80,17 @@ current: resource_list
 
 
     <!-- releative -->
-    <div class="hotTopic container py-5 p-lg-8 pt-lg-0">
+    <div class="hotTopic relatedContainer container py-5 p-lg-8 pt-lg-0">
         <h3 class="fs-5 fw-bold mb-4">相關主題</h3>
-        <div class="row">
-            <div class="col-md-4">
+        <div class="row relatedTopic">
+            <div class="col">
                 <div class="topicItem text-center my-2  p-3 rounded-3">
                     <a href="#" class="">
                         <h4 class="fs-6 mb-0">HTML/CSS</h4>
                      </a>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col">
                 <div class="topicItem text-center my-2  p-3 rounded-3">
                     <a href="#" class="">
                         <h4 class="fs-6 mb-0">JavaScript</h4>
@@ -118,7 +107,7 @@ current: resource_list
         <h3 class="fs-5 fw-bold mb-4 d-lg-none">篩選</h3>
 
 
-        <div class="filter bg-white rounded-3 p-4 me-lg-4 d-flex flex-wrap flex-lg-column flex-column flex-sm-row ">
+        <div class="filter bg-white rounded-3 p-4 me-lg-4 d-flex flex-wrap flex-lg-column flex-column justify-content-between justify-content-lg-start flex-sm-row ">
             
             <div class="filterGroup1 mb-4 pb-4 ">
                 <h3 class="fs-6">資源性質</h3>
@@ -220,8 +209,7 @@ current: resource_list
                 <div class="col-md-3  d-flex align-items-end">
                     <div class="input-group ">
                         <select class="form-select form-select-sm"  id="resourceSort">
-                            <!-- id="inputGroupSelect01" -->
-                            <option value="heightRate"selected>最高評價</option>
+                            <option value="heightRate">最高評價</option>
                             <option value="new">最新</option>
                         </select>
                     </div>
@@ -311,7 +299,7 @@ current: resource_list
 
             
 
-            <div class="d-flex justify-content-center">
+            <!-- <div class="d-flex justify-content-center">
                 <nav aria-label="Page navigation me-auto">
                     <ul class="pagination">
                     <li class="page-item">
@@ -329,7 +317,7 @@ current: resource_list
                     </li>
                     </ul>
                 </nav>
-            </div>
+            </div> -->
         </div><!--resourceList-->
             
     </div><!-- end filterList -->

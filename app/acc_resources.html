@@ -26,7 +26,9 @@ current: resource
 
             <!-- Button trigger modal -->
             <button type="button" class="btn btn-secondary text-white" data-bs-toggle="modal" data-bs-target="#staticBackdrop"> + 新增資源</button>
+            <!-- <a href="./add_resource.html?userid=4"role="button" class="btn btn-secondary text-white" data-bs-toggle="" data-bs-target="#"> + 新增資源</a> -->
 
+            
             <!-- Modal -->
             <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -160,7 +162,7 @@ current: resource
     </div><!--end bannerBlock-->
 </div>
 
-<div class="container">
+<div class="container my-8 pb-5">
     <div class=" mt-4">
         <div class="row">
             <div class="col-lg-4 col-md-6 col">
@@ -196,65 +198,71 @@ current: resource
         </div>
         <!-- title -->
         <div class="row border-bottom">
-            <div class="col-1 d-flex justify-content-center">
-                <span class="d-none d-md-block">置頂</span></div>
-            <div class="col-1">
+            <div class="col-1 d-none d-xl-block"></div>
+            <div class="col-2 col-md-1 d-flex justify-content-center">置頂</div>
+            <!-- <div class="col-1">
                 <input class="form-check-input" type="checkbox" value="" id="selectAll">
                 <label class="form-check-label" for="selectAll">
                    <span class="d-none d-md-block">全選</span> 
                 </label>
-            </div>
-            <div class="col-1 d-none d-md-block"></div>
-            <div class="col-4 text-center">資源項目</div>
-            <div class="col-5 text-center">操作</div>
+            </div> -->
+            <div class="col-1 d-none d-md-block"></div> <!--圖片-->
+            <div class="col-xl-4 col-4 col-md-5 text-center">資源項目</div>
+            <div class="col-xl-4 col-6 col-md-5 text-center">操作</div>
+            <div class="col-1 d-none d-xl-block"></div>
         </div>
 
-        <div class="row my-3 d-flex align-items-center">
-            <div class="col-1 d-flex justify-content-center">
-                <span class="material-icons fs-6">push_pin</span>
-                <!-- <span class="material-icons-outlined">push_pin</span> -->
-            </div>
-           
-            <div class="col-1 ">
-                <input class="form-check-input" type="checkbox" value="" id="checkItem">
-            </div>
+        <div class="row">
+            <div class="col userResourcesList">
+                <div class="row my-3 d-flex align-items-center">
+                    <div class="col-1 d-flex justify-content-center">
+                        <span class="material-icons fs-6">push_pin</span>
+                        <!-- <span class="material-icons-outlined">push_pin</span> -->
+                    </div>
+                
+                    <div class="col-1 ">
+                        <input class="form-check-input" type="checkbox" value="" id="checkItem">
+                    </div>
 
-            <div class="col-1 d-none d-md-block">
-                <img src="./assets/images/icon_image.png" alt="">
+                    <div class="col-1 d-none d-md-block">
+                        <img src="./assets/images/icon_image.png" alt="">
+                    </div>
+                    <div class="col-4">
+                        <h4 class="fs-8">w3schools JavaScript Tutorial w3schools w3schools JavaScript Tutorial w3schools...</h4>
+                        <div class="d-flex flex-wrap align-items-center">
+                            <span class="fs-7 fw-bold me-lg-2">3.2</span>
+                            <ul class="d-flex align-items-center lh-1 me-lg-2">
+                                <li><span class="material-icons material-icons-sharp fs-8">star</span></li>
+                                <li><span class="material-icons material-icons-sharp fs-8">star</span></li>
+                                <li><span class="material-icons material-icons-sharp fs-8">star</span></li>
+                                <li><span class="material-icons material-icons-sharp fs-8">star_half</span></li>
+                                <li><span class="material-icons material-icons-sharp fs-8">star_outline</span></li>
+                            </ul>                                
+                            <span class="fs-8">(35)</span>
+                        </div>
+                    </div>
+                    <div class="col-5">
+                        <div class="d-flex align-items-center justify-content-center flex-wrap">
+                            <button type="button" class="btn btn-tiffany my-2 mx-1 ">前往資源</button>
+                            <button type="button" class="btn btn-yellowBrown my-2  mx-1" >查看評論</button>
+                            <div>
+                            <a href="#" role="button" class="btn my-2 mx-1">
+                                <span class="material-icons">bookmark_remove</span></a>    
+                            <a href="#" role="button" class="btn my-2 mx-1">
+                                <span class="material-icons">delete_forever</span> </a>
+                            </div>    
+                        </div>
+                    </div>
+                </div><!--end row-->
             </div>
-            <div class="col-4">
-                <h4 class="fs-8">w3schools JavaScript Tutorial w3schools w3schools JavaScript Tutorial w3schools...</h4>
-                <div class="d-flex flex-wrap align-items-center">
-                    <span class="fs-7 fw-bold me-lg-2">3.2</span>
-                    <ul class="d-flex align-items-center lh-1 me-lg-2">
-                        <li><span class="material-icons material-icons-sharp fs-8">star</span></li>
-                        <li><span class="material-icons material-icons-sharp fs-8">star</span></li>
-                        <li><span class="material-icons material-icons-sharp fs-8">star</span></li>
-                        <li><span class="material-icons material-icons-sharp fs-8">star_half</span></li>
-                        <li><span class="material-icons material-icons-sharp fs-8">star_outline</span></li>
-                    </ul>                                
-                    <span class="fs-8">(35)</span>
-                </div>
-            </div>
-            <div class="col-5">
-                <div class="d-flex align-items-center justify-content-center flex-wrap">
-                    <button type="button" class="btn btn-tiffany my-2 mx-1 ">前往資源</button>
-                    <button type="button" class="btn btn-yellowBrown my-2  mx-1" >查看評論</button>
-                    <div>
-                    <a href="#" role="button" class="btn my-2 mx-1">
-                        <span class="material-icons">bookmark_remove</span></a>    
-                    <a href="#" role="button" class="btn my-2 mx-1">
-                        <span class="material-icons">delete_forever</span> </a>
-                    </div>    
-                </div>
-            </div>
-        </div><!--end row-->
+        </div>
+        
 
     </div><!--end-->
 
 
     <!-- pagination -->
-    <div class="d-flex justify-content-end my-5">
+    <!-- <div class="d-flex justify-content-end my-5">
         <nav aria-label="Page navigation me-auto">
             <ul class="pagination">
             <li class="page-item">
@@ -272,7 +280,7 @@ current: resource
             </li>
             </ul>
         </nav>
-    </div>
+    </div> -->
 
 </div><!--end -->
 

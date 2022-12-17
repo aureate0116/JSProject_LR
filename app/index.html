@@ -10,7 +10,7 @@ current: index
     <!-- 1 bannerBlock -->
     <div class="container-fluid px-3 py-5 p-lg-0 bg-primary">
         <div class="bannerBlock container p-0 p-lg-8 p-md-4 d-flex align-items-center justify-content-center justify-content-lg-between">
-            <div class="bannerLeft">
+            <div class="bannerLeft" >
                 <div class="text-white fs-2 d-flex flex-wrap align-items-center">
                     <span>幫助想成為</span>  
                     <span id="bannerText" class="carousel slide" data-bs-ride="carousel">
@@ -37,14 +37,14 @@ current: index
                 </div>
 
                 <!-- 推薦關鍵字 -->
-                <ul class="d-flex fs-7 text-center">
+                <!-- <ul class="d-flex fs-7 text-center">
                     <li class="me-2"><a href="#" class="text-light"> JavaScript </a></li>
                     <li class="me-2"><a href="#" class="text-light"> Python </a></li>
                     <li class="me-2"><a href="#" class="text-light"> HTML </a></li>
-                </ul>
+                </ul> -->
 
             </div>
-
+            
             <img src="./assets/images/banner01.png" alt="banner">
             
         </div> 
@@ -53,7 +53,7 @@ current: index
    
     <!-- 2 painpoint -->
     <div class="painpoint container px-3 py-5 p-lg-8 d-flex align-items-center flex-column flex-md-row">
-        <div class="me-md-4 me-0 text-center">
+        <div data-aos="zoom-in" data-aos-duration="1000" class="me-md-4 me-0 text-center" >
             <img width="70%" src="./assets/images/banner02.png" alt="painpoint">
         </div>
         <div class="painpointRight mt-5 mt-md-0">
@@ -113,27 +113,27 @@ current: index
             <h3 class="fw-bold text-white text-center mb-6">解決你搜尋學習資源的困擾</h3>
             <div class="row">
                 <div class="col-md-3"> 
-                    <div class="content text-center bg-white p-6 p-md-4 rounded-3 m-4 m-md-1">                 
+                    <div data-aos="fade-right" data-aos-duration="1000" data-aos-easing="ease-in-sine" class="content text-center bg-white p-6 p-md-4 rounded-3 m-4 m-md-1">                 
                         <img src="./assets/images/icon_file.png" alt="輕鬆查找">
                         <h4 class="text-primary fw-bold my-3">輕鬆查找</h4>
                         <p>降低連到無關網頁機率<br/>簡化你查找資源的時間</p>   
                     </div>   
                 </div>
-                <div class="col-md-3">
+                <div data-aos="zoom-in-down" data-aos-duration="1000" class="col-md-3">
                     <div class="content text-center bg-white p-6 p-md-4 rounded-3 m-4 m-md-1">
                         <img src="./assets/images/icon_review.png" alt="輕鬆判別">
                         <h4 class="text-primary fw-bold my-3">輕鬆判別</h4>
                         <p>資源評價機制，讓你輕鬆判別該資源是否具參考價值</p>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div data-aos="fade-down" data-aos-duration="1000" class="col-md-3">
                     <div class="content text-center bg-white p-6 p-md-4 rounded-3 m-4 m-md-1">
                         <img src="./assets/images/icon_bookmark.png" alt="輕鬆收藏">
                         <h4 class="text-primary fw-bold my-3">輕鬆收藏</h4>
                         <p>專屬的學習資源庫，簡化你的管理流程</p>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div data-aos="fade-left" data-aos-duration="1000" class="col-md-3">
                     <div class="content text-center bg-white p-6 p-md-4 rounded-3 m-4 m-md-1">
                     <img src="./assets/images/icon_flag.png" alt="輕鬆募集">
                     <h4 class="text-primary fw-bold my-3">輕鬆募集</h4>
@@ -163,6 +163,101 @@ current: index
 
             <div class="tab-pane fade show active" id="goodRate1" role="tabpanel" aria-labelledby="goodRate1-tab">
                 <div class="row">
+                    <div class="col-md-6 col-lg-4">
+                        <div class="d-flex p-2 align-items-center">
+                            <img src="./assets/images/icon_image.png" alt="image">
+                            <div class="p-2">
+                                <h4 class="">w3schools JavaScript Tutorial w3schools...</h4>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fs-6 fw-bold">3.2</span>
+                                    <ul class="d-flex align-items-center lh-1">
+                                        <li><span class="material-icons material-icons-sharp fs-6">star</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star_half</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star_outline</span></li>
+                                    </ul>                                
+                                    <span class="fs-7">(35)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="d-flex p-2 align-items-center">
+                            <img src="./assets/images/icon_image.png" alt="image">
+                            <div class="p-2">
+                                <h4 class="">w3schools JavaScript Tutorial w3schools...</h4>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fs-6 fw-bold">3.2</span>
+                                    <ul class="d-flex align-items-center lh-1">
+                                        <li><span class="material-icons material-icons-sharp fs-6">star</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star_half</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star_outline</span></li>
+                                    </ul>                                
+                                    <span class="fs-7">(35)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="d-flex p-2 align-items-center">
+                            <img src="./assets/images/icon_image.png" alt="image">
+                            <div class="p-2">
+                                <h4 class="">w3schools JavaScript Tutorial w3schools...</h4>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fs-6 fw-bold">3.2</span>
+                                    <ul class="d-flex align-items-center lh-1">
+                                        <li><span class="material-icons material-icons-sharp fs-6">star</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star_half</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star_outline</span></li>
+                                    </ul>                                
+                                    <span class="fs-7">(35)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="d-flex p-2 align-items-center">
+                            <img src="./assets/images/icon_image.png" alt="image">
+                            <div class="p-2">
+                                <h4 class="">w3schools JavaScript Tutorial w3schools...</h4>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fs-6 fw-bold">3.2</span>
+                                    <ul class="d-flex align-items-center lh-1">
+                                        <li><span class="material-icons material-icons-sharp fs-6">star</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star_half</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star_outline</span></li>
+                                    </ul>                                
+                                    <span class="fs-7">(35)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="d-flex p-2 align-items-center">
+                            <img src="./assets/images/icon_image.png" alt="image">
+                            <div class="p-2">
+                                <h4 class="">w3schools JavaScript Tutorial w3schools...</h4>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fs-6 fw-bold">3.2</span>
+                                    <ul class="d-flex align-items-center lh-1">
+                                        <li><span class="material-icons material-icons-sharp fs-6">star</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star_half</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star_outline</span></li>
+                                    </ul>                                
+                                    <span class="fs-7">(35)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-md-6 col-lg-4">
                         <div class="d-flex p-2 align-items-center">
                             <img src="./assets/images/icon_image.png" alt="image">
@@ -351,25 +446,22 @@ current: index
             <div class="row">
                 <div class="col-md-4">
                     <div class="topicItem text-center my-2  p-4 rounded-3">
-                        <a href="#" class="">
-                            <!-- <img src="./assets/images/icon_image.png" alt="image"> -->
-                            <h4>HTML/CSS</h4>
+                        <a href="./resource_list.html?topics=HTML/CSS" >
+                            <h4 class="fw-bold">HTML/CSS</h4>
                          </a>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="topicItem text-center my-2  p-4 rounded-3">
-                        <a href="#" class="">
-                            <!-- <img src="./assets/images/icon_image.png" alt="image"> -->
-                            <h4>JavaScript</h4>
+                        <a href="./resource_list.html?topics=JavaScript" >
+                            <h4 class="fw-bold">JavaScript</h4>
                          </a>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="topicItem text-center my-2  p-4 rounded-3">
-                        <a href="#" class="">
-                            <!-- <img src="./assets/images/icon_image.png" alt="image"> -->
-                            <h4>Python</h4>
+                        <a href="./resource_list.html?topics=Python" >
+                            <h4 class="fw-bold">Python</h4>
                          </a>
                     </div>
                 </div>
@@ -381,14 +473,15 @@ current: index
 </main>
 
 
-<script scr="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
 
 
 <script src="./assets/js/all.js"></script>
 <script>
+    AOS.init();
 
    //輪播
    let swiper = new Swiper(".mySwiper", {

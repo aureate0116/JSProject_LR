@@ -6,10 +6,6 @@ let localStorageUserId = localStorage.getItem("userId");
 let pageClassify = locationHref[3].split(".html")[0];
 let homePage = locationHref[0]+`//`+locationHref[2];
 
-// let resTopicNew = resTopic.split(" ");
-// console.log(resTopic);
-// console.log("pageClassify",pageClassify);
-// console.log("locationHref",locationHref);
 
 //1. 頁面初始化
 function initIndex(){
@@ -24,8 +20,6 @@ function initIndex(){
             location.href = `./index.html`;
         }
     }
-    
-    
 }
 initIndex();
 
@@ -48,6 +42,7 @@ const resource3Tab = document.querySelector('#resource3-tab');
 
 let resourcesData = [];
 let commentsData = [];
+document.querySelector("body").setAttribute("style","overflow-y:hidden");
 
 //取得資源資料
 function getResourcesForIndex(){
@@ -55,6 +50,17 @@ function getResourcesForIndex(){
   .then(res=>{
     resourcesData = res.data;
     document.title = "Eng!neer 程式學習資源網";
+    
+    // displayNoneWrapper();
+    if(wrapperLoading!==null){
+        wrapperLoading.setAttribute("class","d-none");
+        document.querySelector("body").setAttribute("style","");
+        if(document.querySelector(".loadingBG")!==null){
+            document.querySelector(".loadingBG").setAttribute("class","d-none");
+        }    
+    }
+
+    sortGoodRateResources(resourcesData);
     renderGoodRateList();
     renderNewFreeList();
   
@@ -63,15 +69,6 @@ function getResourcesForIndex(){
   })
 }
 
-function getCommentForIndex(){
-    axios.get(`${url}/comments`)
-    .then(res=>{
-      commentsData = res.data;
-    
-    }).catch(error=>{
-      console.log(error);
-    })
-}
 
 //渲染好評推薦資料
 function renderGoodRateList(){
@@ -151,11 +148,11 @@ function combineResouorceItemType1(item,resultScore,starStr,commentNum){
     <div class="col-md-6 col-lg-4">
     <div class="d-flex p-2 align-items-center">
         <div class="row">
-            <div class="col-6"><a href="./resource.html?id=${item.id}" target="_blank"><img src="${item.imgUrl}" alt="${item.title}" onerror="this.src=./assets/images/resources_cover/noimgCover.jpg"></a></div>
+            <div class="col-6"><a href="./resource.html?id=${item.id}" ><img src="${item.imgUrl}" alt="${item.title}" onerror="this.src=./assets/images/resources_cover/noimgCover.jpg"></a></div>
             
             <div class="col-6">
-                <h4 class="ellipsis"><a href="./resource.html?id=${item.id}" target="_blank"> ${item.title}</a></h4>
-                <div class="d-flex justify-content-between align-items-center">
+                <h4 class="ellipsis"><a href="./resource.html?id=${item.id}" > ${item.title}</a></h4>
+                <div class="d-flex justify-content-between text-gray fs-8 align-items-center">
                 尚無評價
                 </div>
             </div>
@@ -171,16 +168,16 @@ function combineResouorceItemType1(item,resultScore,starStr,commentNum){
     <div class="col-md-6 col-lg-4">
     <div class="d-flex p-2 align-items-center">
         <div class="row">
-            <div class="col-6"><a href="./resource.html?id=${item.id}" target="_blank"><img src="${item.imgUrl}" alt="${item.title}" onerror="this.src=./assets/images/resources_cover/noimgCover.jpg"></a></div>
+            <div class="col-6"><a href="./resource.html?id=${item.id}" ><img src="${item.imgUrl}" alt="${item.title}" onerror="this.src=./assets/images/resources_cover/noimgCover.jpg"></a></div>
 
             <div class="col-6">
-                <h4 class="ellipsis"><a href="./resource.html?id=${item.id}" target="_blank"> ${item.title}</a></h4>
-                <div class="d-flex justify-content-between align-items-center">
-                    <span class="fs-6 fw-bold"> ${resultScore[item.id]}</span>
-                    <ul class="d-flex align-items-center lh-1">
+                <h4 class="ellipsis"><a href="./resource.html?id=${item.id}" > ${item.title}</a></h4>
+                <div class="d-flex justify-content-start align-items-center ">
+                    <span class="fs-7 fw-bold text-secondary"> ${resultScore[item.id]}</span>
+                    <ul class="d-flex align-items-center mx-2 lh-1 text-secondary">
                     ${starStr[item.id]}
                     </ul>                                
-                    <span class="fs-7">(${commentNum[item.id]})</span>
+                    <span class="fs-8 text-secondary">(${commentNum[item.id]})</span>
                 </div>
             </div>
         </div>
@@ -198,22 +195,39 @@ function renderNewFreeList(){
     let commentNum = commentScoreNum[1];
     let starStr = combineCommentStar(resultScore);
 
+
+    let itemNum1 = 0;
+    let itemNum2 = 0;
+    let itemNum3 = 0;
+    let renderMaxNum = 6;
+
     let tabOnline ="";
     let tabOffline="";
     let tabArticle="";
 
+
     resourcesData.forEach( (item)=>{
         if(item.price==="免費"){
             if(item.type==="線上課程"){
-                tabOnline += combineResouorceItem(item,resultScore,starStr,commentNum);
+                if(itemNum1 <renderMaxNum){
+                    tabOnline += combineResouorceItem(item,resultScore,starStr,commentNum);
+                    itemNum1+=1
+                }
             }
 
             if(item.type==="實體課程"){
-                tabOffline += combineResouorceItem(item,resultScore,starStr,commentNum);
+                if(itemNum2 <renderMaxNum){
+                    tabOffline += combineResouorceItem(item,resultScore,starStr,commentNum);
+                    itemNum2+=1
+                }
             }
 
             if(item.type==="文章"){
-                tabArticle += combineResouorceItem(item,resultScore,starStr,commentNum);
+                if(itemNum3 <renderMaxNum){
+                    tabArticle += combineResouorceItem(item,resultScore,starStr,commentNum);
+                    itemNum3+=1
+                }
+
             }
         }
  
@@ -242,3 +256,11 @@ function renderNewFreeList(){
 
 }
 
+
+function sortGoodRateResources(resRenderList){
+   
+    resRenderList = resRenderList?.sort((a,b)=>{
+        return b.averageScore - a.averageScore;
+    })
+      return resRenderList;
+}

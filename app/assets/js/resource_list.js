@@ -1,10 +1,8 @@
 
-
 //1. 頁面初始化
 function initResourceList(){
   getResourcesForResources();
   getCommentData();
-  //changeResourceAverageScore();
 }
 initResourceList();
 
@@ -37,6 +35,7 @@ function getResourcesForResources(){
     })
     renderFoundationRecommond();
     renderFilterResultList();
+    sortResourcesList();
 
   }).catch(error=>{
     console.log(error);
@@ -64,7 +63,7 @@ function renderFoundationRecommond(){
   let itemNum1 = 0;
   let itemNum2 = 0;
   let itemNum3 = 0;
-  let renderMaxNum = 5;
+  let renderMaxNum = 6;
   //組各tab render HTML
   let basicStr ="";
   let freeStr="";
@@ -184,6 +183,8 @@ function combineCommentStar(resultScore){
   return newResultScore;
 }
 
+
+
 //5. 入門推薦組單一資源項目html
 function combineResouorceItem(item,resultScore,starStr,commentNum){
 
@@ -197,10 +198,10 @@ function combineResouorceItem(item,resultScore,starStr,commentNum){
     <div class="col-lg-2 col-md-4 col-6">
     <div>
         <p class="text-center">
-            <a href="./resource.html?id=${item.id}" target="_blank">
+            <a href="./resource.html?id=${item.id}" >
             <img src="${item.imgUrl}" alt="${item.title}" onerror="this.src=./assets/images/resources_cover/noimgCover.jpg"></a></p>
         <div class="p-2">
-            <h4 class="fs-7 ellipsis"><a href="./resource.html?id=${item.id}" target="_blank"> ${item.title}</a></h4>
+            <h4 class="fs-7 ellipsis"><a href="./resource.html?id=${item.id}" > ${item.title}</a></h4>
             <div class="d-flex flex-wrap justify-content-between align-items-center">                             
                 <span class="fs-8 text-gray"> 尚無評價 </span>
             </div>
@@ -214,10 +215,10 @@ function combineResouorceItem(item,resultScore,starStr,commentNum){
       <div class="col-lg-2 col-md-4 col-6">
       <div>
           <p class="text-center">
-              <a href="./resource.html?id=${item.id}" target="_blank">
+              <a href="./resource.html?id=${item.id}" >
               <img src="${item.imgUrl}" alt="${item.title}" onerror="this.src=./assets/images/resources_cover/noimgCover.jpg"></a></p>
           <div class="p-2">
-              <h4 class="fs-7 ellipsis"><a href="./resource.html?id=${item.id}" target="_blank"> ${item.title}</a></h4>
+              <h4 class="fs-7 ellipsis"><a href="./resource.html?id=${item.id}" > ${item.title}</a></h4>
 
               <div class="d-flex flex-wrap justify-content-between align-items-center text-secondary">
                   <span class="fs-7 fw-bold me-lg-2"> ${resultScore[item.id]}</span>
@@ -236,6 +237,24 @@ function combineResouorceItem(item,resultScore,starStr,commentNum){
 }
 
 /***************** 相關主題 ***************/
+const relatedTopic = document.querySelector('.relatedTopic');
+if(resTopic=="JavaScript"){
+  relatedTopic.innerHTML = `
+  <div class="col">
+    <div class="topicItem text-center my-2  p-3 rounded-3">
+    <a href="./resource_list.html?topics=HTML/CSS"><h4 class="fs-6 mb-0">HTML/CSS</h4></a>
+    </div>
+  </div>`;
+}else if(resTopic=="HTML/CSS"){
+  relatedTopic.innerHTML = `
+  <div class="col">
+    <div class="topicItem text-center my-2  p-3 rounded-3">
+    <a href="./resource_list.html?topics=JavaScript"><h4 class="fs-6 mb-0">JavaScript</h4></a>
+    </div>
+  </div>`;
+}else if(resTopic=="Python"){
+  document.querySelector('.relatedContainer').setAttribute("class","d-none");
+}
 
 
 
@@ -246,6 +265,7 @@ const filterItemInput = document.querySelectorAll('.filterItem > input');
 
 let checkObj={};
 let renderList=[];
+let newSortRenderList=[];
 
 // checked 監聽 : 取得 checked 清單的關鍵字 + render
 filterItemInput.forEach((item,index)=>{
@@ -253,7 +273,7 @@ filterItemInput.forEach((item,index)=>{
   item.addEventListener("change",e=>{
     let filterKeyword = item.getAttribute("name");
     let groupName = item.getAttribute("data-group");
-    console.log(filterKeyword,groupName);
+    // console.log(filterKeyword,groupName);
 
     if (e.target.checked) {
       if(checkObj[groupName]===undefined){
@@ -270,9 +290,6 @@ filterItemInput.forEach((item,index)=>{
           delete checkObj[groupName];
         }
     }
-
-    //  console.log("checkObj");
-    //  console.log(checkObj);
 
     renderList = resourcesData.filter(resItem=>{
       
@@ -302,16 +319,16 @@ filterItemInput.forEach((item,index)=>{
       return hasType && hasLevel && hasPrice && checkLang ;
   
     })
-    // console.log(renderList);
     renderFilterResultList(); 
-
   })
 })
 
 
 
-function renderFilterResultList(){ 
+let sortList = [];
 
+function renderFilterResultList(){ 
+  //render前 先排序
   let commentScoreNum = getAverageScore();
   let resultScore = commentScoreNum[0];
   let commentNum = commentScoreNum[1];
@@ -319,17 +336,17 @@ function renderFilterResultList(){
 
     let renderfilterStr="";
     if(renderList.length===0){
-      resourcesData.forEach(renderItem=>{
+      sortList = sortResourcesList(resourcesData);
+      sortList.forEach(renderItem=>{
         renderfilterStr += combineResouorceItemType2(renderItem,resultScore,starStr,commentNum);
       })
 
-      if(resultNumber!==undefined){
+      if(resultNumber!==null){
         resultNumber.setAttribute("class","d-none");
       }
-      if(clearBtnText!==undefined){
+      if(clearBtnText!==null){
         clearBtnText.setAttribute("class","d-none");
-      }
-      
+      }    
 
       if(checkObj.type !== undefined || checkObj.level !== undefined || checkObj.price !== undefined || checkObj.lang !== undefined ){
         renderfilterStr = "沒有符合條件的項目";
@@ -343,16 +360,13 @@ function renderFilterResultList(){
         clearBtnText.setAttribute("class","d-inline-block");
       }
       
-    
       if(checkObj.type==undefined && checkObj.level==undefined && checkObj.price==undefined && checkObj.lang==undefined ){
         resultNumber.setAttribute("class","d-none");
         clearBtnText.setAttribute("class","d-none");
       }
 
-      clearFilter();
-      
-
-      renderList.forEach(renderItem=>{
+      sortList = sortResourcesList(renderList);
+      sortList.forEach(renderItem=>{
         renderfilterStr += combineResouorceItemType2(renderItem,resultScore,starStr,commentNum);
       })
     }
@@ -371,42 +385,42 @@ function combineResouorceItemType2(renderItem,resultScore,starStr,commentNum){
   if(resultScore[renderItem.id]===undefined || starStr[renderItem.id]=== undefined || commentNum[renderItem.id]=== undefined ){
     return `<div class="row my-3 ">
     <div class="col-2 ">
-      <a href="./resource.html?id=${renderItem.id}" target="_blank"><img src="${renderItem.imgUrl}" alt="${renderItem.title}"></a>
+      <a href="./resource.html?id=${renderItem.id}" ><img src="${renderItem.imgUrl}" alt="${renderItem.title}"></a>
     </div>
       <div class="col-6">
-          <h4 class="fs-7"><a href="./resource.html?id=${renderItem.id}" target="_blank">${renderItem.title}</a></h4>
+          <h4 class="fs-7"><a href="./resource.html?id=${renderItem.id}" >${renderItem.title}</a></h4>
           <div class="d-flex flex-wrap align-items-center">
               <span class="fs-8 text-gray fw-bold me-lg-2"> 尚無評價</span>
-              <p class="text-dark fs-8" >test:${renderItem.type}, ${renderItem.level} , ${renderItem.price}, ${renderItem.lang} </p>
+             
           </div>
       </div>
       <div class="col-4">
           <div class="d-flex flex-column flex-lg-row  align-items-end">
               <a href="${renderItem.url}" target="_blank" role="button" class="btn btn-tiffany my-2 w-75 mx-2">前往資源</a>
-              <a href="./resource.html?id=${renderItem.id}" target="_blank" role="button" class="btn btn-yellowBrown my-2 w-75 mx-2">查看內容</a>
+              <a href="./resource.html?id=${renderItem.id}"  role="button" class="btn btn-yellowBrown my-2 w-75 mx-2">查看內容</a>
           </div>
       </div>
     </div>`;
   }else{
     return `<div class="row my-3 ">
   <div class="col-2 ">
-     <a href="./resource.html?id=${renderItem.id}" target="_blank"><img src="${renderItem.imgUrl}" alt="${renderItem.title}"></a>  
+     <a href="./resource.html?id=${renderItem.id}" ><img src="${renderItem.imgUrl}" alt="${renderItem.title}"></a>  
   </div>
     <div class="col-6">
-     <h4 class="fs-7"><a href="./resource.html?id=${renderItem.id}" target="_blank">${renderItem.title}</a></h4>
+     <h4 class="fs-7"><a href="./resource.html?id=${renderItem.id}" >${renderItem.title}</a></h4>
         <div class="d-flex flex-wrap align-items-center text-secondary">
             <span class="fs-7 fw-bold me-lg-2"> ${resultScore[renderItem.id]}</span>
             <ul class="d-flex align-items-center lh-1 me-lg-2  ">
             ${starStr[renderItem.id]}
             </ul>                                
             <span class="fs-8">(${commentNum[renderItem.id]})</span>
-            <p class="text-dark fs-8">test ${renderItem.type}, ${renderItem.level} , ${renderItem.price}, ${renderItem.lang} </p>
+           
         </div>
     </div>
     <div class="col-4">
         <div class="d-flex flex-column flex-lg-row  align-items-end">
           <a href="${renderItem.url}" target="_blank" role="button" class="btn btn-tiffany my-2 w-75 mx-2">前往資源</a>
-          <a href="./resource.html?id=${renderItem.id}" target="_blank" role="button" class="btn btn-yellowBrown my-2 w-75 mx-2">查看內容</a>
+          <a href="./resource.html?id=${renderItem.id}"  role="button" class="btn btn-yellowBrown my-2 w-75 mx-2">查看內容</a>
         </div>  
     </div>
   </div>
@@ -415,39 +429,62 @@ function combineResouorceItemType2(renderItem,resultScore,starStr,commentNum){
   
 }
 
-
-
-/***************** n 筆結果 / 清除篩選 / 排序 ***************/
+/***************** n 筆結果 / 清除篩選  ***************/
 
 const resultNumber = document.querySelector('.resultNumber');
 const clearBtnText = document.querySelector('.clearBtnText');
 const clearFilterBtn = document.querySelector('#clearFilterBtn');
+
+  if(clearFilterBtn!==null){
+    clearFilterBtn.addEventListener("click",e=>{
+      if(checkObj.type){
+        delete checkObj.type;
+      }
+      if(checkObj.level){
+        delete checkObj.level;
+      }
+      if(checkObj.price){
+        delete checkObj.price;
+      }
+      if(checkObj.lang){
+        delete checkObj.lang;
+      }
+      filterItemInput.forEach(item=>{
+        item.checked = false;
+      })
+      renderList =[];
+      renderFilterResultList();
+    })
+  }
+  
+
+
+
+/*********************** 排序 ***********************/
+
 const resourceSort = document.querySelector('#resourceSort');
 
-function clearFilter(){
-  clearFilterBtn.addEventListener("click",e=>{
-    if(checkObj.type){
-      delete checkObj.type;
+function sortResourcesList(resRenderList){
+  if(resourceSort!==null || resourceSort!==undefined){
+
+     if(resourceSort?.value=="heightRate"){
+      resRenderList = resRenderList?.sort((a,b)=>{
+        return b.averageScore - a.averageScore;
+     })
+     
+    }else if(resourceSort?.value=="new"){
+      resRenderList = resRenderList?.sort((a,b)=>{
+        return b.id - a.id;
+     })
+
     }
-    if(checkObj.level){
-      delete checkObj.level;
-    }
-    if(checkObj.price){
-      delete checkObj.price;
-    }
-    if(checkObj.lang){
-      delete checkObj.lang;
-    }
-    filterItemInput.forEach(item=>{
-      item.checked = false;
-    })
-    renderFilterResultList();
-    console.log("click check");
-    console.log(checkObj);
-  })
-  
+  }
+   
+    return resRenderList;
 }
 
-
-
-
+if(resourceSort!==null){
+  resourceSort.addEventListener("change",e=>{
+    renderFilterResultList();
+  })
+}

@@ -1,3 +1,4 @@
+
 const signUpForm = document.querySelector('form.signUpForm');  //form
 
 const signupLastName = document.querySelector('#signupLastName');
@@ -8,8 +9,6 @@ const signupPwConfirm = document.querySelector('#signupPwConfirm');
 
 const signUpFormInputs = document.querySelectorAll('input.signupInput');  //input
 const btnSignUp = document.querySelector('#btnSignUp');
-
-//console.log(signUpFormInputs);
 
 
 function initSignup(){
@@ -47,9 +46,6 @@ const constraints ={
         equality:{
             attribute:"password",
             message: "與前者輸入密碼不同",
-            // comparator: function(v1, v2) {
-            //     return v1 === v2;
-            //   }
         }
     }
 }
@@ -75,7 +71,6 @@ signUpFormInputs.forEach(item=>{
         //有錯就呈現在畫面上
         if (errors) {
           Object.keys(errors).forEach( keys=> {
-            //console.log(keys);
             document.querySelector(`.${keys}`).textContent = errors[keys][0].split(" ")[1];
           });
         }
@@ -87,10 +82,10 @@ signUpFormInputs.forEach(item=>{
 //取得用戶清單
 let usersData = [];
 function getUserList(){
-    axios.get("http://localhost:3000/users").then(res=>{
+    axios.get(`http://localhost:3000/users`).then(res=>{
         usersData = res.data
     }).catch(err=>{
-        console.log(err.response);
+        console.log(err);
     })
 }
 
@@ -101,7 +96,6 @@ if(btnSignUp!==null){
     e.preventDefault();
 
     if(signupLastName.value===""||signupfirstName.value===""||signupMail.value===""||signupPw.value===""||signupPwConfirm.value===""){
-        // console.log("有空欄位");
         return;
     }
 
@@ -115,8 +109,7 @@ if(btnSignUp!==null){
     if(signupPw.value!== signupPwConfirm.value){
         return;
     }
-
-    axios.post("http://localhost:3000/users",{
+    axios.post(`http://localhost:3000/users`,{
         "lastName": signupLastName.value,
         "firstName": signupfirstName.value,
         "email": signupMail.value,
@@ -127,12 +120,23 @@ if(btnSignUp!==null){
         "links":{"websiteUrl":""}
 
     }).then(res=>{
-        console.log(res.data);
-        alert('成功註冊')
-        location.href ='./login.html';
+        Swal.fire({
+            icon: 'success',
+            title: '成功註冊',
+            iconColor:"#4AA9B6",            
+            confirmButtonColor:"#4AA9B6",
+            showConfirmButton: true,
+        });
+        setTimeout(() => { location.href = `./login.html`;}, 5000);
+        console.log(res)
 
     }).catch(err=>{
-        console.log(err.response);
+       
+        Swal.fire({
+            icon: 'error',
+            title: '連線有誤',
+        });
+        console.log(err)
     })
 
 })

@@ -18,11 +18,15 @@ function initProfile(){
         axios.get(`${url}/users?id=${localStorageUserId}`,headers)
         .then(res=>{
             userData = res.data;
-            //console.log(userData);
             renderUserData();
         
         }).catch(err=>{
-            console.log(err.response);
+            //console.log(err);
+            if (err?.response?.status === 403) {
+                document.location.href = `./acc_resources.html?userid=${localStorageUserId}`;
+            } else if (err?.response?.status === 401) {
+                clearLocalStorage();
+            };
         })
     }else{
         if( location.href !== `${homePage}/index.html`){
@@ -52,14 +56,22 @@ const profileImg = document.querySelector('.profileImg');
 const leftMenu = document.querySelector('.leftMenu');
 
 function renderUserData() {
-    firstName.value = userData[0].firstName;
-    lastName.value = userData[0].lastName;
+    if(firstName!==null){
+        firstName.value = userData[0].firstName;
+    }
+    if(lastName!==null){
+        lastName.value = userData[0].lastName;
+    }
    
     if(userData[0].title!=undefined){
-        userTitle.value = userData[0].title;
+        if(userTitle!==null){
+            userTitle.value = userData[0].title;
+        }
     }
     if(userData[0].experiences!=undefined){
-        userExp.value = userData[0].experiences;
+        if(userExp!==null){
+            userExp.value = userData[0].experiences;
+        }
     }
     // if( userData[0].links.websiteUrl!=undefined){
     //     websiteUrl.value = userData[0].links.websiteUrl;
@@ -70,7 +82,9 @@ function renderUserData() {
     
     let profileImgStr=`
     <span class="userImg d-inline-block bg-primary p-4 rounded-circle fw-bold lh-1 text-white text-center">${prefix}</span>`;
-    profileImg.innerHTML = profileImgStr;
+    if(profileImg!==null){
+        profileImg.innerHTML = profileImgStr;
+    }
 
 
     let leftMenuStr=`<ul class="nav flex-row flex-lg-column">
@@ -84,8 +98,9 @@ function renderUserData() {
         <a class="nav-link" href="#">通知</a>
         </li> -->
     </ul>  `;
-    
-    leftMenu.innerHTML = leftMenuStr;
+    if(leftMenu!==null){
+        leftMenu.innerHTML = leftMenuStr;
+    }
 
 }
 
@@ -128,19 +143,23 @@ if(btnSaveProfile!==null){
                 "experiences" : userExp.value,
             },headers)
             .then(res=>{
-                alert("已成功更新");
-                //document.write(`<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>`)
-                //Swal.fire('Any fool can use a computer')
-                // Swal.fire({
-                //     position: 'top-end',
-                //     icon: 'success',
-                //     title: 'Your work has been saved',
-                //     showConfirmButton: false,
-                //     timer: 1500
-                // })
-                console.log(res.data);
+            
+                Swal.fire({
+                    text:"已成功更新",
+                    icon: 'success',
+                    iconColor:"#4AA9B6",        
+                    showConfirmButton: false,
+                    timer: 2000
+                })
+               
+                //console.log(res.data);
             }).catch(err=>{
-                console.log(err.response);
+                if (err.request.status === 403) {
+                    document.location.href = `./acc_profile.html?userid=${localStorageUserId}`;
+                } else if (err?.response?.status === 401) {
+                    clearLocalStorage();
+                };
+               
             })
            
         }

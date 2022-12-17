@@ -12,6 +12,8 @@ function initResourcePage(){
     getResourcesComment(resId);
 
     getUserData();
+    getbookmarkData();
+    //submitComment();
 }
 initResourcePage();
 
@@ -22,10 +24,7 @@ let commentsData = [];
 function getResourcesForResources(){
   axios.get(`${url}/resources`)
   .then(res=>{
-    resourcesData = res.data;
-    //getCommentData();
-    //renderRelatedResource();
-
+    resourcesData = res.data; 
   }).catch(error=>{
     console.log(error);
   })
@@ -38,6 +37,7 @@ function getCommentData(){
     renderRelatedResource();
   }).catch(error=>{
     console.log(error);
+    
   })
 }
 
@@ -45,7 +45,7 @@ function getCommentData(){
 let resourceContent=[];
 let resourceCommentData=[];
 
-//取得單一資源>>用於渲染資源建立者
+//取得單一資源
 function getResourcesItem(id){
     axios.get(`${url}/resources?id=${id}&_expand=user`)
     .then(res=>{
@@ -63,6 +63,7 @@ function getResourcesComment(id){
         resourceCommentData = res.data;
         renderResource();
         renderComment();
+        submitComment();
 
     }).catch(error=>{
       console.log(error);
@@ -73,11 +74,10 @@ function getResourcesComment(id){
 
 const imageNBrief = document.querySelector('.imageNBrief');
 const titleBox = document.querySelector('.titleBox');
-const btnBox = document.querySelector('.btnBox');
+const btnResLink = document.querySelector('.btnResLink');
 
 
 function renderResource(){
-    
 
     let renderItem=resourceContent[0];
     let userName ="";
@@ -143,22 +143,9 @@ function renderResource(){
             </div>`;
         }
 
-
+        
         btnBoxStr = `
-        <a href="${renderItem.url}" target="_blank" type="button" class="btn btn-sm btn-secondary my-2 text-white px-lg-4 py-2 fs-6">前往資源</a>
-        <div class="d-flex justify-content-center flex-row flex-md-column flex-lg-row align-items-center">                    
-            <a href="#" role="button" class="d-flex align-items-center me-2 ">
-                <span class="material-icons ">bookmark_border</span>
-                <!-- <span class="material-icons">bookmark</span> -->
-                <span>收藏</span>
-            </a>
-
-            <a href="#" role="button" class=" d-flex align-items-center me-2 ">
-                <span class="material-icons material-icons-outlined">feedback</span>
-                <!-- <span class="material-icons">feedback</span> -->
-                <span>回報</span>
-            </a>
-        </div>`;
+        <a href="${renderItem.url}" type="button" target="_blank" class="btn btn-secondary my-2 text-white px-lg-4 py-2 fs-6 w-100">前往資源</a>`;
 
         imageNBriefStr = `
         <img class="d-md-block" src="${renderItem.imgUrl}" alt="${renderItem.title}">
@@ -171,8 +158,8 @@ function renderResource(){
         if(titleBox!==null){
             titleBox.innerHTML = titleBoxStr;
         }
-        if(btnBox!==null){
-            btnBox.innerHTML = btnBoxStr;
+        if(btnResLink!==null){
+            btnResLink.innerHTML = btnBoxStr;
         }
 
     }
@@ -301,8 +288,10 @@ function renderComment(){
          commentList.innerHTML = commentStr;
     }
     if(commentStr==""){
-        commentSort.setAttribute("class","d-none");
-        commentList.innerHTML = `<div class="text-center">目前尚無評論，歡迎您留言分享寶貴的經驗唷!</div>`;
+        if(commentSort!==null){
+            commentSort.setAttribute("class","d-none");
+            commentList.innerHTML = `<div class="text-center">目前尚無評論，歡迎您留言分享寶貴的經驗唷!</div>`;
+        }
 
     }
 
@@ -338,7 +327,7 @@ function renderRelatedResource(){
                     if(resultScore[resItem.id]==undefined||starStr[resItem.id]==undefined || commentNum[resItem.id] == undefined){
                         relatedStr+=`
                         <div class="my-4">
-                        <h4 class="fs-7"><a href="./resource.html?id=${resItem.id}" target="_blank"> ${resItem.title}</a></h4>
+                        <h4 class="fs-7"><a href="./resource.html?id=${resItem.id}" > ${resItem.title}</a></h4>
                             <div class="d-flex flex-wrap justify-content-start align-items-center">
                                 <span class="fs-8 text-gray me-lg-2">尚無評價</span>                           
                             </div>
@@ -347,7 +336,7 @@ function renderRelatedResource(){
                     }else{
                         relatedStr+=`
                         <div class="my-4">
-                        <h4 class="fs-7"><a href="./resource.html?id=${resItem.id}" target="_blank"> ${resItem.title}</a></h4>
+                        <h4 class="fs-7"><a href="./resource.html?id=${resItem.id}"> ${resItem.title}</a></h4>
                         <div class="d-flex flex-wrap justify-content-start align-items-center text-secondary">
                             <span class="fs-7 fw-bold me-lg-2">${resultScore[resItem.id]}</span>
                             <ul class="d-flex align-items-center lh-1 me-lg-2 ">
@@ -389,6 +378,7 @@ const btnCommentSubmit = document.querySelector('.btnCommentSubmit');
 
 const commentStar = document.querySelectorAll('.commentStar > li > a >span');
 const commentTextarea = document.querySelector('#commentTextarea');
+const btnBookmark = document.querySelector('.btnBookmark');
 
 
 //取得該用戶資料
@@ -396,27 +386,48 @@ let localStorageUserId = localStorage.getItem("userId");
 let localStorageToken = localStorage.getItem("accessToken");
 
 let userData=[];
+document.querySelector("body").setAttribute("style","overflow-y:hidden");
+
 function getUserData(){
-    
     axios.get(`${url}/users?id=${localStorageUserId}`)
     .then(res=>{
         userData = res.data;
-        console.log(userData);
         renderBtnCommentContent();
   
     }).catch(error=>{
+        if(error?.response?.status==401){
+            clearLocalStorage();
+        }
       console.log(error);
     })
-
 }
 
-//渲染按鈕 //更新 collapseComment id
+let userBookmark;
+function getbookmarkData(){
+    axios.get(`${url}/bookmarks?userId=${localStorageUserId}`)
+    .then(res=>{
+        userBookmark = res.data;        
+        renderBookmark();
+  
+    }).catch(error=>{
+        console.log(error);
+        if(error?.response?.status==401){
+            clearLocalStorage();
+        }
+        
+    })
+}
+
+//渲染按鈕 //更新 collapseComment   判斷是否有"收藏"
 function renderBtnCommentContent(){
     //console.log(localStorageUserId,localStorageToken);
-
-    btnComment.setAttribute("href",`#collapseComment${resId}`);
-    btnComment.setAttribute("aria-controls",`collapseComment${resId}`);
-    commentContent.setAttribute("id",`collapseComment${resId}`);
+    if(btnComment!==null){
+        btnComment.setAttribute("href",`#collapseComment${resId}`);
+        btnComment.setAttribute("aria-controls",`collapseComment${resId}`);
+    }
+    if(commentContent!==null){
+        commentContent.setAttribute("id",`collapseComment${resId}`);
+    }
 
     // console.log("resId");
     // console.log(resId);
@@ -433,16 +444,102 @@ function renderBtnCommentContent(){
             <span class="fs-9 text-gray">${userData[0].title}</span>
 
         </p>`;
-        
-        userInfo.innerHTML = userInfoStr;
+
+        if(userInfo!==null){
+            userInfo.innerHTML = userInfoStr;
+        }
 
     }else{
-         btnComment.setAttribute("href",``);
-         commentContent.setAttribute("class","d-none");
-         btnComment.addEventListener("click",e=>{
-            alert("請先登入");
-            location.href="./login.html"
-        })
+        if(commentContent!==null){
+           commentContent.setAttribute("class","d-none");
+
+        }
+        if(btnComment!==null){
+            btnComment.setAttribute("href",``); 
+            btnComment.addEventListener("click",e=>{
+            //alert("請先登入");
+                Swal.fire({
+                    text:`請先登入`,
+                    icon: 'info',
+                    iconColor:"#4AA9B6",            
+                    confirmButtonColor:"#4AA9B6",   
+                })
+            //location.href="./login.html"
+            })
+        }
+    }
+}
+
+function renderBookmark(){
+    if(localStorageUserId !=="" && localStorageUserId !== null){
+        //console.log(resId);
+        
+        let result = userBookmark.filter(item=>{
+            return item.resourceId == resId;
+        }) 
+        //console.log(result);
+
+        if(result.length!==0){
+            if(btnBookmark!==null){
+                btnBookmark.innerHTML = `<span class="material-icons text-secondary">bookmark</span>
+                <span class="text-secondary">收藏</span>`;
+            }
+        }
+        
+        if(btnBookmark!=null){
+            btnBookmark.addEventListener("click",e=>{
+                //如果已收藏 會取消收藏 delete bookmarks
+                if(result.length!==0){
+                    //console.log(result[0].id);
+                    axios.delete(`${url}/bookmarks/${result[0].id}`,headers)
+                    .then(res=>{
+                        btnBookmark.innerHTML = `<span class="material-icons">bookmark_border</span>
+                        <span>收藏</span>`;
+                    
+                        location.reload();
+                    }).catch(err=>{
+                        if (err?.response?.status === 401) {
+                            clearLocalStorage();
+                        };
+                        console.log(err);
+                    })      
+                }else if(result.length == 0){ //如果尚未收藏  會加入收藏  post bookmarks
+                    axios.post(`${url}/600/bookmarks?userId=${localStorageUserId}`,{  
+                        "resourceId": resId,
+                        "userId": localStorageUserId,
+                        "isFixedTop": false
+                    },headers)
+                    .then(res=>{
+                        btnBookmark.innerHTML = `<span class="material-icons text-secondary">bookmark</span>
+                        <span class="text-secondary">收藏</span>`;
+                        location.reload();
+                        //console.log(res.data);
+                    }).catch(err=>{
+                        console.log(err);
+                        if (err?.response?.status === 401) {
+                            clearLocalStorage();
+                        };
+                    })
+                }
+            })
+        }
+    }else{
+        if(btnBookmark!=null){
+            btnBookmark.addEventListener("click",e=>{
+                //alert("請先登入");
+                Swal.fire({
+                    text:`請先登入`,
+                    icon: 'info',
+                    iconColor:"#4AA9B6",            
+                    confirmButtonColor:"#4AA9B6",   
+                    // showConfirmButton: false,
+                    timer: 1500
+                })
+                // location.href="./login.html";
+                //setTimeout("location.href='./login.html'",4000);
+            })
+
+        }
     }
 }
 
@@ -451,11 +548,8 @@ let thisTime = ((Date.now())/1000).toFixed(0);
 // console.log(thisTime);
 
 let starNum = 0;
-
 //checked 星星
 // console.log(commentStar);
-
-
 commentStar.forEach((starItem,index)=>{
     starItem.addEventListener("click",e=>{
         
@@ -468,16 +562,12 @@ commentStar.forEach((starItem,index)=>{
             commentStar[i].textContent = "star";
             starNum +=1;
         }
-        //console.log(starNum);
-        console.log(starNum);
-        
-        //return starNum;
-        //console.log(starNum);
-    })
-   // submitComment();
-    
-})
+        // console.log("starNum");
+        // console.log(starNum);
 
+    })
+  
+})
 
 //檢查留言字數
 if(commentTextarea!==null){
@@ -492,26 +582,85 @@ if(commentTextarea!==null){
     })
 }
 
+//送出評論, 要更新總評分
+function submitComment(){
+    // console.log("resourceCommentData");
+    // console.log(resourceCommentData);
+    let totalScore = 0;
+    resourceCommentData.forEach(item=>{
+        totalScore += item.score;
+    })
+    let thisResAverageScore = totalScore/resourceCommentData.length;
+    // console.log("thisResAverageScore");
+    // console.log(thisResAverageScore);
 
-//送出評論
-// function submitComment(){
+
     if(btnCommentSubmit!=null){
     btnCommentSubmit.addEventListener("click",e=>{
-        axios.post(`${url}/600/comments/`,{
-            "resourceId": resId,
-            "userId": localStorageUserId,
-            "commentTime": thisTime,
-            "score": starNum,
-            "content": commentTextarea.value,
-            "likeNum": 0,
-            "dislikeNum": 0
-        },headers).then(res=>{
-            location.reload();
-            //console.log(res.data)
-        }).catch(err=>{
-            console.log(err.response);
-        })
+        if(commentTextarea.value=="" ){
+            Swal.fire({
+                text:"請填寫評價內容",
+                icon: 'info',
+                iconColor:"#4AA9B6", 
+                confirmButtonColor:"#4AA9B6",       
+                showConfirmButton: true,
+            })
+        }
+        if(starNum==0 ){
+            Swal.fire({
+                text:"請給予評分",
+                icon: 'info',
+                iconColor:"#4AA9B6", 
+                confirmButtonColor:"#4AA9B6",       
+                showConfirmButton: true,
+            })
+        }
+        
+        if(commentTextarea.value!=="" && commentTextarea.value.length >= 20 && starNum!==0){
+            axios.post(`${url}/600/comments/`,{
+                "resourceId": resId,
+                "userId": localStorageUserId,
+                "commentTime": thisTime,
+                "score": starNum,
+                "content": commentTextarea.value,
+                "likeNum": 0,
+                "dislikeNum": 0
+            },headers).then(res=>{
+    
+                let newAverageScore ;
+                if(thisResAverageScore == NaN || resourceCommentData.length==0){
+                    newAverageScore = starNum;
+                }else{
+                    newAverageScore = ((thisResAverageScore*resourceCommentData.length)+starNum)/(resourceCommentData.length+1).toFixed(1);
+                } 
+                axios.patch(`${url}/resources/${resId}`,{
+                    "averageScore":newAverageScore
+                })
+                .then(res=>{
+                    console.log(res.data);
+                }).catch(err=>{
+                    console.log(err);
+                })
+    
+                location.reload();
+    
+    
+            }).catch(err=>{
+                console.log(err);
+                if (err?.response?.status === 401) {
+                    clearLocalStorage();
+                };
+            })
+        }
+
+        
     
     })
+    }
 }
-// }
+
+
+
+
+
+/******************收藏資源***********************/

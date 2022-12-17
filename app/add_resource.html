@@ -1,0 +1,461 @@
+---
+title: (資源名稱)
+layout: ./app/layout.ejs
+engine: ejs
+current: resource
+---
+
+<main>
+    <div class="container-fluid px-3 py-5 p-lg-0 bg-primary">
+        <div class="bannerBlock container p-0 py-lg-8 py-md-4">
+            <nav class="navbar navbar-expand-lg">
+                <div class=" navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active text-primary btn bg-white" aria-current="page" href="#">我的資源</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#">我的募集</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#">我的學習</a>
+                    </li>
+                    </ul>
+                </div>
+
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-secondary text-white" data-bs-toggle="modal" data-bs-target="#staticBackdrop"> + 新增資源</button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">新增資源</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3 d-flex align-items-center">
+                            <div style="width:30%;"> <label for="resImg">資源圖片預覽</label> </div>
+                            
+                            <div style="width:30%;" id="resImg" class="me-4" >
+                                <img class="d-block" src="./assets/images/icon_image.png" alt="資源圖片"></div>
+                        
+                            <div style="width:40%;" class="fs-8">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="resImgDefault" id="resImgDefault" checked>
+                                    <label class="form-check-label" for="resImgDefault">預設圖片</label>
+                                </div>
+                                <div class="form-check ">                           
+                                    <input class="form-check-input" type="radio" name="resImgSys" id="resImgSys">
+                                    <label class="form-check-label" for="resImgSys">系統圖片</label>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="url" class="form-control" id="resLink" placeholder="資源連結">
+                            <label for="resLink">資源連結</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="resName" placeholder="資源名稱">
+                            <label for="resName">資源名稱</label>
+                        </div>
+
+                        <div class="input-group">
+                            <select class="form-select form-select-sm"  id="resTopic">
+                                <option value="selectTopic"selected>選擇主題</option>
+                                <option value="topic">(列出目前有的主題)</option>
+                                <option value="newTopic">新主題</option>
+                            </select>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="addNewTopic" placeholder="新增主題名稱">
+                            <label for="addNewTopic">新增主題名稱</label>
+                            <!-- <span>提醒您 : 新增主題，若要發佈公開前將會列入後台審核機制</span> -->
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <textarea class="form-control" placeholder="" id="resIntro" style="height: 100px"></textarea>
+                            <label for="resIntro">資源說明</label>
+                        </div>
+
+                        <!-- resource_list.html filterlist -->
+                        <div class="filterGroup1 mb-4 ">
+                            <h3 class="fs-6">資源性質</h3>
+                            <div class="input-group">
+
+                                <input type="checkbox" id="typeArticles" class="me-2">
+                                <label for="typeArticles" class="me-2">文章</label>
+
+                                <input type="checkbox" id="typeBooks" class="me-2">
+                                <label for="typeBooks" class="me-2">書籍</label>
+                            
+                                <input type="checkbox" id="typeOnline" class="me-2">
+                                <label for="typeOnline" class="me-2">線上課程</label>
+
+                                <input type="checkbox" id="typeOffline" class="me-2">
+                                <label for="typeOffline" class="me-2">實體課程</label>
+
+                                <input type="checkbox" id="typeBlog" class="me-2">
+                                <label for="typeBlog" class="me-2">個人部落格</label>
+
+                                <input type="checkbox" id="typeThirdParty" class="me-2">
+                                <label for="typeThirdParty" class="me-2">第三方技術網站</label>
+                            </div>
+                        </div> <!--end filterGroup1-->
+            
+                        <div class="filterGroup2 mb-4">
+                            <h3 class="fs-6">適用等級</h3>
+                            <div class="input-group">
+                                <input type="checkbox" id="lvBasic" class="me-2">
+                                <label for="levelBasic" class="me-2">初階</label>
+
+                                <input type="checkbox" id="lvMedium" class="me-2" >
+                                <label for="lvMedium" class="me-2">中階</label>
+
+                                <input type="checkbox" id="lvAdvanced" class="me-2">
+                                <label for="lvAdvanced" class="me-2">高階</label>
+                            </div>
+                        </div><!--end filterGroup2-->
+            
+                        <div class="filterGroup3 mb-4">
+                            <h3 class="fs-6">價格</h3>
+                            <div class="input-group">
+                                <input type="checkbox" id="costFree" class="me-2">
+                                <label for="costFree" class="me-2">免費</label>
+                                <input type="checkbox" id="costPay" class="me-2">
+                                <label for="costPay" class="me-2">付費</label>
+                                <input type="checkbox" id="costPartiallyPaid" class="me-2">
+                                <label for="partiallyPaid" class="me-2">部分付費</label>
+                            </div>
+                        </div><!--end filterGroup3-->
+            
+                        <div class="filterGroup4 mb-4">
+                            <h3 class="fs-6">語系</h3>
+                            <div class="input-group">
+                                <input type="checkbox" id="langTc" class="me-2">
+                                <label for="langTC" class="me-2">繁體中文</label>
+                                <input type="checkbox" id="langSc" class="me-2">
+                                <label for="langSc" class="me-2">簡體中文</label>
+                                <input type="checkbox" id="langEn" class="me-2">
+                                <label for="langEn" class="me-2">英文</label>
+                            </div>
+                        </div><!--end filterGroup4-->
+            
+                    </div>  
+                    <!-- modal-body -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary text-white">儲存為自己使用</button>
+                        <button type="button" class="btn btn-secondary text-white">發佈公開資源</button>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            
+            </nav>
+        </div><!--end bannerBlock-->
+    </div>
+
+    <div class="container my-8 pb-5 bg-white">
+        <div class="row">
+            <div class="col-2"></div>
+            <div class="col-8">
+                <form action="">
+                    <div class="row my-2">
+                        <div class="col-2"><label for="resImg">資源圖片</label></div>
+                        <div class="col"> 
+                            <!-- <img class="d-block" src="./assets/images/icon_image.png" alt="資源圖片"> -->
+
+                            <!-- <label class="text-center mb-5 image-preview-wrapper" for="file-uploader">
+                                <img src="https://via.placeholder.com/300x300/efefef?text=Avatar" alt="image-placehoder" class="img-thumbnail" data-target="image-preview">
+                                <div class="spinner-wrapper position-absolute" data-target="spinner">
+                                  <div class="spinner-border text-secondary" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                  </div>
+                                </div>
+                              </label>
+                              
+                              <div class="row">
+                                <div class="col-12 col-md-6 mx-auto">
+                                  <div class="custom-file">
+                                    <input type="file" class="custom-file-input" data-target="file-uploader" id="file-uploader">
+                                    <label class="custom-file-label" for="customFile">Choose file</label>
+                                  </div>
+                                </div>
+                              </div> -->
+
+                            <label class="btn btn-info">
+                                <input id="upload_img" style="display:none;" type="file" accept="image/*">上傳圖片</label>
+
+                            <div id="oldImg" style="display:none;"></div>
+                            
+
+                           
+                        </div>
+                        <div class="col">
+                            <button id="crop_img" class="btn btn-info">裁剪圖片</button>
+                            <div id="newImgInfo"></div>
+                            <div id="newImg"></div>
+                            <!-- <div class="form-check">
+                                <input class="form-check-input" type="radio" name="resImgDefault" id="resImgDefault" checked>
+                                <label class="form-check-label" for="resImgDefault">預設圖片</label>
+                            </div>
+                            <div class="form-check ">                           
+                                <input class="form-check-input" type="radio" name="resImgSys" id="resImgSys">
+                                <label class="form-check-label" for="resImgSys">系統圖片</label>
+                            </div> -->
+                        </div>
+                    </div>
+                    <div class="row my-2">
+                        <div class="col-2"><label for="resLink">資源連結</label></div>
+                        <div class="col"><input type="url" class="form-control" id="resLink" placeholder=""></div>
+                    </div>
+                    <div class="row my-2">
+                        <div class="col-2"><label for="resName">資源名稱</label></div>
+                        <div class="col"><input type="text" class="form-control" id="resName" placeholder=""></div>
+                    </div>
+                    <div class="row my-2">
+                        <div class="col-2"><label for="topic">選擇主題</label></div>
+                        <div class="col">
+                            <select class="form-select form-select-sm"  id="resTopic" name="topic">
+                                <option value="selectTopic"selected>選擇主題</option>
+                                <option value="topicJavaScript">JavaScript</option>
+                                <option value="topicHTMLCSS">HTML/CSS</option>
+                                <option value="topicPython">Python</option>
+                                <option value="newTopic">新主題</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- <div class="row my-2">
+                        <div class="col"><label for="addNewTopic">新增主題名稱</label></div>
+                        <div class="col"><input type="text" class="form-control" id="addNewTopic" placeholder="新增主題名稱"></div>
+                                     <span>提醒您 : 新增主題，若要發佈公開前將會列入後台審核機制</span>  
+                    </div> -->
+                    <div class="row my-2">
+                        <div class="col-2"><label for="resIntro">資源說明</label></div>
+                        <div class="col">
+                            <textarea class="form-control" placeholder="" id="resIntro" style="height: 100px"></textarea>
+                        </div>
+                    </div>
+        
+                    <div class="row my-2">
+                        <div class="col-2"><label for="type">資源性質</label></h3></div>
+                        <div class="col">
+                            <div class="input-group">
+                                <div class="form-check">
+                                <input type="radio" id="typeArticles" name="type">
+                                <label for="typeArticles">文章</label>
+                                </div>  
+                                
+                                <div class="form-check">
+                                <input type="radio" id="typeBooks"  name="type">
+                                <label for="typeBooks" >書籍</label>
+                                </div>
+
+                                <div class="form-check">
+                                <input type="radio" id="typeOnline"  name="type">
+                                <label for="typeOnline" >線上課程</label>
+                                </div>
+
+                                <div class="form-check">
+                                <input type="radio" id="typeOffline"  name="type">
+                                <label for="typeOffline" >實體課程</label>
+                                </div>
+
+                                <div class="form-check">
+                                <input type="radio" id="typeBlog"  name="type">
+                                <label for="typeBlog" >個人部落格</label>
+                                </div>
+
+                                <div class="form-check">
+                                <input type="radio" id="typeThirdParty" name="type">
+                                <label for="typeThirdParty" >第三方技術網站</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="row my-2">
+                        <div class="col-2"><label for="level">適用等級</label></div>
+                        <div class="col">
+                            <div class="input-group">
+                                <div class="form-check">
+                                <input type="checkbox" id="lvBasic"  name="level">
+                                <label for="levelBasic" >初階</label>
+                                </div>
+
+                                <div class="form-check">
+                                <input type="checkbox" id="lvMedium"  name="level">
+                                <label for="lvMedium" >中階</label>
+                                </div>
+                                
+                                <div class="form-check">
+                                <input type="checkbox" id="lvAdvanced"  name="level">
+                                <label for="lvAdvanced" >高階</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="row my-2">
+                        <div class="col-2"><label for="price">價格</label></div>
+                        <div class="col">
+                            <div class="input-group">
+                                <div class="form-check">
+                                    <input type="radio" id="costFree" name="price">
+                                    <label for="costFree" >免費</label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input type="radio" id="costPay" name="price">
+                                    <label for="costPay" >付費</label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input type="radio" id="costPartiallyPaid"  name="price">
+                                    <label for="partiallyPaid" >部分付費</label>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="row">
+                        <div class="col-2"><label for="lang">語系</label></div>
+                        <div class="col">
+                            <div class="input-group">
+                                <div class="form-check">
+                                    <input type="checkbox" id="langTc" >
+                                    <label for="langTC" >繁體中文</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" id="langSc" >
+                                    <label for="langSc" >簡體中文</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" id="langEn" >
+                                    <label for="langEn" >英文</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" id="langMulti" >
+                                <label for="langMulti" >多語系</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                </form>
+        
+                
+                <div class="border-top my-5 py-3 text-center">
+                    <button type="button" class="btn btn-primary text-white">儲存為自己使用</button>
+                    <button type="button" class="btn btn-secondary text-white">發佈公開資源</button>
+                </div>
+            </div>
+            <div class="col-2"></div>
+        </div>
+    </div><!--end -->
+
+    <!-- <link href='//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css' rel='stylesheet'></link> -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet"></link> -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js"></script>
+
+    <script>
+        (function($) {
+            var width_crop = 320, // 圖片裁切寬度 px 值
+            height_crop = 180, // 圖片裁切高度 px 值
+            type_crop = "square", // 裁切形狀: square 為方形, circle 為圓形
+            width_preview = 350, // 預覽區塊寬度 px 值
+            height_preview = 350, // 預覽區塊高度 px 值
+            compress_ratio = 0.85, // 圖片壓縮比例 0~1
+            type_img = "jpeg", // 圖檔格式 jpeg png webp
+            oldImg = new Image(),
+            myCrop, file, oldImgDataUrl;
+            
+            // 裁切初始參數設定
+            myCrop = $("#oldImg").croppie({
+                viewport: { // 裁切區塊
+                width: width_crop,
+                height: height_crop,
+                type: type_crop
+                },
+                boundary: { // 預覽區塊
+                width: width_preview,
+                height: height_preview
+                }
+            });
+            
+            function readFile(input) {
+                if (input.files && input.files[0]){
+                file = input.files[0];
+                } else {
+                alert("瀏覽器不支援此功能！建議使用最新版本 Chrome");
+                return;
+                }
+                
+                if (file.type.indexOf("image") == 0) {
+                var reader = new FileReader();
+                
+                reader.onload = function(e) {
+                oldImgDataUrl = e.target.result;
+                oldImg.src = oldImgDataUrl; // 載入 oldImg 取得圖片資訊
+                myCrop.croppie("bind", {
+                url: oldImgDataUrl
+                });
+                };
+                
+                reader.readAsDataURL(file);
+                } else {
+                alert("您上傳的不是圖檔！");
+                }
+            }
+            
+            function displayCropImg(src) {
+                var html = "<img src='" + src + "' />";
+                $("#newImg").html(html);
+                }
+                
+                $("#upload_img").on("change", function() {
+                $("#oldImg").show();
+                readFile(this);
+                });
+                
+                oldImg.onload = function() {
+                var width = this.width,
+                height = this.height,
+                fileSize = Math.round(file.size / 1000),
+                html = "";
+                
+                html += "<p>原始圖片尺寸 " + width + "x" + height + "</p>";
+                html += "<p>檔案大小約 " + fileSize + "k</p>";
+                $("#oldImg").before(html);
+            };
+            
+            function displayNewImgInfo(src) {
+                var html = "",
+                filesize = src.length * 0.75;
+                
+                html += "<p>裁切圖片尺寸 " + width_crop + "x" + height_crop + "</p>";
+                html += "<p>檔案大小約 " + Math.round(filesize / 1000) + "k</p>";
+                $("#newImgInfo").html(html);
+                }
+                
+                $("#crop_img").on("click", function() {
+                    myCrop.croppie("result", {
+                        type: "canvas",
+                        format: type_img,
+                        quality: compress_ratio
+                    }).then(function(src) {
+                        displayCropImg(src);
+                        displayNewImgInfo(src);
+                    });
+                    });
+            })(jQuery);
+        </script>
+        
+
+</main>
