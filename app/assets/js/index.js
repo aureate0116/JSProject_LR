@@ -4,7 +4,7 @@ let resId = location.href.split("=")[1];
 let userId = location.href.split("=")[1];
 let localStorageUserId = localStorage.getItem("userId");  
 // let pageClassify = locationHref[3].split(".html")[0];
-let homePage = locationHref[0]+`//`+locationHref[2];
+// let homePage = locationHref[0]+`//`+locationHref[2];
 
 
 //1. 頁面初始化
