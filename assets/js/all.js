@@ -3,12 +3,12 @@
 var url = "http://localhost:3000";
 var userId = location.href.split("=")[1];
 var localStorageUserId = localStorage.getItem("userId");
-var localStorageToken = localStorage.getItem("accessToken");
-var pageClassify = location.href.split("/")[3].split(".html")[0];
+var localStorageToken = localStorage.getItem("accessToken"); // let pageClassify = location.href.split("/")[3].split(".html")[0];
+
 var headers = {
   Authorization: "Bearer ".concat(localStorageToken)
-};
-var homePage = location.href.split("/")[0] + "//" + location.href.split("/")[2]; //如果localStorage userid 是空的 或是 該id 跟 這個page的id 不同 ，就轉跳至首頁
+}; // let homePage = location.href.split("/")[0]+`//`+location.href.split("/")[2];
+//如果localStorage userid 是空的 或是 該id 跟 這個page的id 不同 ，就轉跳至首頁
 //取得該用戶資料
 
 var userData = [];
@@ -28,12 +28,15 @@ function initAccount() {
       ;
       console.log(err);
     });
-  } else {
-    if (location.href !== "".concat(homePage, "/index.html")) {
-      if (pageClassify !== "resource" && pageClassify !== "resource_list" && location.href !== homePage + "/login.html" && location.href !== homePage + "/signup.html" && location.href !== homePage + "/acc_account.html" && location.href !== homePage + "/acc_resources.html") {
-        location.href = "./index.html";
-      }
-    }
+  } else {// if( location.href !== `${homePage}/index.html`){
+    //     if( pageClassify!=="resource" && pageClassify!=="resource_list" 
+    //     && location.href!==homePage+"/login.html"
+    //     && location.href!==homePage+"/signup.html"
+    //     && location.href!==homePage+"/acc_account.html"
+    //     && location.href!==homePage+"/acc_resources.html"){
+    //         location.href = `./index.html`;
+    //     }
+    // }
   }
 }
 
@@ -606,8 +609,8 @@ var resTopic = location.href.split("=")[1];
 var resId = location.href.split("=")[1];
 var userId = location.href.split("=")[1];
 var localStorageUserId = localStorage.getItem("userId"); // let pageClassify = locationHref[3].split(".html")[0];
-
-var homePage = locationHref[0] + "//" + locationHref[2]; //1. 頁面初始化
+// let homePage = locationHref[0]+`//`+locationHref[2];
+//1. 頁面初始化
 
 function initIndex() {
   getResourcesForIndex(); // if(pageClassify=="resource"){
