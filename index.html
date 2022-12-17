@@ -7,10 +7,26 @@
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 <title>Engineer();程式學習資源網</title>
 <link rel="stylesheet" href="./assets/style/all.css">
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.css" rel="stylesheet"></link>
+
 
 </head>
 
+
 <body>
+<div class="loadingBG"></div>  
+<div class="wrapperLoading">
+    <div class="circle"></div>
+    <div class="circle"></div>
+    <div class="circle"></div>
+    <div class="shadow"></div>
+    <div class="shadow"></div>
+    <div class="shadow"></div>
+    <span class="fs-2 fontTeko">Loading</span>
+</div>
+
+
 <div class="container-fluid p-0 bg-white">
 
 <header class="container-fluid p-lg-0 ">
@@ -23,7 +39,7 @@
           <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse mt-3 mt-lg-0 d-lg-flex justify-content-between" id="navbarContent">
+        <div class="collapse navbar-collapse mt-3 mt-lg-0 d-lg-flex justify-content-end" id="navbarContent">
           <ul class="navbar-nav d-lg-flex align-items-lg-center">
             <li class="nav-item position-relative">              
               <a class="nav-link dropdown-toggle" href="#" id="resourceBrowse" role="button" data-bs-toggle="dropdown" aria-expanded="false"> 探索資源</a>
@@ -41,27 +57,28 @@
               <a class="nav-link" href="#">募集中的資源</a>
             </li>
             <li class="nav-item">
-              <div class="bg-light input-group rounded-3 w-lg-75 my-3">
-                <a class="btn lh-1" href="#" role="button"><span class="material-icons material-icons-outlined">search</span></a>
-                <input class="border-0 bg-light" type="text" placeholder="JavaScript" >
+              <div class="bg-light input-group input-group-sm rounded-3 my-3">
+                <a class="btn lh-1" href="#" role="button">
+                  <span class="material-icons material-icons-outlined">search</span></a>
+                <input class="border-0 bg-light form-control" type="text" placeholder="JavaScript" >
               </div>
             </li>
           </ul>
 
           <!-- 登入前 -->
-          <ul class="navbar-nav beforeLogin">
+          <ul class="navbar-nav beforeLogin ms-lg-3">
             <li class="nav-item d-flex">
-              <a class="nav-link btn btn-primary mx-2 text-white" href="./login.html" role="button">登入</a>
-              <a class="nav-link btn btn-secondary mx-2 text-white" href="./signup.html" role="button">註冊</a>
+              <a class="nav-link btn btn-primary mx-lg-2 px-2 text-white" href="./login.html" role="button">登入</a>
+              <a class="nav-link btn btn-secondary mx-lg-2 mx-2 px-2 text-white" href="./signup.html" role="button">註冊</a>
             </li>
           </ul>
 
-          <!-- 登入後顯示 lg 桌機-->
-          <ul class="afterLogin w-25 justify-content-end navbar-nav d-lg-flex align-items-lg-center lh-1">
+          <!-- 登入後 -->
+          <div class="desktopMenu ms-lg-3">
+          <ul class="afterLogin justify-content-end navbar-nav d-lg-flex align-items-lg-center lh-1">
             <li class="nav-item">
-              <!-- 有通知 -->
               <!-- <span class="material-icons text-danger">notifications</span> -->
-              <span class="material-icons material-icons-outlined text-dark">notifications_none</span>
+              <!-- <span class="material-icons material-icons-outlined text-dark">notifications_none</span> -->
             </li>
             
             <li class="nav-item dropdown create">
@@ -73,9 +90,9 @@
                 <li><a class="dropdown-item" href="#">新增募集</a></li>
               </ul>
             </li>
-            <li class="nav-item dropdown w-25 ">
+            <li class="nav-item dropdown ">
                 <a class="nav-link dropdown-toggle accountMenuImg" href="#" id="accountMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <img class="rounded-circle" width="40%" src="./assets/images/icon_image.png" alt="">
+                  <span class="userImg d-inline-block bg-primary px-2 py-2 rounded-circle fw-bold fs-7 lh-1 text-white text-center">U</span>
                 </a>
  
                 <ul class="dropdown-menu" aria-labelledby="accountMenu">
@@ -88,18 +105,18 @@
                       <li><a class="dropdown-item" href="#">設定</a></li>
                     </ul>
                   </li>
-                  <li><a class="dropdown-item logOut" href="#">登出</a></li>
+                  <li><a role="button"class="dropdown-item logOut">登出</a></li>
                 </ul>
-
             </li>
           </ul>
+          </div>
 
           <!-- 登入後顯示 mobile -->
-          <!-- <ul class="navbar-nav ">
-            <li class="nav-item my-2">
+          <!-- <ul class="navbar-nav mobileMenu d-none"> -->
+            <!-- <li class="nav-item my-2">
               <h3 class="fs-7">通知</h3>
-            </li>
-            <li class="nav-item my-2">
+            </li> -->
+            <!-- <li class="nav-item my-2">
               <h3 class="fs-7">新增</h3>
               <ul class="ms-3">
                 <li class="nav-item"><a class="nav-link" href="#">新增資源</a></li>
@@ -110,12 +127,12 @@
             <li class="nav-item my-2">
               <h3 class="fs-7">我的帳戶</h3>
               <ul class="ms-3">
-                <li class="nav-item"><a class="nav-link" href="#">個人資料</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">我的資源</a></li>
+                <li class="nav-item"><a class="nav-link" href="./acc_profile.html">個人資料</a></li>
+                <li class="nav-item"><a class="nav-link" href="./acc_resources.html">我的資源</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">我的募集</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">我的學習</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">設定</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">登出</a></li>
+                <li class="nav-item"><a role="button" class="dropdown-item logOutMobile">登出</a></li>
               </ul>
             </li>            
           </ul> -->
@@ -131,7 +148,7 @@
     <!-- 1 bannerBlock -->
     <div class="container-fluid px-3 py-5 p-lg-0 bg-primary">
         <div class="bannerBlock container p-0 p-lg-8 p-md-4 d-flex align-items-center justify-content-center justify-content-lg-between">
-            <div class="bannerLeft">
+            <div class="bannerLeft" >
                 <div class="text-white fs-2 d-flex flex-wrap align-items-center">
                     <span>幫助想成為</span>  
                     <span id="bannerText" class="carousel slide" data-bs-ride="carousel">
@@ -158,14 +175,14 @@
                 </div>
 
                 <!-- 推薦關鍵字 -->
-                <ul class="d-flex fs-7 text-center">
+                <!-- <ul class="d-flex fs-7 text-center">
                     <li class="me-2"><a href="#" class="text-light"> JavaScript </a></li>
                     <li class="me-2"><a href="#" class="text-light"> Python </a></li>
                     <li class="me-2"><a href="#" class="text-light"> HTML </a></li>
-                </ul>
+                </ul> -->
 
             </div>
-
+            
             <img src="./assets/images/banner01.png" alt="banner">
             
         </div> 
@@ -174,7 +191,7 @@
    
     <!-- 2 painpoint -->
     <div class="painpoint container px-3 py-5 p-lg-8 d-flex align-items-center flex-column flex-md-row">
-        <div class="me-md-4 me-0 text-center">
+        <div data-aos="zoom-in" data-aos-duration="1000" class="me-md-4 me-0 text-center" >
             <img width="70%" src="./assets/images/banner02.png" alt="painpoint">
         </div>
         <div class="painpointRight mt-5 mt-md-0">
@@ -234,27 +251,27 @@
             <h3 class="fw-bold text-white text-center mb-6">解決你搜尋學習資源的困擾</h3>
             <div class="row">
                 <div class="col-md-3"> 
-                    <div class="content text-center bg-white p-6 p-md-4 rounded-3 m-4 m-md-1">                 
+                    <div data-aos="fade-right" data-aos-duration="1000" data-aos-easing="ease-in-sine" class="content text-center bg-white p-6 p-md-4 rounded-3 m-4 m-md-1">                 
                         <img src="./assets/images/icon_file.png" alt="輕鬆查找">
                         <h4 class="text-primary fw-bold my-3">輕鬆查找</h4>
                         <p>降低連到無關網頁機率<br/>簡化你查找資源的時間</p>   
                     </div>   
                 </div>
-                <div class="col-md-3">
+                <div data-aos="zoom-in-down" data-aos-duration="1000" class="col-md-3">
                     <div class="content text-center bg-white p-6 p-md-4 rounded-3 m-4 m-md-1">
                         <img src="./assets/images/icon_review.png" alt="輕鬆判別">
                         <h4 class="text-primary fw-bold my-3">輕鬆判別</h4>
                         <p>資源評價機制，讓你輕鬆判別該資源是否具參考價值</p>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div data-aos="fade-down" data-aos-duration="1000" class="col-md-3">
                     <div class="content text-center bg-white p-6 p-md-4 rounded-3 m-4 m-md-1">
                         <img src="./assets/images/icon_bookmark.png" alt="輕鬆收藏">
                         <h4 class="text-primary fw-bold my-3">輕鬆收藏</h4>
                         <p>專屬的學習資源庫，簡化你的管理流程</p>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div data-aos="fade-left" data-aos-duration="1000" class="col-md-3">
                     <div class="content text-center bg-white p-6 p-md-4 rounded-3 m-4 m-md-1">
                     <img src="./assets/images/icon_flag.png" alt="輕鬆募集">
                     <h4 class="text-primary fw-bold my-3">輕鬆募集</h4>
@@ -284,6 +301,101 @@
 
             <div class="tab-pane fade show active" id="goodRate1" role="tabpanel" aria-labelledby="goodRate1-tab">
                 <div class="row">
+                    <div class="col-md-6 col-lg-4">
+                        <div class="d-flex p-2 align-items-center">
+                            <img src="./assets/images/icon_image.png" alt="image">
+                            <div class="p-2">
+                                <h4 class="">w3schools JavaScript Tutorial w3schools...</h4>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fs-6 fw-bold">3.2</span>
+                                    <ul class="d-flex align-items-center lh-1">
+                                        <li><span class="material-icons material-icons-sharp fs-6">star</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star_half</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star_outline</span></li>
+                                    </ul>                                
+                                    <span class="fs-7">(35)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="d-flex p-2 align-items-center">
+                            <img src="./assets/images/icon_image.png" alt="image">
+                            <div class="p-2">
+                                <h4 class="">w3schools JavaScript Tutorial w3schools...</h4>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fs-6 fw-bold">3.2</span>
+                                    <ul class="d-flex align-items-center lh-1">
+                                        <li><span class="material-icons material-icons-sharp fs-6">star</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star_half</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star_outline</span></li>
+                                    </ul>                                
+                                    <span class="fs-7">(35)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="d-flex p-2 align-items-center">
+                            <img src="./assets/images/icon_image.png" alt="image">
+                            <div class="p-2">
+                                <h4 class="">w3schools JavaScript Tutorial w3schools...</h4>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fs-6 fw-bold">3.2</span>
+                                    <ul class="d-flex align-items-center lh-1">
+                                        <li><span class="material-icons material-icons-sharp fs-6">star</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star_half</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star_outline</span></li>
+                                    </ul>                                
+                                    <span class="fs-7">(35)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="d-flex p-2 align-items-center">
+                            <img src="./assets/images/icon_image.png" alt="image">
+                            <div class="p-2">
+                                <h4 class="">w3schools JavaScript Tutorial w3schools...</h4>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fs-6 fw-bold">3.2</span>
+                                    <ul class="d-flex align-items-center lh-1">
+                                        <li><span class="material-icons material-icons-sharp fs-6">star</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star_half</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star_outline</span></li>
+                                    </ul>                                
+                                    <span class="fs-7">(35)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="d-flex p-2 align-items-center">
+                            <img src="./assets/images/icon_image.png" alt="image">
+                            <div class="p-2">
+                                <h4 class="">w3schools JavaScript Tutorial w3schools...</h4>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fs-6 fw-bold">3.2</span>
+                                    <ul class="d-flex align-items-center lh-1">
+                                        <li><span class="material-icons material-icons-sharp fs-6">star</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star_half</span></li>
+                                        <li><span class="material-icons material-icons-sharp fs-6">star_outline</span></li>
+                                    </ul>                                
+                                    <span class="fs-7">(35)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-md-6 col-lg-4">
                         <div class="d-flex p-2 align-items-center">
                             <img src="./assets/images/icon_image.png" alt="image">
@@ -472,25 +584,22 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="topicItem text-center my-2  p-4 rounded-3">
-                        <a href="#" class="">
-                            <!-- <img src="./assets/images/icon_image.png" alt="image"> -->
-                            <h4>HTML/CSS</h4>
+                        <a href="./resource_list.html?topics=HTML/CSS" >
+                            <h4 class="fw-bold">HTML/CSS</h4>
                          </a>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="topicItem text-center my-2  p-4 rounded-3">
-                        <a href="#" class="">
-                            <!-- <img src="./assets/images/icon_image.png" alt="image"> -->
-                            <h4>JavaScript</h4>
+                        <a href="./resource_list.html?topics=JavaScript" >
+                            <h4 class="fw-bold">JavaScript</h4>
                          </a>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="topicItem text-center my-2  p-4 rounded-3">
-                        <a href="#" class="">
-                            <!-- <img src="./assets/images/icon_image.png" alt="image"> -->
-                            <h4>Python</h4>
+                        <a href="./resource_list.html?topics=Python" >
+                            <h4 class="fw-bold">Python</h4>
                          </a>
                     </div>
                 </div>
@@ -502,14 +611,15 @@
 </main>
 
 
-<script scr="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
 
 
 <script src="./assets/js/all.js"></script>
 <script>
+    AOS.init();
 
    //輪播
    let swiper = new Swiper(".mySwiper", {
@@ -535,12 +645,18 @@
 
 
 <footer class="footer container-fluid py-5 p-lg-5 bg-primary">
-  <div class="container d-flex justify-content-between">
-      
-      <a class="footer-brand"  href="index.html"></a>
+  <div class="container d-flex flex-md-row flex-column justify-content-between align-items-center">
+
+      <ul class="navbar-nav d-flex flex-row flex-wrap justify-content-start">
+        <li class="nav-item me-3 me-md-5 mb-3 mb-md-0"><a class="footer-brand"  href="index.html"></a></li>
+        <li class="nav-item me-2"> <a class="nav-link text-white">關於我們</a></li>
+        <li class="nav-item me-2"> <a class="nav-link text-white">聯絡我們</a></li>
+        <li class="nav-item me-2"> <a class="nav-link text-white">常見問題</a></li>
+        <li class="nav-item me-2"> <a class="nav-link text-white">隱私權政策</a></li>
+        <li class="nav-item me-2"> <a class="nav-link text-white"></a></li>
+      </ul>
       <ul class="navbar-nav d-flex flex-row">
-        <li class="nav-item me-2"> <a class="nav-link text-white">快速連結</a></li>
-        <li class="nav-item me-2"> <a class="nav-link text-white">快速連結</a></li>
+        <li class="nav-item me-2"> <a class="nav-link text-white fs-8">僅學習作品用無商業用途</a></li>
       </ul>
 
   </div>
@@ -550,12 +666,14 @@
 
 </div>
 
-<script scr="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="./assets/js/all.js"></script>
 </body>
+
 
 </html>

@@ -7,10 +7,26 @@
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 <title>(資源名稱)</title>
 <link rel="stylesheet" href="./assets/style/all.css">
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.css" rel="stylesheet"></link>
+
 
 </head>
 
+
 <body>
+<div class="loadingBG"></div>  
+<div class="wrapperLoading">
+    <div class="circle"></div>
+    <div class="circle"></div>
+    <div class="circle"></div>
+    <div class="shadow"></div>
+    <div class="shadow"></div>
+    <div class="shadow"></div>
+    <span class="fs-2 fontTeko">Loading</span>
+</div>
+
+
 <div class="container-fluid p-0 bg-white">
 
 <header class="container-fluid p-lg-0 ">
@@ -23,7 +39,7 @@
           <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse mt-3 mt-lg-0 d-lg-flex justify-content-between" id="navbarContent">
+        <div class="collapse navbar-collapse mt-3 mt-lg-0 d-lg-flex justify-content-end" id="navbarContent">
           <ul class="navbar-nav d-lg-flex align-items-lg-center">
             <li class="nav-item position-relative">              
               <a class="nav-link dropdown-toggle" href="#" id="resourceBrowse" role="button" data-bs-toggle="dropdown" aria-expanded="false"> 探索資源</a>
@@ -41,27 +57,28 @@
               <a class="nav-link" href="#">募集中的資源</a>
             </li>
             <li class="nav-item">
-              <div class="bg-light input-group rounded-3 w-lg-75 my-3">
-                <a class="btn lh-1" href="#" role="button"><span class="material-icons material-icons-outlined">search</span></a>
-                <input class="border-0 bg-light" type="text" placeholder="JavaScript" >
+              <div class="bg-light input-group input-group-sm rounded-3 my-3">
+                <a class="btn lh-1" href="#" role="button">
+                  <span class="material-icons material-icons-outlined">search</span></a>
+                <input class="border-0 bg-light form-control" type="text" placeholder="JavaScript" >
               </div>
             </li>
           </ul>
 
           <!-- 登入前 -->
-          <ul class="navbar-nav beforeLogin">
+          <ul class="navbar-nav beforeLogin ms-lg-3">
             <li class="nav-item d-flex">
-              <a class="nav-link btn btn-primary mx-2 text-white" href="./login.html" role="button">登入</a>
-              <a class="nav-link btn btn-secondary mx-2 text-white" href="./signup.html" role="button">註冊</a>
+              <a class="nav-link btn btn-primary mx-lg-2 px-2 text-white" href="./login.html" role="button">登入</a>
+              <a class="nav-link btn btn-secondary mx-lg-2 mx-2 px-2 text-white" href="./signup.html" role="button">註冊</a>
             </li>
           </ul>
 
-          <!-- 登入後顯示 lg 桌機-->
-          <ul class="afterLogin w-25 justify-content-end navbar-nav d-lg-flex align-items-lg-center lh-1">
+          <!-- 登入後 -->
+          <div class="desktopMenu ms-lg-3">
+          <ul class="afterLogin justify-content-end navbar-nav d-lg-flex align-items-lg-center lh-1">
             <li class="nav-item">
-              <!-- 有通知 -->
               <!-- <span class="material-icons text-danger">notifications</span> -->
-              <span class="material-icons material-icons-outlined text-dark">notifications_none</span>
+              <!-- <span class="material-icons material-icons-outlined text-dark">notifications_none</span> -->
             </li>
             
             <li class="nav-item dropdown create">
@@ -73,9 +90,9 @@
                 <li><a class="dropdown-item" href="#">新增募集</a></li>
               </ul>
             </li>
-            <li class="nav-item dropdown w-25 ">
+            <li class="nav-item dropdown ">
                 <a class="nav-link dropdown-toggle accountMenuImg" href="#" id="accountMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <img class="rounded-circle" width="40%" src="./assets/images/icon_image.png" alt="">
+                  <span class="userImg d-inline-block bg-primary px-2 py-2 rounded-circle fw-bold fs-7 lh-1 text-white text-center">U</span>
                 </a>
  
                 <ul class="dropdown-menu" aria-labelledby="accountMenu">
@@ -88,18 +105,18 @@
                       <li><a class="dropdown-item" href="#">設定</a></li>
                     </ul>
                   </li>
-                  <li><a class="dropdown-item logOut" href="#">登出</a></li>
+                  <li><a role="button"class="dropdown-item logOut">登出</a></li>
                 </ul>
-
             </li>
           </ul>
+          </div>
 
           <!-- 登入後顯示 mobile -->
-          <!-- <ul class="navbar-nav ">
-            <li class="nav-item my-2">
+          <!-- <ul class="navbar-nav mobileMenu d-none"> -->
+            <!-- <li class="nav-item my-2">
               <h3 class="fs-7">通知</h3>
-            </li>
-            <li class="nav-item my-2">
+            </li> -->
+            <!-- <li class="nav-item my-2">
               <h3 class="fs-7">新增</h3>
               <ul class="ms-3">
                 <li class="nav-item"><a class="nav-link" href="#">新增資源</a></li>
@@ -110,12 +127,12 @@
             <li class="nav-item my-2">
               <h3 class="fs-7">我的帳戶</h3>
               <ul class="ms-3">
-                <li class="nav-item"><a class="nav-link" href="#">個人資料</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">我的資源</a></li>
+                <li class="nav-item"><a class="nav-link" href="./acc_profile.html">個人資料</a></li>
+                <li class="nav-item"><a class="nav-link" href="./acc_resources.html">我的資源</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">我的募集</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">我的學習</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">設定</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">登出</a></li>
+                <li class="nav-item"><a role="button" class="dropdown-item logOutMobile">登出</a></li>
               </ul>
             </li>            
           </ul> -->
@@ -141,11 +158,11 @@
             </div>
 
             <!--related item-->
-            <div class="mt-7 d-none d-md-block">
+            <div class="mt-7 d-none d-md-block py-6">
                 <h3 class="fs-6 relatedTitle">相關資源</h3>
                 <div class="relatedResource">
                     <div class="my-4">
-                        <h4 class="fs-7">w3schools JavaScript Tutorial w3schools...</h4>
+                        <!-- <h4 class="fs-7">w3schools JavaScript Tutorial w3schools...</h4>
                         <div class="d-flex flex-wrap justify-content-start align-items-center">
                             <span class="fs-7 fw-bold me-lg-2">3.2</span>
                             <ul class="d-flex align-items-center lh-1 me-lg-2">
@@ -156,7 +173,7 @@
                                 <li><span class="material-icons material-icons-sharp fs-8">star_outline</span></li>
                             </ul>                                
                             <span class="fs-8">(35)</span>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -168,7 +185,7 @@
                 <div class="titleBox">
                     <h2 class="fs-5 fw-bold mt-md-0 mt-3">w3schools JavaScript Tutorial w3schools JavaScript w3schools ...</h2>
                     <div class="d-flex flex-wrap align-items-center text-secondary">
-                        <span class="fs-5 fw-bold me-lg-2">3.2</span>
+                        <!-- <span class="fs-5 fw-bold me-lg-2">3.2</span>
                         <ul class="d-flex align-items-center lh-1 me-lg-2">
                             <li><span class="material-icons material-icons-sharp fs-7">star</span></li>
                             <li><span class="material-icons material-icons-sharp fs-7">star</span></li>
@@ -176,7 +193,7 @@
                             <li><span class="material-icons material-icons-sharp fs-7">star_half</span></li>
                             <li><span class="material-icons material-icons-sharp fs-7">star_outline</span></li>
                         </ul>                                
-                        <span class="fs-8">(35)</span>
+                        <span class="fs-8">(35)</span> -->
                     </div>
                     <div class="classify fs-8">
                         <ul class="d-flex">
@@ -192,11 +209,12 @@
                     </div>
                 </div>
                 <div class="btnBox d-flex flex-column justify-content-center">
-                    <button type="button" class="btn btn-sm btn-secondary my-2 text-white px-lg-4 py-2 fs-6">前往資源</button>
+                    <div class="btnResLink">
+                        <button type="button" class=" btn btn-sm btn-secondary my-2 text-white px-lg-4 py-2 fs-6">前往資源</button>
+                    </div>
                     <div class="d-flex justify-content-center flex-row flex-md-column flex-lg-row align-items-center">                    
-                        <a href="#" role="button" class="d-flex align-items-center me-2 ">
+                        <a role="button" class="btnBookmark d-flex align-items-center me-2 ">
                             <span class="material-icons ">bookmark_border</span>
-                            <!-- <span class="material-icons">bookmark</span> -->
                             <span>收藏</span>
                         </a>
 
@@ -214,9 +232,9 @@
             <div class="resourceComment ">
                 <!--登入後顯示-->
                 <div class="loginComment">
-                    <a class="btnComment btn btn-outline-primary w-100" data-bs-toggle="collapse" href="#collapseComment" role="button" aria-expanded="false" aria-controls="collapseComment">
+                    <button class="btnComment btn btn-outline-primary w-100" data-bs-toggle="collapse" href="#collapseComment" role="button" aria-expanded="false" aria-controls="collapseComment">
                         立即評論
-                    </a>
+                    </button>
 
 
                     <div class="commentContent collapse border border-2 rounded-3 p-lg-4 my-2 p-2" id="collapseComment">
@@ -245,7 +263,7 @@
                                 <span class="message commentTextarea text-danger fs-8 "></span>
                                 <label for="commentTextarea">Comments</label>
                             </div>
-                            <a href="#" role="button" class="btnCommentSubmit btn btn-primary text-white mt-4">送出評論</a>
+                            <button role="button" class="btnCommentSubmit btn btn-primary text-white mt-4">送出評論</button>
                         </div>
                     </div>
                 </div>
@@ -501,9 +519,9 @@
                 <!-- comment read more Scrollable modal -->
                 <div>
                     <!-- Button trigger modal -->
-                    <button type="button" class="btn btnReadMore btn-outline-primary" data-bs-toggle="modal" data-bs-target="#moreComment">
+                    <!-- <button type="button" class="btn btnReadMore btn-outline-primary" data-bs-toggle="modal" data-bs-target="#moreComment">
                         瀏覽更多
-                    </button>
+                    </button> -->
                     
                     <!-- Modal -->
                     <div class="modal fade" id="moreComment" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" >
@@ -842,13 +860,21 @@
 
 </main>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <footer class="footer container-fluid py-5 p-lg-5 bg-primary">
-  <div class="container d-flex justify-content-between">
-      
-      <a class="footer-brand"  href="index.html"></a>
+  <div class="container d-flex flex-md-row flex-column justify-content-between align-items-center">
+
+      <ul class="navbar-nav d-flex flex-row flex-wrap justify-content-start">
+        <li class="nav-item me-3 me-md-5 mb-3 mb-md-0"><a class="footer-brand"  href="index.html"></a></li>
+        <li class="nav-item me-2"> <a class="nav-link text-white">關於我們</a></li>
+        <li class="nav-item me-2"> <a class="nav-link text-white">聯絡我們</a></li>
+        <li class="nav-item me-2"> <a class="nav-link text-white">常見問題</a></li>
+        <li class="nav-item me-2"> <a class="nav-link text-white">隱私權政策</a></li>
+        <li class="nav-item me-2"> <a class="nav-link text-white"></a></li>
+      </ul>
       <ul class="navbar-nav d-flex flex-row">
-        <li class="nav-item me-2"> <a class="nav-link text-white">快速連結</a></li>
-        <li class="nav-item me-2"> <a class="nav-link text-white">快速連結</a></li>
+        <li class="nav-item me-2"> <a class="nav-link text-white fs-8">僅學習作品用無商業用途</a></li>
       </ul>
 
   </div>
@@ -858,12 +884,14 @@
 
 </div>
 
-<script scr="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="./assets/js/all.js"></script>
 </body>
+
 
 </html>
