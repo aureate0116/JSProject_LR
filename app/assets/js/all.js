@@ -25,6 +25,7 @@ function displayNoneWrapper(){
 }
 
 function displayBlockWrapper(){
+    document.querySelector("body").setAttribute("style","overflow-y:hidden");
     wrapperLoading.setAttribute("class","d-block");
     document.querySelector("body").setAttribute("style","");
     if(document.querySelector(".loadingBG")!==null){

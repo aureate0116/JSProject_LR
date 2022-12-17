@@ -386,7 +386,7 @@ let localStorageUserId = localStorage.getItem("userId");
 let localStorageToken = localStorage.getItem("accessToken");
 
 let userData=[];
-document.querySelector("body").setAttribute("style","overflow-y:hidden");
+// document.querySelector("body").setAttribute("style","overflow-y:hidden");
 
 function getUserData(){
     axios.get(`${url}/users?id=${localStorageUserId}`)

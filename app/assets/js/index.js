@@ -42,7 +42,7 @@ const resource3Tab = document.querySelector('#resource3-tab');
 
 let resourcesData = [];
 let commentsData = [];
-document.querySelector("body").setAttribute("style","overflow-y:hidden");
+// document.querySelector("body").setAttribute("style","overflow-y:hidden");
 
 //取得資源資料
 function getResourcesForIndex(){
@@ -53,6 +53,7 @@ function getResourcesForIndex(){
     
     // displayNoneWrapper();
     if(wrapperLoading!==null){
+        document.querySelector("body").setAttribute("style","");
         wrapperLoading.setAttribute("class","d-none");
         document.querySelector("body").setAttribute("style","");
         if(document.querySelector(".loadingBG")!==null){
