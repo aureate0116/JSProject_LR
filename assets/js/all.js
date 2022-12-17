@@ -588,6 +588,7 @@ function displayNoneWrapper() {
 }
 
 function displayBlockWrapper() {
+  document.querySelector("body").setAttribute("style", "overflow-y:hidden");
   wrapperLoading.setAttribute("class", "d-block");
   document.querySelector("body").setAttribute("style", "");
 
@@ -641,8 +642,8 @@ var resource1Tab = document.querySelector('#resource1-tab');
 var resource2Tab = document.querySelector('#resource2-tab');
 var resource3Tab = document.querySelector('#resource3-tab');
 var resourcesData = [];
-var commentsData = [];
-document.querySelector("body").setAttribute("style", "overflow-y:hidden"); //取得資源資料
+var commentsData = []; // document.querySelector("body").setAttribute("style","overflow-y:hidden");
+//取得資源資料
 
 function getResourcesForIndex() {
   axios.get("".concat(url, "/resources")).then(function (res) {
@@ -650,6 +651,7 @@ function getResourcesForIndex() {
     document.title = "Eng!neer 程式學習資源網"; // displayNoneWrapper();
 
     if (wrapperLoading !== null) {
+      document.querySelector("body").setAttribute("style", "");
       wrapperLoading.setAttribute("class", "d-none");
       document.querySelector("body").setAttribute("style", "");
 
@@ -1183,8 +1185,7 @@ var btnBookmark = document.querySelector('.btnBookmark'); //取得該用戶資�
 
 var localStorageUserId = localStorage.getItem("userId");
 var localStorageToken = localStorage.getItem("accessToken");
-var userData = [];
-document.querySelector("body").setAttribute("style", "overflow-y:hidden");
+var userData = []; // document.querySelector("body").setAttribute("style","overflow-y:hidden");
 
 function getUserData() {
   axios.get("".concat(url, "/users?id=").concat(localStorageUserId)).then(function (res) {
