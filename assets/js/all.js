@@ -1,6 +1,6 @@
 "use strict";
 
-var url = "http://localhost:3000";
+var apiUrl = "https://json-server-vercel-ochre.vercel.app";
 var userId = location.href.split("=")[1];
 var localStorageUserId = localStorage.getItem("userId");
 var localStorageToken = localStorage.getItem("accessToken"); // let pageClassify = location.href.split("/")[3].split(".html")[0];
@@ -15,7 +15,7 @@ var userData = [];
 
 function initAccount() {
   if (localStorageUserId == userId && localStorageUserId !== "") {
-    axios.get("".concat(url, "/users?id=").concat(localStorageUserId), headers).then(function (res) {
+    axios.get("".concat(apiUrl, "/users?id=").concat(localStorageUserId), headers).then(function (res) {
       userData = res.data;
       renderUserAccount();
     })["catch"](function (err) {
@@ -92,7 +92,7 @@ var constraints = {
 };
 "use strict";
 
-var url = "http://localhost:3000";
+var apiUrl = "https://json-server-vercel-ochre.vercel.app";
 var userId = location.href.split("=")[1];
 var localStorageUserId = localStorage.getItem("userId");
 var localStorageToken = localStorage.getItem("accessToken"); // let pageClassify = location.href.split("/")[3].split(".html")[0];
@@ -109,7 +109,7 @@ var userData = [];
 
 function initProfile() {
   if (localStorageUserId == userId && localStorageUserId !== "") {
-    axios.get("".concat(url, "/users?id=").concat(localStorageUserId), headers).then(function (res) {
+    axios.get("".concat(apiUrl, "/users?id=").concat(localStorageUserId), headers).then(function (res) {
       userData = res.data;
       renderUserData();
     })["catch"](function (err) {
@@ -218,7 +218,7 @@ var btnSaveProfile = document.querySelector('.btnSaveProfile');
 if (btnSaveProfile !== null) {
   btnSaveProfile.addEventListener("click", function (e) {
     if (firstName.value !== "" && lastName.value !== "" && userTitle.value.length < 15) {
-      axios.patch("".concat(url, "/600/users/").concat(localStorageUserId), {
+      axios.patch("https://json-server-vercel-ochre.vercel.app/600/users/".concat(localStorageUserId), {
         "lastName": lastName.value,
         "firstName": firstName.value,
         "title": userTitle.value,
@@ -247,6 +247,8 @@ if (btnSaveProfile !== null) {
 }
 "use strict";
 
+var apiUrl = "https://json-server-vercel-ochre.vercel.app";
+
 function initAccountResources() {
   getAccountUserData();
   getAccountBookmarkData();
@@ -261,7 +263,7 @@ var localStorageToken = localStorage.getItem("accessToken"); // document.querySe
 var userData = [];
 
 function getAccountUserData() {
-  axios.get("".concat(url, "/users?id=").concat(localStorageUserId)).then(function (res) {
+  axios.get("".concat(apiUrl, "/users?id=").concat(localStorageUserId)).then(function (res) {
     userData = res.data;
     document.title = "我的資源";
     renderUserResList();
@@ -283,7 +285,7 @@ function getAccountUserData() {
 var userBookmark = [];
 
 function getAccountBookmarkData() {
-  axios.get("".concat(url, "/bookmarks?_expand=resource&&userId=").concat(localStorageUserId)).then(function (res) {
+  axios.get("https://json-server-vercel-ochre.vercel.app/bookmarks?_expand=resource&&userId=".concat(localStorageUserId)).then(function (res) {
     userBookmark = res.data;
     renderUserResList();
   })["catch"](function (error) {
@@ -401,7 +403,7 @@ if (userResourcesList !== null) {
         cancelButtonText: '否'
       }).then(function (result) {
         if (result.isConfirmed) {
-          axios["delete"]("".concat(url, "/bookmarks/").concat(bookmarkId), headers).then(function (res) {
+          axios["delete"]("https://json-server-vercel-ochre.vercel.app/bookmarks/".concat(bookmarkId), headers).then(function (res) {
             Swal.fire({
               title: '已成功取消收藏',
               confirmButtonColor: '#4AA9B6'
@@ -598,13 +600,11 @@ function displayBlockWrapper() {
 }
 "use strict";
 
-var url = "http://localhost:3000"; // const url="./json/db.json"
-// const url="http://localhost:3000/users"
-// const url="http://localhost:3000/resources"
-// const url="http://localhost:3000/bookmarks"
-// const url="http://localhost:3000/comments"
+// const url="http://localhost:3000";
+var apiUrl = "https://json-server-vercel-ochre.vercel.app";
 "use strict";
 
+var apiUrl = "https://json-server-vercel-ochre.vercel.app";
 var locationHref = location.href.split("/");
 var resTopic = location.href.split("=")[1];
 var resId = location.href.split("=")[1];
@@ -646,7 +646,7 @@ var commentsData = []; // document.querySelector("body").setAttribute("style","o
 //取得資源資料
 
 function getResourcesForIndex() {
-  axios.get("".concat(url, "/resources")).then(function (res) {
+  axios.get("".concat(apiUrl, "/resources")).then(function (res) {
     resourcesData = res.data;
     document.title = "Eng!neer 程式學習資源網"; // displayNoneWrapper();
 
@@ -822,6 +822,7 @@ function sortGoodRateResources(resRenderList) {
 }
 "use strict";
 
+var apiUrl = "https://json-server-vercel-ochre.vercel.app";
 var localStorageUserId = localStorage.getItem("userId");
 var localStorageUserToken = localStorage.getItem("accessToken");
 var beforeLogin = document.querySelector('.beforeLogin');
@@ -840,7 +841,7 @@ if (localStorageUserId == null || localStorageUserId == "") {
   }
 
   var userData = [];
-  axios.get("".concat(url, "/users?id=").concat(localStorageUserId), headers).then(function (res) {
+  axios.get("".concat(apiUrl, "/users?id=").concat(localStorageUserId), headers).then(function (res) {
     userData = res.data;
     renderAccountMenu(userData);
   })["catch"](function (err) {
@@ -878,13 +879,13 @@ logOut.addEventListener("click", function (e) {
 
   if (afterLogin !== null) {
     afterLogin.setAttribute("class", "d-none");
-  } // location.href = "./index.html";
+  }
 
-
-  location.reload();
+  location.href = "./index.html"; //location.reload();
 });
 "use strict";
 
+var apiUrl = "https://json-server-vercel-ochre.vercel.app";
 var loginAccount = document.querySelector('#loginAccount');
 var loginPw = document.querySelector('#loginPw');
 var btnLogin = document.querySelector('#btnLogin'); // const signUpFormInputs = document.querySelectorAll('input.form-control');  //input
@@ -898,7 +899,7 @@ initLogin(); //取得用戶清單
 var usersData = [];
 
 function getUserListbyLoginPage() {
-  axios.get("".concat(url, "/users")).then(function (res) {
+  axios.get("".concat(apiUrl, "/users")).then(function (res) {
     usersData = res.data;
   })["catch"](function (err) {
     console.log(err);
@@ -948,7 +949,7 @@ if (btnLogin !== null) {
     }
 
     if (document.querySelector('.account').textContent == "" && document.querySelector('.password').textContent == "") {
-      axios.post("http://localhost:3000/login", {
+      axios.post("https://json-server-vercel-ochre.vercel.app/login", {
         "email": loginAccount.value,
         "password": loginPw.value
       }).then(function (res) {
@@ -964,6 +965,7 @@ if (btnLogin !== null) {
 }
 "use strict";
 
+var apiUrl = "https://json-server-vercel-ochre.vercel.app";
 var resId = parseFloat(location.href.split("=")[1]);
 var headers = {
   headers: {
@@ -985,7 +987,7 @@ var resourcesData = [];
 var commentsData = []; // 取得所有資源資料
 
 function getResourcesForResources() {
-  axios.get("".concat(url, "/resources")).then(function (res) {
+  axios.get("".concat(apiUrl, "/resources")).then(function (res) {
     resourcesData = res.data;
   })["catch"](function (error) {
     console.log(error);
@@ -993,7 +995,7 @@ function getResourcesForResources() {
 }
 
 function getCommentData() {
-  axios.get("".concat(url, "/comments")).then(function (res) {
+  axios.get("".concat(apiUrl, "/comments")).then(function (res) {
     commentsData = res.data;
     renderRelatedResource();
   })["catch"](function (error) {
@@ -1005,7 +1007,7 @@ var resourceContent = [];
 var resourceCommentData = []; //取得單一資源
 
 function getResourcesItem(id) {
-  axios.get("".concat(url, "/resources?id=").concat(id, "&_expand=user")).then(function (res) {
+  axios.get("".concat(apiUrl, "/resources?id=").concat(id, "&_expand=user")).then(function (res) {
     resourceContent = res.data;
     renderResource();
     renderRelatedResource();
@@ -1015,7 +1017,7 @@ function getResourcesItem(id) {
 }
 
 function getResourcesComment(id) {
-  axios.get("".concat(url, "/comments?_expand=resouceId&&resourceId=").concat(id, "&&_expand=user")).then(function (res) {
+  axios.get("".concat(apiUrl, "/comments?_expand=resouceId&&resourceId=").concat(id, "&&_expand=user")).then(function (res) {
     resourceCommentData = res.data;
     renderResource();
     renderComment();
@@ -1188,7 +1190,7 @@ var localStorageToken = localStorage.getItem("accessToken");
 var userData = []; // document.querySelector("body").setAttribute("style","overflow-y:hidden");
 
 function getUserData() {
-  axios.get("".concat(url, "/users?id=").concat(localStorageUserId)).then(function (res) {
+  axios.get("".concat(apiUrl, "/users?id=").concat(localStorageUserId)).then(function (res) {
     userData = res.data;
     renderBtnCommentContent();
   })["catch"](function (error) {
@@ -1205,7 +1207,7 @@ function getUserData() {
 var userBookmark;
 
 function getbookmarkData() {
-  axios.get("".concat(url, "/bookmarks?userId=").concat(localStorageUserId)).then(function (res) {
+  axios.get("".concat(apiUrl, "/bookmarks?userId=").concat(localStorageUserId)).then(function (res) {
     userBookmark = res.data;
     renderBookmark();
   })["catch"](function (error) {
@@ -1281,7 +1283,7 @@ function renderBookmark() {
         //如果已收藏 會取消收藏 delete bookmarks
         if (result.length !== 0) {
           //console.log(result[0].id);
-          axios["delete"]("".concat(url, "/bookmarks/").concat(result[0].id), headers).then(function (res) {
+          axios["delete"]("".concat(apiUrl, "/bookmarks/").concat(result[0].id), headers).then(function (res) {
             btnBookmark.innerHTML = "<span class=\"material-icons\">bookmark_border</span>\n                        <span>\u6536\u85CF</span>";
             location.reload();
           })["catch"](function (err) {
@@ -1296,7 +1298,7 @@ function renderBookmark() {
           });
         } else if (result.length == 0) {
           //如果尚未收藏  會加入收藏  post bookmarks
-          axios.post("".concat(url, "/600/bookmarks?userId=").concat(localStorageUserId), {
+          axios.post("".concat(apiUrl, "/600/bookmarks?userId=").concat(localStorageUserId), {
             "resourceId": resId,
             "userId": localStorageUserId,
             "isFixedTop": false
@@ -1402,7 +1404,7 @@ function submitComment() {
       }
 
       if (commentTextarea.value !== "" && commentTextarea.value.length >= 20 && starNum !== 0) {
-        axios.post("".concat(url, "/600/comments/"), {
+        axios.post("".concat(apiUrl, "/600/comments/"), {
           "resourceId": resId,
           "userId": localStorageUserId,
           "commentTime": thisTime,
@@ -1419,7 +1421,7 @@ function submitComment() {
             newAverageScore = (thisResAverageScore * resourceCommentData.length + starNum) / (resourceCommentData.length + 1).toFixed(1);
           }
 
-          axios.patch("".concat(url, "/resources/").concat(resId), {
+          axios.patch("".concat(apiUrl, "/resources/").concat(resId), {
             "averageScore": newAverageScore
           }).then(function (res) {
             console.log(res.data);
@@ -1451,7 +1453,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-//1. 頁面初始化
+var apiUrl = "https://json-server-vercel-ochre.vercel.app"; //1. 頁面初始化
+
 function initResourceList() {
   getResourcesForResources();
   getCommentData();
@@ -1476,7 +1479,7 @@ var commentsData = [];
 var thisTopicData = []; //2. 取得資料
 
 function getResourcesForResources() {
-  axios.get("".concat(url, "/resources")).then(function (res) {
+  axios.get("".concat(apiUrl, "/resources")).then(function (res) {
     resourcesData = res.data.filter(function (item) {
       return item.topics == resTopic;
     });
@@ -1489,7 +1492,7 @@ function getResourcesForResources() {
 }
 
 function getCommentData() {
-  axios.get("".concat(url, "/comments")).then(function (res) {
+  axios.get("".concat(apiUrl, "/comments")).then(function (res) {
     commentsData = res.data;
   })["catch"](function (error) {
     console.log(error);
@@ -1834,6 +1837,7 @@ if (resourceSort !== null) {
 }
 "use strict";
 
+var apiUrl = "https://json-server-vercel-ochre.vercel.app";
 var signUpForm = document.querySelector('form.signUpForm'); //form
 
 var signupLastName = document.querySelector('#signupLastName');
@@ -1916,7 +1920,7 @@ signUpFormInputs.forEach(function (item) {
 var usersData = [];
 
 function getUserList() {
-  axios.get("http://localhost:3000/users").then(function (res) {
+  axios.get("https://json-server-vercel-ochre.vercel.app/users").then(function (res) {
     usersData = res.data;
   })["catch"](function (err) {
     console.log(err);
@@ -1943,7 +1947,7 @@ if (btnSignUp !== null) {
       return;
     }
 
-    axios.post("http://localhost:3000/users", {
+    axios.post("".concat(apiUrl, "/users"), {
       "lastName": signupLastName.value,
       "firstName": signupfirstName.value,
       "email": signupMail.value,
