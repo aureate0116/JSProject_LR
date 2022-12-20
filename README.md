@@ -8,7 +8,7 @@
 - 資源留言評價
 
 ### 注意事項:
-- 目前API資料使用 render(https://json-server-cyh3.onrender.com)，若連線有問題或無正確資料連線，畫面會顯示 Loading
+- 目前API資料使用 render ( https://json-server-cyh3.onrender.com )，若連線有問題或無正確資料連線，畫面會顯示 Loading
 - 如有上述情況，仍想要瀏覽一般切版畫面，使用Chrome右鍵檢查，將元素中的body內以下幾下刪除即可
     - ```<body>``` 中的 style="overflow-y:hidden"
     - ```<div class="loadingBG"></div>``` 整個loadingBG div刪除
