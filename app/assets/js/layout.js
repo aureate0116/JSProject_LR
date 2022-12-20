@@ -1,4 +1,4 @@
-const apiUrl="https://json-server-vercel-ochre.vercel.app";
+const apiUrl="https://json-server-cyh3.onrender.com";
 
 let localStorageUserId = localStorage.getItem("userId");
 let localStorageUserToken = localStorage.getItem("accessToken");

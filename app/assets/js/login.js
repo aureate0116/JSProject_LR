@@ -1,5 +1,5 @@
 
-const apiUrl="https://json-server-vercel-ochre.vercel.app";
+const apiUrl="https://json-server-cyh3.onrender.com";
 
 const loginAccount = document.querySelector('#loginAccount');
 const loginPw = document.querySelector('#loginPw');
@@ -16,10 +16,11 @@ initLogin();
 //取得用戶清單
 let usersData = [];
 function getUserListbyLoginPage(){
-    axios.get(`${apiUrl}/users`).then(res=>{
+    axios.get(`https://json-server-cyh3.onrender.com/users`).then(res=>{
         usersData = res.data;
     }).catch(err=>{
         console.log(err);
+        
     })
 }
 
@@ -41,6 +42,7 @@ function getUserListbyLoginPage(){
             // console.log(result);
             if(result.length==0){
                 document.querySelector('.account').textContent="此帳號不存在";
+                
             }
 
            
@@ -71,7 +73,7 @@ function getUserListbyLoginPage(){
         if(document.querySelector('.account').textContent=="" && 
         document.querySelector('.password').textContent=="" ){
 
-            axios.post("https://json-server-vercel-ochre.vercel.app/login",{
+            axios.post("https://json-server-cyh3.onrender.com/login",{
                 "email":loginAccount.value,
                 "password":loginPw.value
 

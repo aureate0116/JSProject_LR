@@ -1,4 +1,4 @@
-const apiUrl="https://json-server-vercel-ochre.vercel.app";
+const apiUrl="https://json-server-cyh3.onrender.com";
 
 function initAccountResources(){
     getAccountUserData();
@@ -36,7 +36,7 @@ function getAccountUserData(){
 //取得收藏資料
 let userBookmark=[];
 function getAccountBookmarkData(){
-    axios.get(`https://json-server-vercel-ochre.vercel.app/bookmarks?_expand=resource&&userId=${localStorageUserId}`)
+    axios.get(`https://json-server-cyh3.onrender.com/bookmarks?_expand=resource&&userId=${localStorageUserId}`)
     .then(res=>{
         userBookmark = res.data;
         renderUserResList();
@@ -58,7 +58,7 @@ function renderUserResList(){
 
     if(userBookmark.length!=0){
         userBookmark.forEach(item=>{
-            console.log(userBookmark);
+            //console.log(userBookmark);
             let score;
             if(item?.resource?.averageScore !== undefined){
                 score = item?.resource?.averageScore ;
@@ -208,7 +208,7 @@ if(userResourcesList!==null){
               }).then((result) => {
 
                  if(result.isConfirmed) {   
-                    axios.delete(`https://json-server-vercel-ochre.vercel.app/bookmarks/${bookmarkId}`,headers)
+                    axios.delete(`https://json-server-cyh3.onrender.com/bookmarks/${bookmarkId}`,headers)
                     .then(res=>{
                         Swal.fire({
                             title:'已成功取消收藏',

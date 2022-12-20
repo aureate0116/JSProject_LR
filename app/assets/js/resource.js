@@ -1,4 +1,4 @@
-const apiUrl="https://json-server-vercel-ochre.vercel.app";
+const apiUrl="https://json-server-cyh3.onrender.com";
 
 let resId = parseFloat(location.href.split("=")[1]);
 let headers = {

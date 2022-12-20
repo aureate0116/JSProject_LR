@@ -1,4 +1,4 @@
-const apiUrl="https://json-server-vercel-ochre.vercel.app";
+const apiUrl="https://json-server-cyh3.onrender.com";
 
 let userId = location.href.split("=")[1];
 let localStorageUserId = localStorage.getItem("userId");  
@@ -138,7 +138,7 @@ if(btnSaveProfile!==null){
     btnSaveProfile.addEventListener("click",e=>{
         if(firstName.value !=="" && lastName.value!=="" && userTitle.value.length < 15){
                
-            axios.patch(`https://json-server-vercel-ochre.vercel.app/600/users/${localStorageUserId}`,{
+            axios.patch(`https://json-server-cyh3.onrender.com/600/users/${localStorageUserId}`,{
                 "lastName" : lastName.value,
                 "firstName" : firstName.value,
                 "title" : userTitle.value,

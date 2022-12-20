@@ -1,4 +1,4 @@
-const apiUrl="https://json-server-vercel-ochre.vercel.app";
+const apiUrl="https://json-server-cyh3.onrender.com";
 
 const signUpForm = document.querySelector('form.signUpForm');  //form
 
@@ -83,7 +83,7 @@ signUpFormInputs.forEach(item=>{
 //取得用戶清單
 let usersData = [];
 function getUserList(){
-    axios.get(`https://json-server-vercel-ochre.vercel.app/users`).then(res=>{
+    axios.get(`https://json-server-cyh3.onrender.com/users`).then(res=>{
         usersData = res.data
     }).catch(err=>{
         console.log(err);
