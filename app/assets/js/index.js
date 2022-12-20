@@ -1,3 +1,4 @@
+const apiUrl="https://json-server-vercel-ochre.vercel.app";
 let locationHref = location.href.split("/");
 let resTopic = location.href.split("=")[1];
 let resId = location.href.split("=")[1];
@@ -46,7 +47,7 @@ let commentsData = [];
 
 //取得資源資料
 function getResourcesForIndex(){
-  axios.get(`${url}/resources`)
+  axios.get(`${apiUrl}/resources`)
   .then(res=>{
     resourcesData = res.data;
     document.title = "Eng!neer 程式學習資源網";

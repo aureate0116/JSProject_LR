@@ -1,3 +1,5 @@
+const apiUrl="https://json-server-vercel-ochre.vercel.app";
+
 let resId = parseFloat(location.href.split("=")[1]);
 let headers = {
     headers:{
@@ -22,7 +24,7 @@ let commentsData = [];
 
 // 取得所有資源資料
 function getResourcesForResources(){
-  axios.get(`${url}/resources`)
+  axios.get(`${apiUrl}/resources`)
   .then(res=>{
     resourcesData = res.data; 
   }).catch(error=>{
@@ -31,7 +33,7 @@ function getResourcesForResources(){
 }
 
 function getCommentData(){
-  axios.get(`${url}/comments`)
+  axios.get(`${apiUrl}/comments`)
   .then(res=>{
     commentsData = res.data; 
     renderRelatedResource();
@@ -47,7 +49,7 @@ let resourceCommentData=[];
 
 //取得單一資源
 function getResourcesItem(id){
-    axios.get(`${url}/resources?id=${id}&_expand=user`)
+    axios.get(`${apiUrl}/resources?id=${id}&_expand=user`)
     .then(res=>{
         resourceContent = res.data;
         renderResource();
@@ -58,7 +60,7 @@ function getResourcesItem(id){
     })
 }
 function getResourcesComment(id){
-    axios.get(`${url}/comments?_expand=resouceId&&resourceId=${id}&&_expand=user`)
+    axios.get(`${apiUrl}/comments?_expand=resouceId&&resourceId=${id}&&_expand=user`)
     .then(res=>{
         resourceCommentData = res.data;
         renderResource();
@@ -389,7 +391,7 @@ let userData=[];
 // document.querySelector("body").setAttribute("style","overflow-y:hidden");
 
 function getUserData(){
-    axios.get(`${url}/users?id=${localStorageUserId}`)
+    axios.get(`${apiUrl}/users?id=${localStorageUserId}`)
     .then(res=>{
         userData = res.data;
         renderBtnCommentContent();
@@ -404,7 +406,7 @@ function getUserData(){
 
 let userBookmark;
 function getbookmarkData(){
-    axios.get(`${url}/bookmarks?userId=${localStorageUserId}`)
+    axios.get(`${apiUrl}/bookmarks?userId=${localStorageUserId}`)
     .then(res=>{
         userBookmark = res.data;        
         renderBookmark();
@@ -491,7 +493,7 @@ function renderBookmark(){
                 //如果已收藏 會取消收藏 delete bookmarks
                 if(result.length!==0){
                     //console.log(result[0].id);
-                    axios.delete(`${url}/bookmarks/${result[0].id}`,headers)
+                    axios.delete(`${apiUrl}/bookmarks/${result[0].id}`,headers)
                     .then(res=>{
                         btnBookmark.innerHTML = `<span class="material-icons">bookmark_border</span>
                         <span>收藏</span>`;
@@ -504,7 +506,7 @@ function renderBookmark(){
                         console.log(err);
                     })      
                 }else if(result.length == 0){ //如果尚未收藏  會加入收藏  post bookmarks
-                    axios.post(`${url}/600/bookmarks?userId=${localStorageUserId}`,{  
+                    axios.post(`${apiUrl}/600/bookmarks?userId=${localStorageUserId}`,{  
                         "resourceId": resId,
                         "userId": localStorageUserId,
                         "isFixedTop": false
@@ -617,7 +619,7 @@ function submitComment(){
         }
         
         if(commentTextarea.value!=="" && commentTextarea.value.length >= 20 && starNum!==0){
-            axios.post(`${url}/600/comments/`,{
+            axios.post(`${apiUrl}/600/comments/`,{
                 "resourceId": resId,
                 "userId": localStorageUserId,
                 "commentTime": thisTime,
@@ -633,7 +635,7 @@ function submitComment(){
                 }else{
                     newAverageScore = ((thisResAverageScore*resourceCommentData.length)+starNum)/(resourceCommentData.length+1).toFixed(1);
                 } 
-                axios.patch(`${url}/resources/${resId}`,{
+                axios.patch(`${apiUrl}/resources/${resId}`,{
                     "averageScore":newAverageScore
                 })
                 .then(res=>{

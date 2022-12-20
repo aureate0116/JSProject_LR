@@ -1,4 +1,6 @@
 
+const apiUrl="https://json-server-vercel-ochre.vercel.app";
+
 const loginAccount = document.querySelector('#loginAccount');
 const loginPw = document.querySelector('#loginPw');
 const btnLogin = document.querySelector('#btnLogin');
@@ -14,7 +16,7 @@ initLogin();
 //取得用戶清單
 let usersData = [];
 function getUserListbyLoginPage(){
-    axios.get(`${url}/users`).then(res=>{
+    axios.get(`${apiUrl}/users`).then(res=>{
         usersData = res.data;
     }).catch(err=>{
         console.log(err);
@@ -33,7 +35,7 @@ function getUserListbyLoginPage(){
             }
             
             let result = usersData.filter(userItem=>{
-                return userItem.email ===loginAccount.value;
+                return userItem.email === loginAccount.value;
             })
             // console.log("result");
             // console.log(result);
@@ -69,7 +71,7 @@ function getUserListbyLoginPage(){
         if(document.querySelector('.account').textContent=="" && 
         document.querySelector('.password').textContent=="" ){
 
-            axios.post("http://localhost:3000/login",{
+            axios.post("https://json-server-vercel-ochre.vercel.app/login",{
                 "email":loginAccount.value,
                 "password":loginPw.value
 

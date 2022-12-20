@@ -1,3 +1,5 @@
+const apiUrl="https://json-server-vercel-ochre.vercel.app";
+
 
 //1. 頁面初始化
 function initResourceList(){
@@ -28,7 +30,7 @@ let thisTopicData = [];
 
 //2. 取得資料
 function getResourcesForResources(){
-  axios.get(`${url}/resources`)
+  axios.get(`${apiUrl}/resources`)
   .then(res=>{
     resourcesData = res.data.filter(item=>{
       return item.topics == resTopic;
@@ -43,7 +45,7 @@ function getResourcesForResources(){
 }
 
 function getCommentData(){
-  axios.get(`${url}/comments`)
+  axios.get(`${apiUrl}/comments`)
   .then(res=>{
     commentsData = res.data; 
   }).catch(error=>{

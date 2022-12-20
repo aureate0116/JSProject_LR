@@ -1,4 +1,5 @@
-const url="http://localhost:3000";
+const apiUrl="https://json-server-vercel-ochre.vercel.app";
+
 let userId = location.href.split("=")[1];
 let localStorageUserId = localStorage.getItem("userId");  
 let localStorageToken = localStorage.getItem("accessToken");
@@ -13,7 +14,7 @@ let headers = {
 let userData=[];
 function initAccount(){
     if(localStorageUserId == userId && localStorageUserId !==""){
-        axios.get(`${url}/users?id=${localStorageUserId}`,headers)
+        axios.get(`${apiUrl}/users?id=${localStorageUserId}`,headers)
         .then(res=>{
             userData = res.data;
             renderUserAccount();

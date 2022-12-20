@@ -1,3 +1,5 @@
+const apiUrl="https://json-server-vercel-ochre.vercel.app";
+
 let localStorageUserId = localStorage.getItem("userId");
 let localStorageUserToken = localStorage.getItem("accessToken");
 
@@ -22,7 +24,7 @@ if(localStorageUserId == null || localStorageUserId == "" ){
         beforeLogin.setAttribute("class","d-none");
     }
     let userData=[];
-    axios.get(`${url}/users?id=${localStorageUserId}`,headers).then(res=>{
+    axios.get(`${apiUrl}/users?id=${localStorageUserId}`,headers).then(res=>{
         userData=res.data;
         renderAccountMenu(userData);
        
@@ -67,7 +69,7 @@ logOut.addEventListener("click",e=>{
     if(afterLogin!==null){
         afterLogin.setAttribute("class","d-none");
     }
-    // location.href = "./index.html";
-    location.reload();
+    location.href = "./index.html";
+    //location.reload();
 })
 

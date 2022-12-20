@@ -1,4 +1,5 @@
-const url="http://localhost:3000";
+const apiUrl="https://json-server-vercel-ochre.vercel.app";
+
 let userId = location.href.split("=")[1];
 let localStorageUserId = localStorage.getItem("userId");  
 let localStorageToken = localStorage.getItem("accessToken");
@@ -15,7 +16,7 @@ let headers = {
 let userData=[];
 function initProfile(){
     if(localStorageUserId == userId && localStorageUserId !==""){
-        axios.get(`${url}/users?id=${localStorageUserId}`,headers)
+        axios.get(`${apiUrl}/users?id=${localStorageUserId}`,headers)
         .then(res=>{
             userData = res.data;
             renderUserData();
@@ -137,7 +138,7 @@ if(btnSaveProfile!==null){
     btnSaveProfile.addEventListener("click",e=>{
         if(firstName.value !=="" && lastName.value!=="" && userTitle.value.length < 15){
                
-            axios.patch(`${url}/600/users/${localStorageUserId}`,{
+            axios.patch(`https://json-server-vercel-ochre.vercel.app/600/users/${localStorageUserId}`,{
                 "lastName" : lastName.value,
                 "firstName" : firstName.value,
                 "title" : userTitle.value,

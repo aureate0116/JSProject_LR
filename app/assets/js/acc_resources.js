@@ -1,3 +1,5 @@
+const apiUrl="https://json-server-vercel-ochre.vercel.app";
+
 function initAccountResources(){
     getAccountUserData();
     getAccountBookmarkData();
@@ -15,7 +17,7 @@ let localStorageToken = localStorage.getItem("accessToken");
 
 let userData=[];
 function getAccountUserData(){
-    axios.get(`${url}/users?id=${localStorageUserId}`)
+    axios.get(`${apiUrl}/users?id=${localStorageUserId}`)
     .then(res=>{
         userData = res.data;
         document.title ="我的資源";
@@ -34,7 +36,7 @@ function getAccountUserData(){
 //取得收藏資料
 let userBookmark=[];
 function getAccountBookmarkData(){
-    axios.get(`${url}/bookmarks?_expand=resource&&userId=${localStorageUserId}`)
+    axios.get(`https://json-server-vercel-ochre.vercel.app/bookmarks?_expand=resource&&userId=${localStorageUserId}`)
     .then(res=>{
         userBookmark = res.data;
         renderUserResList();
@@ -206,7 +208,7 @@ if(userResourcesList!==null){
               }).then((result) => {
 
                  if(result.isConfirmed) {   
-                    axios.delete(`${url}/bookmarks/${bookmarkId}`,headers)
+                    axios.delete(`https://json-server-vercel-ochre.vercel.app/bookmarks/${bookmarkId}`,headers)
                     .then(res=>{
                         Swal.fire({
                             title:'已成功取消收藏',

@@ -1,3 +1,4 @@
+const apiUrl="https://json-server-vercel-ochre.vercel.app";
 
 const signUpForm = document.querySelector('form.signUpForm');  //form
 
@@ -82,7 +83,7 @@ signUpFormInputs.forEach(item=>{
 //取得用戶清單
 let usersData = [];
 function getUserList(){
-    axios.get(`http://localhost:3000/users`).then(res=>{
+    axios.get(`https://json-server-vercel-ochre.vercel.app/users`).then(res=>{
         usersData = res.data
     }).catch(err=>{
         console.log(err);
@@ -109,7 +110,7 @@ if(btnSignUp!==null){
     if(signupPw.value!== signupPwConfirm.value){
         return;
     }
-    axios.post(`http://localhost:3000/users`,{
+    axios.post(`${apiUrl}/users`,{
         "lastName": signupLastName.value,
         "firstName": signupfirstName.value,
         "email": signupMail.value,
