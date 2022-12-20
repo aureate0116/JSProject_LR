@@ -1,6 +1,6 @@
 "use strict";
 
-var apiUrl = "https://json-server-vercel-ochre.vercel.app";
+var apiUrl = "https://json-server-cyh3.onrender.com";
 var userId = location.href.split("=")[1];
 var localStorageUserId = localStorage.getItem("userId");
 var localStorageToken = localStorage.getItem("accessToken"); // let pageClassify = location.href.split("/")[3].split(".html")[0];
@@ -92,7 +92,7 @@ var constraints = {
 };
 "use strict";
 
-var apiUrl = "https://json-server-vercel-ochre.vercel.app";
+var apiUrl = "https://json-server-cyh3.onrender.com";
 var userId = location.href.split("=")[1];
 var localStorageUserId = localStorage.getItem("userId");
 var localStorageToken = localStorage.getItem("accessToken"); // let pageClassify = location.href.split("/")[3].split(".html")[0];
@@ -218,7 +218,7 @@ var btnSaveProfile = document.querySelector('.btnSaveProfile');
 if (btnSaveProfile !== null) {
   btnSaveProfile.addEventListener("click", function (e) {
     if (firstName.value !== "" && lastName.value !== "" && userTitle.value.length < 15) {
-      axios.patch("https://json-server-vercel-ochre.vercel.app/600/users/".concat(localStorageUserId), {
+      axios.patch("https://json-server-cyh3.onrender.com/600/users/".concat(localStorageUserId), {
         "lastName": lastName.value,
         "firstName": firstName.value,
         "title": userTitle.value,
@@ -247,7 +247,7 @@ if (btnSaveProfile !== null) {
 }
 "use strict";
 
-var apiUrl = "https://json-server-vercel-ochre.vercel.app";
+var apiUrl = "https://json-server-cyh3.onrender.com";
 
 function initAccountResources() {
   getAccountUserData();
@@ -285,7 +285,7 @@ function getAccountUserData() {
 var userBookmark = [];
 
 function getAccountBookmarkData() {
-  axios.get("https://json-server-vercel-ochre.vercel.app/bookmarks?_expand=resource&&userId=".concat(localStorageUserId)).then(function (res) {
+  axios.get("https://json-server-cyh3.onrender.com/bookmarks?_expand=resource&&userId=".concat(localStorageUserId)).then(function (res) {
     userBookmark = res.data;
     renderUserResList();
   })["catch"](function (error) {
@@ -310,7 +310,7 @@ function renderUserResList() {
     userBookmark.forEach(function (item) {
       var _item$resource;
 
-      console.log(userBookmark);
+      //console.log(userBookmark);
       var score;
 
       if ((item === null || item === void 0 ? void 0 : (_item$resource = item.resource) === null || _item$resource === void 0 ? void 0 : _item$resource.averageScore) !== undefined) {
@@ -403,7 +403,7 @@ if (userResourcesList !== null) {
         cancelButtonText: '否'
       }).then(function (result) {
         if (result.isConfirmed) {
-          axios["delete"]("https://json-server-vercel-ochre.vercel.app/bookmarks/".concat(bookmarkId), headers).then(function (res) {
+          axios["delete"]("https://json-server-cyh3.onrender.com/bookmarks/".concat(bookmarkId), headers).then(function (res) {
             Swal.fire({
               title: '已成功取消收藏',
               confirmButtonColor: '#4AA9B6'
@@ -601,10 +601,11 @@ function displayBlockWrapper() {
 "use strict";
 
 // const url="http://localhost:3000";
-var apiUrl = "https://json-server-vercel-ochre.vercel.app";
+// const apiUrl="https://json-server-vercel-ochre.vercel.app"
+var apiUrl = "https://json-server-cyh3.onrender.com";
 "use strict";
 
-var apiUrl = "https://json-server-vercel-ochre.vercel.app";
+var apiUrl = "https://json-server-cyh3.onrender.com";
 var locationHref = location.href.split("/");
 var resTopic = location.href.split("=")[1];
 var resId = location.href.split("=")[1];
@@ -822,7 +823,7 @@ function sortGoodRateResources(resRenderList) {
 }
 "use strict";
 
-var apiUrl = "https://json-server-vercel-ochre.vercel.app";
+var apiUrl = "https://json-server-cyh3.onrender.com";
 var localStorageUserId = localStorage.getItem("userId");
 var localStorageUserToken = localStorage.getItem("accessToken");
 var beforeLogin = document.querySelector('.beforeLogin');
@@ -885,7 +886,7 @@ logOut.addEventListener("click", function (e) {
 });
 "use strict";
 
-var apiUrl = "https://json-server-vercel-ochre.vercel.app";
+var apiUrl = "https://json-server-cyh3.onrender.com";
 var loginAccount = document.querySelector('#loginAccount');
 var loginPw = document.querySelector('#loginPw');
 var btnLogin = document.querySelector('#btnLogin'); // const signUpFormInputs = document.querySelectorAll('input.form-control');  //input
@@ -899,7 +900,7 @@ initLogin(); //取得用戶清單
 var usersData = [];
 
 function getUserListbyLoginPage() {
-  axios.get("".concat(apiUrl, "/users")).then(function (res) {
+  axios.get("https://json-server-cyh3.onrender.com/users").then(function (res) {
     usersData = res.data;
   })["catch"](function (err) {
     console.log(err);
@@ -949,7 +950,7 @@ if (btnLogin !== null) {
     }
 
     if (document.querySelector('.account').textContent == "" && document.querySelector('.password').textContent == "") {
-      axios.post("https://json-server-vercel-ochre.vercel.app/login", {
+      axios.post("https://json-server-cyh3.onrender.com/login", {
         "email": loginAccount.value,
         "password": loginPw.value
       }).then(function (res) {
@@ -965,7 +966,7 @@ if (btnLogin !== null) {
 }
 "use strict";
 
-var apiUrl = "https://json-server-vercel-ochre.vercel.app";
+var apiUrl = "https://json-server-cyh3.onrender.com";
 var resId = parseFloat(location.href.split("=")[1]);
 var headers = {
   headers: {
@@ -1453,7 +1454,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var apiUrl = "https://json-server-vercel-ochre.vercel.app"; //1. 頁面初始化
+var apiUrl = "https://json-server-cyh3.onrender.com"; //1. 頁面初始化
 
 function initResourceList() {
   getResourcesForResources();
@@ -1837,7 +1838,7 @@ if (resourceSort !== null) {
 }
 "use strict";
 
-var apiUrl = "https://json-server-vercel-ochre.vercel.app";
+var apiUrl = "https://json-server-cyh3.onrender.com";
 var signUpForm = document.querySelector('form.signUpForm'); //form
 
 var signupLastName = document.querySelector('#signupLastName');
@@ -1920,7 +1921,7 @@ signUpFormInputs.forEach(function (item) {
 var usersData = [];
 
 function getUserList() {
-  axios.get("https://json-server-vercel-ochre.vercel.app/users").then(function (res) {
+  axios.get("https://json-server-cyh3.onrender.com/users").then(function (res) {
     usersData = res.data;
   })["catch"](function (err) {
     console.log(err);
